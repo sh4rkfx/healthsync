@@ -1,0 +1,5 @@
+garminconnect>=0.3.17,<0.4  # unofficial Garmin Connect client; token format changed in 0.3
+requests>=2.31
+tzdata>=2024.1  # time zone data for Windows, where the OS does not ship it
+pandas>=2.1  # analysis only
+scipy>=1.11  # analysis only: Spearman, Theil-Sen, Benjamini-Hochberg

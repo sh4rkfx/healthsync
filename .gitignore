@@ -1,0 +1,16 @@
+# Credentials: never commit
+.garmin-tokens/
+.garminconnect/
+.env
+
+# Raw API dumps from `python -m healthsync dump-raw` contain health data
+debug/
+
+# Python
+.pytest_cache/
+.ruff_cache/
+*.json.tmp
+__pycache__/
+*.pyc
+.venv/
+venv/

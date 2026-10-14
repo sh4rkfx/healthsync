@@ -1,0 +1,43 @@
+"""Settings shared by all modules. Everything can be overridden via environment variables."""
+
+from __future__ import annotations
+
+import os
+from datetime import date, datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+# Output
+DATA_DIR = Path(os.environ.get("HEALTHSYNC_DATA_DIR", "data"))
+GARMIN_CSV = DATA_DIR / "garmin_daily.csv"
+ACTIVITIES_CSV = DATA_DIR / "garmin_activities.csv"
+HEVY_CSV = DATA_DIR / "hevy_sets.csv"
+INSIGHTS_JSON = DATA_DIR / "insights.json"
+DEBUG_DIR = Path("debug")
+
+# Garmin uses local calendar days; Hevy timestamps are converted to the same zone.
+TIMEZONE = ZoneInfo(os.environ.get("HEALTHSYNC_TZ", "Europe/Vienna"))
+
+# Garmin authentication
+TOKEN_DIR = Path(os.environ.get("GARMIN_TOKEN_DIR", Path.home() / ".garminconnect"))
+TOKEN_JSON = os.environ.get("GARMIN_TOKENS_JSON")  # seed tokens for CI, from `export-tokens`
+
+# Garmin fetching
+GARMIN_REQUEST_DELAY_S = 0.6  # pause between days to stay well below rate limits
+GARMIN_REFRESH_DAYS = 3  # always re-fetch today and the previous N days (late syncs)
+
+# Hevy fetching
+HEVY_API_URL = "https://api.hevyapp.com/v1/workouts"
+HEVY_PAGE_SIZE = 10  # maximum allowed by the API
+
+
+class SetupError(RuntimeError):
+    """Missing or invalid credentials. Printed without a traceback."""
+
+
+def today() -> date:
+    return datetime.now(TIMEZONE).date()
+
+
+def running_in_ci() -> bool:
+    return os.environ.get("CI", "").lower() == "true"
