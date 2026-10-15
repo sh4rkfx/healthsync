@@ -1,37 +1,49 @@
 # healthsync
 
 Personal training and recovery data in one place. healthsync pulls daily health metrics and
-activities from Garmin Connect and workout sets from Hevy, stores them as plain CSV files in
-this repository, looks for time-lagged relationships between them and shows everything on a
-static dashboard. It runs locally or once a day on GitHub Actions.
+activities from Garmin Connect and workout sets from Hevy, stores them as plain CSV files, looks
+for time-lagged relationships between them and shows everything on a static dashboard. It runs
+locally or once a day on GitHub Actions.
 
 > [!IMPORTANT]
-> Keep this repository **private**. The data files contain health data, and anything that is
-> committed stays in the Git history.
+> This repository holds **code only** and can be public. Your data lives in a second, **private**
+> repository that is cloned into `data/`. `data/` is git-ignored here, so health data cannot be
+> committed to this repository by accident.
 
 ## What you get
 
 | Output | Content |
 |---|---|
-| `data/garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
-| `data/garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
-| `data/hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
-| `data/insights.json` | Relationships between training, sleep and recovery that survive a statistical check, e.g. "1 hour later to bed: -2.0 ms HRV that night" |
-| `dashboard/index.html` | Charts and tables for all of the above, no build step |
+| `garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
+| `garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
+| `hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
+| `insights.json` | Relationships between training, sleep and recovery that survive a statistical check, e.g. "1 hour later to bed: -2.0 ms HRV that night" |
+| Dashboard | Charts and tables for all of the above, locally or on GitHub Pages, no build step |
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    G["Garmin Connect<br/>daily metrics, activities"] --> S
-    H["Hevy API<br/>workouts, sets"] --> S
-    subgraph GH["GitHub Actions, daily at 06:30 UTC"]
-        S["healthsync sync"] --> C[("data/*.csv")]
-        C --> A["healthsync analyze"] --> I[("data/insights.json")]
+    G["Garmin Connect"] --> S
+    H["Hevy API"] --> S
+    subgraph P["healthsync-data (private)"]
+        S["Daily workflow<br/>sync + analyze"] --> C[("CSV files<br/>insights.json")]
     end
-    C --> D["dashboard/index.html"]
-    I --> D
+    subgraph O["healthsync (public)"]
+        K["Code"] -. checked out by .-> S
+        D["Dashboard on<br/>GitHub Pages"]
+    end
+    C -- "GitHub API,<br/>read-only token" --> D
 ```
+
+| Repository | Visibility | Content |
+|---|---|---|
+| `healthsync` (this one) | public | Python code, dashboard, documentation, tests; the dashboard is published with GitHub Pages |
+| `healthsync-data` | **private** | The data files and the daily workflow with the Garmin and Hevy secrets. Workflow logs and caches stay private with it |
+
+The dashboard on GitHub Pages contains no data. In the browser you connect it once with a
+fine-grained token that can only read the data repository; it then loads the CSV files straight
+from the GitHub API.
 
 The sync is incremental: Garmin days that are complete are not fetched again (except the last
 four, because the watch can sync late), and activities and Hevy sets inside the requested window
@@ -42,17 +54,20 @@ are replaced, so edited or deleted entries are picked up.
 Requirements: Python 3.10 or newer, a Garmin Connect account, and Hevy Pro for the API key.
 
 ```bash
-git clone https://github.com/<you>/<repo>.git && cd <repo>
-python3 -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+git clone https://github.com/sh4rkfx/healthsync.git && cd healthsync
+git clone https://github.com/sh4rkfx/healthsync-data.git data   # your private data repository, see below
+python3 -m venv .venv && source .venv/bin/activate              # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-python -m healthsync login                             # Garmin email, password, MFA code
-export HEVY_API_KEY="..."                              # Windows PowerShell: $env:HEVY_API_KEY="..."
-python -m healthsync sync --days 365                   # first run takes about 10 to 15 minutes
-python -m healthsync analyze                           # writes data/insights.json
+python -m healthsync login                                      # Garmin email, password, MFA code
+export HEVY_API_KEY="..."                                       # Windows PowerShell: $env:HEVY_API_KEY="..."
+python -m healthsync sync --days 365                            # first run takes about 10 to 15 minutes
+python -m healthsync analyze                                    # writes data/insights.json
 
-python -m http.server 8000                             # then open http://localhost:8000/dashboard/
+python -m http.server 8000                                      # then open http://localhost:8000/dashboard/
 ```
+
+Without a data repository, `data/` is just a local folder; everything works the same.
 
 The Hevy API key is created at [hevy.com/settings?developer](https://hevy.com/settings?developer).
 The Garmin password is only used for the first login; afterwards healthsync works with the tokens
@@ -60,20 +75,26 @@ stored in `~/.garminconnect`.
 
 ## Daily sync on GitHub
 
-The workflow in `.github/workflows/sync.yml` fetches the last 30 days every morning, recomputes
-the analysis and commits changed files.
+The workflow runs in the private data repository. It checks out this repository's code, fetches
+the last 30 days every morning, recomputes the analysis and commits changed files.
 
-1. Push this folder to a **private** repository.
-2. Locally, run `python -m healthsync export-tokens` and copy the single line of JSON it prints.
-3. Under *Settings → Secrets and variables → Actions*, add two repository secrets:
+1. Create an empty **private** repository, for example `healthsync-data`.
+2. Copy the contents of [`templates/data-repo/`](templates/data-repo) into it, including the
+   `.github` folder, together with any CSV files you already have, and push.
+3. Locally, run `python -m healthsync export-tokens` and copy the single line of JSON it prints.
+4. In the data repository under *Settings → Secrets and variables → Actions*, add two repository secrets:
 
    | Secret | Value |
    |---|---|
-   | `GARMIN_TOKENS_JSON` | The JSON from step 2 |
+   | `GARMIN_TOKENS_JSON` | The JSON from step 3 |
    | `HEVY_API_KEY` | Your Hevy API key |
 
-4. Under *Settings → Actions → General → Workflow permissions*, select **Read and write permissions**.
-5. Start the first run manually: *Actions → Sync Garmin and Hevy → Run workflow*.
+   With the GitHub CLI: `python -m healthsync export-tokens | gh secret set GARMIN_TOKENS_JSON --repo <you>/healthsync-data`.
+5. Start the first run manually: *Actions → Sync Garmin and Hevy → Run workflow*. Use 365 days if
+   the repository has no data yet.
+
+The workflow uses `sh4rkfx/healthsync` for the code. For a fork, set the repository variable
+`HEALTHSYNC_CODE_REPO` in the data repository to `<you>/healthsync`.
 
 Garmin may hand out a new refresh token whenever it refreshes a session, which would make the
 secret outdated after the first run. The workflow therefore carries the latest tokens from run to
@@ -83,12 +104,33 @@ replace the secret.
 
 ## Dashboard
 
+### Locally
+
 ```bash
+git -C data pull                # latest data from the workflow
 python -m http.server 8000      # in the repository root
 ```
 
 Open <http://localhost:8000/dashboard/>. Opened directly as a file, the page cannot read the CSV
 files and shows generated sample data instead, marked with a yellow notice.
+
+### On GitHub Pages
+
+1. In this repository under *Settings → Pages*, set *Source* to **Deploy from a branch**, branch
+   `main`, folder `/ (root)`, and save. After a minute the dashboard is at
+   `https://<you>.github.io/healthsync/`.
+2. Create a fine-grained personal access token under *Settings → Developer settings → Personal
+   access tokens → Fine-grained tokens*: *Repository access* only the data repository,
+   *Permissions → Contents: Read-only*, nothing else.
+3. Open the dashboard, choose **Mit GitHub verbinden**, enter the data repository and the token.
+
+The token is kept in the browser: in `localStorage` with *Auf diesem Gerät merken*, otherwise only
+until the tab is closed. It is sent to `api.github.com` and nowhere else. All GitHub Pages sites of
+one account share the origin `<you>.github.io`, so scripts on your other Pages sites could read it;
+keep that in mind if you publish other sites with third-party scripts. *Daten → Datenquellen*
+shows the connection and disconnects it.
+
+### Areas
 
 A bar at the top links to every area and holds the time range. Each area opens with one sentence
 that sums it up, and can be collapsed; the sentence stays visible. The **?** on a card explains what
@@ -103,20 +145,21 @@ it shows and which columns it reads.
 | Kraft | Estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night |
 | Aktivitäten | Weekly active time per sport, steps against the 8,000 target, totals per sport, recent activities |
 | Zusammenhänge | The results of `healthsync analyze`, filterable to robust findings, plus scatter plots for training load, tonnage and sleep against recovery and performance |
-| Daten | Status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
+| Daten | Data source and connection, status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
 
 The page warns when the newest Garmin day is two or more days old, which usually means the daily
 workflow has stopped. Keyboard shortcuts: `1` to `7` jump to the areas, `0` back to the overview,
-`Z` switches the time range, `?` opens the help. Range, collapsed areas and the findings filter are
-remembered in the browser.
+`Z` switches the time range, `?` opens the help. Range, collapsed areas, main lifts and the
+findings filter are remembered in the browser.
 
-Three settings at the top of the dashboard script are meant to be edited:
+Settings at the top of the dashboard script:
 
 | Setting | Purpose |
 |---|---|
 | `MAIN_LIFTS` | Default lifts shown as e1RM charts, by their exact Hevy names. Without matches, the four most frequent exercises are used. The easier way is **Kraft → Übungen wählen** on the dashboard: it lists every exercise in your Hevy data, applies the choice at once, remembers it in the browser and copies it in this format if you want it as the default everywhere |
 | `SPORTS` | Groups Garmin activity types into sports. The first matching pattern wins; the order sets colors and stacking |
 | `MAX_LINK_GAP_MIN` | Maximum gap between the start of a Hevy workout and a strength activity on the watch to count them as one session (default 180) |
+| `DATA_REPO` | Data repository suggested in the connect dialog |
 
 ## Analysis
 
@@ -165,18 +208,21 @@ All commands are run as `python -m healthsync <command>`.
 | Symptom | Cause and fix |
 |---|---|
 | A column stays empty | Garmin's field names are undocumented. Run `dump-raw` for an affected day and compare `debug/garmin_raw_<date>.json` with the `parse_*` functions in `healthsync/garmin.py` |
-| Dashboard shows sample data | The page was opened as a file, or the server was started outside the repository root |
+| Dashboard shows sample data | Locally: the page was opened as a file, or the server was started outside the repository root. On GitHub Pages: not connected yet, or the token expired; the yellow notice says which |
 | HTTP 429 from Garmin | Too many requests. Days fetched so far are saved; run again after an hour |
 | Login works locally but fails on GitHub | Garmin sometimes blocks data-center addresses. Run the workflow on a self-hosted runner (`runs-on: self-hosted`) |
-| Push from the workflow fails with 403 | Workflow permissions are read-only, see step 4 of the GitHub setup |
+| Push from the workflow fails with 403 | The data repository's workflow token is read-only: *Settings → Actions → General → Workflow permissions → Read and write permissions* |
 | Sleep times are missing for older days | They were added in an update. Run `sync --days 365 --refresh` once |
 
 ## Privacy and security
 
-- Credentials live only in `~/.garminconnect`, environment variables and GitHub secrets. `.gitignore`
-  keeps token folders and `debug/` out of the repository.
+- Health data lives only in the private data repository and in your local `data/` folder. This
+  repository ignores `data/` and `debug/`.
+- The sync runs in the private repository, so its logs, the Actions cache with the Garmin tokens
+  and the secrets never touch this public repository.
 - The Garmin password is never stored, neither locally nor on GitHub.
-- Anyone with write access to the repository can change the workflow and read its secrets. Do not add collaborators.
+- The dashboard token can only read the data repository. Revoke it on GitHub if a device is lost.
+- Anyone with write access to the data repository can change its workflow and read its secrets. Do not add collaborators.
 - Raw dumps from `dump-raw` contain health data. They stay in `debug/`, which is not committed.
 
 ## Development
@@ -196,7 +242,10 @@ docs/
   analysis.md     analysis method and how to read results
   data-reference.md   every column and the insights.json format
   scores.md       evidence-based design of the daily scores (not yet implemented)
+templates/
+  data-repo/      README, .gitignore and daily workflow for the private data repository
 tests/            pytest suite
+index.html        forwards GitHub Pages visitors to dashboard/
 ```
 
 ```bash
@@ -204,6 +253,8 @@ pip install -r requirements-dev.txt
 pytest          # parsers, time zones, CSV loading, analysis on synthetic data
 ruff check .
 ```
+
+The workflow in `.github/workflows/test.yml` runs both on every push.
 
 ## Disclaimer
 

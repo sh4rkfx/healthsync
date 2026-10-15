@@ -346,6 +346,26 @@ kbd { font-family: var(--font-mono); font-size: 11.5px; border: 1px solid var(--
 
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+/* Connect dialog */
+.field { display: grid; gap: 4px; min-width: 0; }
+.field label { font-size: 13px; font-weight: 500; }
+.field input {
+  width: 100%; min-width: 0; font-size: 14px; padding: 8px 10px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--ring-strong); border-radius: 7px; font-family: var(--font-mono);
+}
+.check { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: center; font-size: 13px; cursor: pointer; }
+.check input { width: 16px; height: 16px; margin: 0; accent-color: var(--s1); }
+.check .sub { flex-basis: 100%; padding-left: 24px; font-size: 12px; }
+.primary-btn { font-size: 13px; font-weight: 500; color: var(--surface); background: var(--ink); border: 1px solid var(--ink); border-radius: 7px; padding: 7px 16px; cursor: pointer; }
+.primary-btn:disabled { opacity: 0.6; cursor: progress; }
+.form-status { font-size: 13px; color: var(--ink-2); min-height: 1.3em; }
+.form-status.error { color: var(--ink); }
+.form-status.error::before { content: "× "; color: var(--crit); font-weight: 700; }
+.token-help summary { cursor: pointer; font-size: 13px; color: var(--ink-2); width: max-content; max-width: 100%; }
+.token-help ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 5px; font-size: 13px; color: var(--ink-2); }
+.token-help a { color: var(--s1); }
+.notice-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
 footer { color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
 footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font-size: 12px; }
 </style>
@@ -641,6 +661,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <div class="area-body" id="b-daten">
       <div class="card span2">
         <div class="card-head"><h3>Datenquellen</h3><p class="sub">Was die Seite geladen hat und wie aktuell es ist</p></div>
+        <div class="card-tools" id="connection"></div>
         <div class="table-wrap wide"><table id="sources"></table></div>
       </div>
       <div class="card span2">
@@ -711,9 +732,41 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
     <div>
       <h3>Bereiche</h3>
-      <p class="sub">Jeder Bereich lässt sich über „Einklappen“ schließen; die Kernaussage bleibt sichtbar. Diese Einstellung und der Zeitraum werden in diesem Browser gespeichert. Das <b>?</b> an einer Karte erklärt, was sie zeigt und woher die Daten kommen. Berechnungen und Begriffe stehen unter <a href="#glossar" id="help-glossary">Daten → So wird gerechnet</a>.</p>
+      <p class="sub">Deine eigenen Daten zeigt die Seite, wenn sie im Repo über einen lokalen Server läuft oder mit deinem privaten Daten-Repository verbunden ist (Daten → Datenquellen). Jeder Bereich lässt sich über „Einklappen“ schließen; die Kernaussage bleibt sichtbar. Diese Einstellung und der Zeitraum werden in diesem Browser gespeichert. Das <b>?</b> an einer Karte erklärt, was sie zeigt und woher die Daten kommen. Berechnungen und Begriffe stehen unter <a href="#glossar" id="help-glossary">Daten → So wird gerechnet</a>.</p>
     </div>
   </div>
+</dialog>
+
+<dialog class="help" id="connect" aria-labelledby="connect-title">
+  <form class="help-in" id="connect-form" novalidate>
+    <div class="help-head">
+      <h2 id="connect-title">Mit GitHub verbinden</h2>
+      <button class="ghost-btn" type="button" id="connect-cancel">Abbrechen</button>
+    </div>
+    <p class="sub">Die Seite liest deine CSV-Dateien direkt aus deinem privaten Daten-Repository. Dafür braucht sie einen Token, der nur dieses eine Repository lesen darf.</p>
+    <div class="field">
+      <label for="gh-repo">Daten-Repository</label>
+      <input id="gh-repo" name="repo" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="besitzer/name">
+    </div>
+    <div class="field">
+      <label for="gh-token">Fine-grained Token</label>
+      <input id="gh-token" name="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_…">
+    </div>
+    <label class="check" for="gh-remember"><input id="gh-remember" type="checkbox" checked><span>Auf diesem Gerät merken</span><span class="sub">Ohne Haken gilt die Verbindung nur, bis du den Tab schließt.</span></label>
+    <p class="form-status" id="connect-status" role="status" aria-live="polite"></p>
+    <div class="picker-actions"><button class="primary-btn" type="submit" id="connect-submit">Verbinden</button></div>
+    <details class="token-help">
+      <summary>So erstellst du den Token</summary>
+      <ol>
+        <li>Auf GitHub <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">einen neuen Fine-grained Token anlegen</a>. Der Weg dorthin: Profilbild → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.</li>
+        <li>Token name zum Beispiel „healthsync dashboard“, Expiration nach Wunsch, etwa ein Jahr.</li>
+        <li>Repository access: <b>Only select repositories</b> und nur dein Daten-Repository auswählen.</li>
+        <li>Permissions → Repository permissions → <b>Contents: Read-only</b>. Mehr braucht die Seite nicht; „Metadata: Read-only“ setzt GitHub automatisch dazu.</li>
+        <li>Auf Generate token klicken, den Token kopieren und hier einfügen.</li>
+      </ol>
+      <p class="sub">Der Token geht nur an api.github.com und bleibt in diesem Browser. Er kann nichts ändern und keine anderen Repositories lesen.</p>
+    </details>
+  </form>
 </dialog>
 
 <script>
@@ -750,6 +803,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     hevy: "../data/hevy_sets.csv",
     insights: "../data/insights.json",
   };
+  // Private repository with the data files, read through the GitHub API when the page runs
+  // without data next to it, e.g. on GitHub Pages. Only the default for the connect dialog.
+  const DATA_REPO = "sh4rkfx/healthsync-data";
+  const GITHUB_FILES = { garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json" };
 
   // German wording for the variables of data/insights.json (keys as in healthsync/analyze.py)
   const INSIGHT_DRIVERS = {
@@ -948,24 +1005,104 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         found: { garmin: embedded.garmin != null, activities: embedded.activities != null, hevy: embedded.hevy != null, insights: embedded.insights != null },
       };
     }
-    // 2. Files next to the dashboard (repo checkout served over HTTP)
-    const [garmin, activities, hevy, insightsText] = await Promise.all([
-      fetchText(DATA_URLS.garmin), fetchText(DATA_URLS.activities), fetchText(DATA_URLS.hevy), fetchText(DATA_URLS.insights),
-    ]);
-    if (garmin != null || activities != null || hevy != null) {
-      let insights = null;
-      try { insights = insightsText ? JSON.parse(insightsText) : null; } catch { insights = null; }
-      return {
-        garmin: garmin ? parseCsv(garmin) : [], activities: activities ? parseCsv(activities) : [], hevy: hevy ? parseCsv(hevy) : [],
-        insights, source: "csv", insightsBroken: insightsText != null && insights == null,
-        found: { garmin: garmin != null, activities: activities != null, hevy: hevy != null, insights: insights != null },
-      };
+    // 2. Files next to the dashboard (repo checkout served over HTTP). Skipped on GitHub Pages,
+    //    where the data is never published.
+    if (!location.hostname.endsWith(".github.io")) {
+      const [garmin, activities, hevy, insights] = await Promise.all([
+        fetchText(DATA_URLS.garmin), fetchText(DATA_URLS.activities), fetchText(DATA_URLS.hevy), fetchText(DATA_URLS.insights),
+      ]);
+      if (garmin != null || activities != null || hevy != null) return fromTexts({ garmin, activities, hevy, insights }, "csv");
     }
-    // 3. Generated example data, with the analysis result the Python script produced for it
+    // 3. The private data repository through the GitHub API, once this browser is connected
+    const cred = loadCredentials();
+    let githubError = null;
+    if (cred) {
+      const data = await loadFromGithub(cred);
+      if (!data.error) return { ...data, repo: cred.repo, remembered: cred.remembered };
+      githubError = data.error;
+    }
+    // 4. Generated example data, with the analysis result the Python script produced for it
     return {
-      ...makeDemoData(tToIso(Date.now())), insights: DEMO_INSIGHTS, source: "demo",
+      ...makeDemoData(tToIso(Date.now())), insights: DEMO_INSIGHTS, source: "demo", githubError,
       found: { garmin: true, activities: true, hevy: true, insights: true },
     };
+  }
+
+  // Parsed data from the raw file contents; null means the file does not exist
+  function fromTexts({ garmin, activities, hevy, insights: insightsText }, source) {
+    let insights = null;
+    try { insights = insightsText ? JSON.parse(insightsText) : null; } catch { insights = null; }
+    return {
+      garmin: garmin ? parseCsv(garmin) : [], activities: activities ? parseCsv(activities) : [], hevy: hevy ? parseCsv(hevy) : [],
+      insights, source, insightsBroken: insightsText != null && insights == null,
+      found: { garmin: garmin != null, activities: activities != null, hevy: hevy != null, insights: insights != null },
+    };
+  }
+
+  // ---- private data repository on GitHub
+
+  // Repository and fine-grained token: localStorage when "remember" is ticked, otherwise only
+  // sessionStorage, which ends with the tab.
+  const CRED_KEY = "healthsync.github";
+  function loadCredentials() {
+    for (const name of ["localStorage", "sessionStorage"]) {
+      try {
+        const c = JSON.parse(window[name].getItem(CRED_KEY) || "null");
+        if (c?.repo && c?.token) return { repo: c.repo, token: c.token, remembered: name === "localStorage" };
+      } catch { /* storage unavailable */ }
+    }
+    return null;
+  }
+  function clearCredentials() {
+    for (const name of ["localStorage", "sessionStorage"]) {
+      try { window[name].removeItem(CRED_KEY); } catch { /* storage unavailable */ }
+    }
+  }
+  function saveCredentials(cred, remember) {
+    clearCredentials();
+    try {
+      window[remember ? "localStorage" : "sessionStorage"].setItem(CRED_KEY, JSON.stringify({ repo: cred.repo, token: cred.token }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function githubRequest(cred, path, raw = false) {
+    return fetch(`https://api.github.com/repos/${cred.repo}${path}`, {
+      headers: { Authorization: `Bearer ${cred.token}`, Accept: raw ? "application/vnd.github.raw+json" : "application/vnd.github+json" },
+      cache: "no-store",
+    });
+  }
+  // Null when the token can read the repository, otherwise what went wrong and how to fix it
+  async function checkGithub(cred) {
+    let res;
+    try {
+      res = await githubRequest(cred, "");
+    } catch {
+      return "GitHub ist nicht erreichbar. Besteht eine Internetverbindung? In einer eingebetteten Vorschau blockiert der Browser solche Anfragen.";
+    }
+    if (res.ok) return null;
+    if (res.status === 401) return "GitHub lehnt den Token ab: falsch kopiert, abgelaufen oder widerrufen. Erstelle einen neuen und verbinde erneut.";
+    if (res.status === 404) return `${cred.repo} wurde nicht gefunden. Stimmt der Name, und hat der Token Zugriff auf genau dieses Repository?`;
+    if (res.status === 403) return "GitHub verweigert den Zugriff. Hat der Token die Berechtigung „Contents: Read-only“? Sonst ist das stündliche Anfragelimit erreicht.";
+    return `GitHub antwortet mit Fehler ${res.status}. Versuche es in ein paar Minuten erneut.`;
+  }
+  async function loadFromGithub(cred) {
+    const problem = await checkGithub(cred);
+    if (problem) return { error: problem };
+    const get = async (file) => {
+      try {
+        const res = await githubRequest(cred, `/contents/${file}`, true);
+        return res.ok ? await res.text() : null;
+      } catch {
+        return null;
+      }
+    };
+    const [garmin, activities, hevy, insights] = await Promise.all(
+      [GITHUB_FILES.garmin, GITHUB_FILES.activities, GITHUB_FILES.hevy, GITHUB_FILES.insights].map(get),
+    );
+    return fromTexts({ garmin, activities, hevy, insights }, "github");
   }
 
   // One entry per data file for the "Datenquellen" table
@@ -978,14 +1115,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         first: d.length ? isoToT(d[0]) : null, last: d.length ? isoToT(d[d.length - 1]) : null,
       };
     };
+    const remote = data.source === "github";
+    const file = (key) => (remote ? `${data.repo}/${GITHUB_FILES[key]}` : DATA_URLS[key].replace("../", ""));
+    const viaWorkflow = "Entsteht beim ersten Lauf des Workflows im Daten-Repository: Actions → Sync Garmin and Hevy → Run workflow.";
     const list = [
-      entry("garmin", "Garmin Tageswerte", "data/garmin_daily.csv", data.garmin, "Abrufen mit `python -m healthsync sync --source garmin`."),
-      entry("activities", "Garmin Aktivitäten", "data/garmin_activities.csv", data.activities || [], "Abrufen mit `python -m healthsync sync --source activities`."),
-      entry("hevy", "Hevy Sätze", "data/hevy_sets.csv", data.hevy, "Abrufen mit `python -m healthsync sync --source hevy`; dafür muss `HEVY_API_KEY` gesetzt sein."),
+      entry("garmin", "Garmin Tageswerte", file("garmin"), data.garmin, remote ? viaWorkflow : "Abrufen mit `python -m healthsync sync --source garmin`."),
+      entry("activities", "Garmin Aktivitäten", file("activities"), data.activities || [], remote ? viaWorkflow : "Abrufen mit `python -m healthsync sync --source activities`."),
+      entry("hevy", "Hevy Sätze", file("hevy"), data.hevy, remote ? `${viaWorkflow} Dafür braucht das Repository das Secret \`HEVY_API_KEY\`.` : "Abrufen mit `python -m healthsync sync --source hevy`; dafür muss `HEVY_API_KEY` gesetzt sein."),
     ];
     const ins = data.insights;
     list.push({
-      key: "insights", label: "Analyse", file: "data/insights.json", found: data.found.insights, broken: data.insightsBroken,
+      key: "insights", label: "Analyse", file: file("insights"), found: data.found.insights, broken: data.insightsBroken,
       rows: ins?.findings?.length ?? 0, generated: ins?.generated_at || null,
       first: ins?.period?.start ? isoToT(ins.period.start) : null, last: ins?.period?.end ? isoToT(ins.period.end) : null,
       fix: "Erzeugen mit `python -m healthsync analyze`; der GitHub-Workflow macht das täglich nach dem Abruf.",
@@ -2016,12 +2156,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderWeeks(M, days);
     renderDaily(days);
     renderSources();
+    renderConnection();
     renderSummaries(M, days, x0, x1, lastWith);
 
     const sourceText = {
       demo: "Beispieldaten, im Browser erzeugt",
       csv: "data/garmin_daily.csv, data/garmin_activities.csv und data/hevy_sets.csv",
       embedded: "eingebettete CSV-Daten",
+      github: `GitHub-Repository ${state.dataRepo}`,
     }[state.source];
     const helpBtn = html("button", { type: "button", class: "link-btn", text: "Hilfe und Tastenkürzel" });
     helpBtn.addEventListener("click", openHelp);
@@ -2041,16 +2183,19 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       fr.stale
         ? pill("warn", `Garmin-Daten vom ${ddmm(fr.t)}, ${fr.age} Tage alt`)
         : html("span", { text: `Stand ${longDate(fr.t ?? M.t1)}` }),
-      state.source === "demo" ? pill("warn", "Beispieldaten") : pill("good", "Deine Daten"),
+      state.source === "demo" ? pill("warn", "Beispieldaten") : pill("good", state.source === "github" ? "Deine Daten von GitHub" : "Deine Daten"),
     );
 
     const parts = [];
     if (state.source === "demo") {
-      parts.push(html("p", {}, [
-        html("strong", { text: "Beispieldaten. " }),
-        "Alle Werte auf dieser Seite sind erfunden. Mit deinen Daten füllt sich die Seite, wenn du sie im Repo über einen lokalen Server öffnest: ",
-        html("code", { text: "python -m http.server" }), ", dann ", html("code", { text: "/dashboard/" }), ".",
-      ]));
+      const connect = html("button", { type: "button", class: "ghost-btn", text: state.githubError ? "Erneut verbinden" : "Mit GitHub verbinden" });
+      connect.addEventListener("click", openConnect);
+      parts.push(html("p", {}, state.githubError
+        ? [html("strong", { text: "Beispieldaten. " }), `Die Verbindung zu deinem Daten-Repository hat nicht geklappt: ${state.githubError}`]
+        : [html("strong", { text: "Beispieldaten. " }),
+          "Alle Werte auf dieser Seite sind erfunden. Deine Daten erscheinen, wenn du die Seite mit deinem privaten Daten-Repository verbindest. Lokal reicht ",
+          html("code", { text: "python -m http.server" }), " im Repo, dann ", html("code", { text: "/dashboard/" }), "."]));
+      parts.push(html("div", { class: "notice-actions" }, [connect]));
     }
     if (fr.stale) {
       parts.push(html("p", {}, [
@@ -2201,6 +2346,29 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       ? `Beispieldaten über ${fmt(M.days.length)} Tage, im Browser erzeugt.`
       : [fr.stale ? pill("warn", "Abruf prüfen") : null,
         html("span", { text: info.map((s) => `${s.label} ${s.found && s.last != null ? `bis ${ddmm(s.last)}` : "fehlen"}`).join(", ") + `, zusammen ${fmt(M.days.length)} Tage.` })]);
+  }
+
+  // Where the data comes from, with connect and disconnect for the GitHub data repository
+  function renderConnection() {
+    const row = $("connection");
+    const button = (label, onClick) => {
+      const b = html("button", { type: "button", class: "ghost-btn", text: label });
+      b.addEventListener("click", onClick);
+      return b;
+    };
+    if (state.source === "github") {
+      row.replaceChildren(
+        html("span", { class: "sub", text: `Verbunden mit ${state.dataRepo}. Der Token ist ${state.remembered ? "auf diesem Gerät gespeichert" : "nur für diesen Tab gespeichert"}.` }),
+        button("Verbindung trennen", () => { clearCredentials(); location.reload(); }),
+      );
+    } else if (state.source === "demo") {
+      row.replaceChildren(
+        html("span", { class: "sub", text: state.githubError ? "Die gespeicherte Verbindung funktioniert nicht mehr." : "Nicht mit einem Daten-Repository verbunden." }),
+        button(state.githubError ? "Erneut verbinden" : "Mit GitHub verbinden", openConnect),
+      );
+    } else {
+      row.replaceChildren(html("span", { class: "sub", text: "Daten aus dem Ordner data/ neben dem Dashboard." }));
+    }
   }
 
   function renderSources() {
@@ -3004,7 +3172,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
       const t = e.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-      if ($("help").open && e.key !== "?") return;
+      if ($("connect").open || ($("help").open && e.key !== "?")) return;
       if (/^[1-7]$/.test(e.key)) { e.preventDefault(); goTo(AREAS[Number(e.key) - 1]); }
       else if (e.key === "0") { e.preventDefault(); goTo("top"); }
       else if (e.key === "z" || e.key === "Z") { if (state.model) { e.preventDefault(); cycleRange(e.shiftKey ? -1 : 1); } }
@@ -3013,14 +3181,61 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     });
   }
 
+  // ------------------------------------------------------------------ connect dialog
+
+  function setConnectStatus(text, error = false) {
+    const el = $("connect-status");
+    el.textContent = text;
+    el.classList.toggle("error", error);
+  }
+  function openConnect() {
+    const cred = loadCredentials();
+    $("gh-repo").value = cred?.repo || state.dataRepo || DATA_REPO;
+    $("gh-token").value = "";
+    $("gh-remember").checked = cred ? cred.remembered : true;
+    setConnectStatus("");
+    const dlg = $("connect");
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    $("gh-token").focus();
+  }
+  function closeConnect() {
+    const dlg = $("connect");
+    if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open");
+  }
+  function setupConnect() {
+    $("connect-cancel").addEventListener("click", closeConnect);
+    $("connect").addEventListener("click", (e) => { if (e.target === $("connect")) closeConnect(); });
+    $("connect-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const repo = $("gh-repo").value.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\.git$/, "").replace(/\/+$/, "");
+      const token = $("gh-token").value.trim();
+      if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return setConnectStatus("Gib das Repository als besitzer/name an, etwa sh4rkfx/healthsync-data.", true);
+      if (!token) return setConnectStatus("Füge den Token ein.", true);
+      const submit = $("connect-submit");
+      submit.disabled = true;
+      setConnectStatus("Prüfe den Zugriff …");
+      const problem = await checkGithub({ repo, token });
+      submit.disabled = false;
+      if (problem) return setConnectStatus(problem, true);
+      if (!saveCredentials({ repo, token }, $("gh-remember").checked)) {
+        return setConnectStatus("Dieser Browser lässt die Seite nichts speichern, etwa in einem privaten Fenster. Öffne sie in einem normalen Fenster.", true);
+      }
+      setConnectStatus("Verbunden. Deine Daten werden geladen …");
+      location.reload();
+    });
+  }
+
   // ------------------------------------------------------------------ start
 
   function renderNoData() {
-    $("tiles").replaceChildren(html("div", { class: "loading" }, withCode("Die CSV-Dateien enthalten noch keine Daten. Zuerst `python -m healthsync sync` ausführen; die Seite zeigt dann alles automatisch.")));
+    $("tiles").replaceChildren(html("div", { class: "loading" }, withCode(state.source === "github"
+      ? `Das Repository ${state.dataRepo} enthält noch keine Daten. Starte dort den Workflow „Sync Garmin and Hevy“ oder lade deine lokalen CSV-Dateien hoch.`
+      : "Die CSV-Dateien enthalten noch keine Daten. Zuerst `python -m healthsync sync` ausführen; die Seite zeigt dann alles automatisch.")));
     $("status-line").replaceChildren(pill("crit", "Keine Daten"));
     for (const area of AREAS) $(`sum-${area}`).textContent = area === "daten" ? "Welche Datei fehlt oder leer ist, steht in der Tabelle unten." : "Noch keine Daten.";
     for (const host of document.querySelectorAll(".chart-host")) emptyNote(host, "Noch keine Daten.");
     renderSources();
+    renderConnection();
   }
 
   async function start() {
@@ -3031,6 +3246,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       if (filter === "robust" || filter === "all") state.insightFilter = filter;
     } catch { /* storage unavailable */ }
     setupUi();
+    setupConnect();
     renderRangeButtons();
     for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"]]) {
       $(id).addEventListener("click", () => {
@@ -3043,6 +3259,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const data = await loadData();
     state.source = data.source;
     state.insightsBroken = Boolean(data.insightsBroken);
+    state.githubError = data.githubError || null;
+    state.dataRepo = data.repo || null;
+    state.remembered = Boolean(data.remembered);
     if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
     state.model = buildModel(data.garmin, data.hevy, data.activities || []);
     state.insights = data.insights;

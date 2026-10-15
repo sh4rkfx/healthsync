@@ -1,3 +1,7 @@
+# Personal data lives in a separate private repository, cloned into data/.
+# Never commit it here: this repository can be public.
+data/
+
 # Credentials: never commit
 .garmin-tokens/
 .garminconnect/

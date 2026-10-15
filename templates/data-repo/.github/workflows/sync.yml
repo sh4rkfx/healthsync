@@ -1,3 +1,6 @@
+# Daily sync for the private data repository. It checks out the public healthsync code,
+# fetches Garmin and Hevy data into this repository and commits the changed files.
+# Runs here and not in the code repository, so logs, caches and secrets stay private.
 name: Sync Garmin and Hevy
 
 on:
@@ -17,14 +20,28 @@ concurrency:
   group: sync
   cancel-in-progress: false
 
+env:
+  # Public repository with the healthsync code; set the repository variable to use a fork
+  CODE_REPO: ${{ vars.HEALTHSYNC_CODE_REPO || 'sh4rkfx/healthsync' }}
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      GARMIN_TOKEN_DIR: .garmin-tokens # inside the workspace (git-ignored) so hashFiles() can see it
+      GARMIN_TOKEN_DIR: .garmin-tokens # inside the workspace so hashFiles() can see it
+      HEALTHSYNC_DATA_DIR: data # the checkout of this repository, see below
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the healthsync code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CODE_REPO }}
+          persist-credentials: false
+
+      - name: Check out this data repository
+        uses: actions/checkout@v4
+        with:
+          path: data
 
       - uses: actions/setup-python@v5
         with:
@@ -51,7 +68,7 @@ jobs:
           DAYS: ${{ inputs.days || '30' }}
         run: python -m healthsync sync --days "$DAYS"
 
-      # Recomputes data/insights.json from whatever data is available, even after a partial sync.
+      # Recomputes insights.json from whatever data is available, even after a partial sync.
       - name: Analyze relationships
         if: ${{ !cancelled() }}
         run: python -m healthsync analyze
@@ -66,11 +83,11 @@ jobs:
       # Runs even if one source failed, so partial data is not lost.
       - name: Commit updated data
         if: ${{ !cancelled() }}
+        working-directory: data
         run: |
-          [ -d data ] || { echo "No data directory, nothing to commit."; exit 0; }
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
+          git add --all -- '*.csv' '*.json'
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

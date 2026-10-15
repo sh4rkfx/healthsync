@@ -1,7 +1,8 @@
 # Data reference
 
-All files live in `data/` (or `HEALTHSYNC_DATA_DIR`). CSV files are UTF-8 with a header row;
-empty fields mean the value was not available.
+All files live in `data/` (or `HEALTHSYNC_DATA_DIR`). Locally that is the clone of the private
+data repository; in the data repository itself they sit at the root. CSV files are UTF-8 with a
+header row; empty fields mean the value was not available.
 
 ## garmin_daily.csv
 

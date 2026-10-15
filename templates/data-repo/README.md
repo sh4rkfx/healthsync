@@ -1,0 +1,40 @@
+# healthsync data
+
+Personal data for [healthsync](https://github.com/sh4rkfx/healthsync): Garmin Connect daily
+metrics and activities, Hevy sets and the relationship analysis.
+
+> [!IMPORTANT]
+> Keep this repository **private**. Every file here is health data, and whatever is committed
+> stays in the Git history.
+
+| File | Content |
+|---|---|
+| `garmin_daily.csv` | One row per day: weight, sleep, HRV, resting heart rate, Body Battery, steps, readiness |
+| `garmin_activities.csv` | One row per watch activity |
+| `hevy_sets.csv` | One row per set |
+| `insights.json` | Result of `python -m healthsync analyze` |
+
+The workflow in `.github/workflows/sync.yml` runs every morning. It checks out the public
+healthsync code, fetches the last 30 days and commits changed files.
+
+## Secrets
+
+Under *Settings → Secrets and variables → Actions → Repository secrets*:
+
+| Secret | Value |
+|---|---|
+| `GARMIN_TOKENS_JSON` | Output of `python -m healthsync export-tokens` |
+| `HEVY_API_KEY` | Hevy API key from hevy.com/settings?developer |
+
+## Working locally
+
+Clone this repository into the `data/` folder of the code checkout. The code repository ignores
+`data/`, so nothing in here can end up there by accident.
+
+```bash
+git clone https://github.com/sh4rkfx/healthsync.git
+git clone https://github.com/sh4rkfx/healthsync-data.git healthsync/data
+```
+
+Run `git -C data pull` before opening the dashboard locally. After a local `sync`, discard the
+changes with `git -C data restore .` before pulling, or commit them yourself.
