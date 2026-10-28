@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#e8eae4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0b0a" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="healthsync">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+</style>
 <title>healthsync</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,6 +129,11 @@ button { font: inherit; }
   display: grid; place-items: center;
 }
 .icon-btn:hover { border-color: var(--ink); }
+.icon-btn svg.ic { width: 17px; height: 17px; }
+.icon-btn:disabled { cursor: progress; }
+.icon-btn.busy svg.ic { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .icon-btn.busy svg.ic { animation: none; } .icon-btn.busy { opacity: 0.55; } }
 @media (max-width: 759px) {
   .bar .seg-host, .brand { display: none; }
 }
@@ -381,6 +401,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-aktivitaeten" viewBox="0 0 20 20"><path d="M2.5 16l5-8.5 3.4 5.2 2.1-3.2 4.5 6.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-zusammenhaenge" viewBox="0 0 20 20"><path d="M3.5 16.5L16.5 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.6"/><g fill="currentColor"><circle cx="5" cy="11.5" r="1.6"/><circle cx="8.5" cy="13.5" r="1.6"/><circle cx="10.5" cy="7.5" r="1.6"/><circle cx="15" cy="9.5" r="1.6"/></g></symbol>
     <symbol id="i-daten" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="13" rx="2"/><path d="M3 8h14M3 12.2h14M8 3.5v13"/></g></symbol>
+    <symbol id="i-refresh" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10.5a6 6 0 1 1-1.9-4.9"/><path d="M15.5 3v3.5H12"/></g></symbol>
+    <symbol id="i-install" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5v9M6.5 9l3.5 3.5L13.5 9"/><path d="M4 14v1.5A1.5 1.5 0 0 0 5.5 17h9a1.5 1.5 0 0 0 1.5-1.5V14"/></g></symbol>
     <symbol id="i-chevron" viewBox="0 0 20 20"><path d="M5.5 8l4.5 4.5L14.5 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
@@ -398,6 +420,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <a href="#daten" title="Taste 7"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg>Daten</a>
     </nav>
     <div class="seg-host"><div class="seg small" role="group" aria-label="Zeitraum" data-range></div></div>
+    <button class="icon-btn" id="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
+    <button class="icon-btn" id="refresh" type="button" aria-label="Daten neu laden" title="Daten neu laden (Taste R)"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></button>
     <button class="icon-btn" id="help-open" type="button" aria-haspopup="dialog" aria-label="Hilfe und Tastenkürzel" title="Hilfe und Tastenkürzel (Taste ?)">?</button>
   </div>
 </div>
@@ -726,9 +750,21 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           <tr><td><kbd>Z</kbd></td><td>Nächster Zeitraum; mit <kbd>Umschalt</kbd> der vorherige</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Im ausgewählten Diagramm einen Tag weiter; mit <kbd>Umschalt</kbd> eine Woche</td></tr>
           <tr><td><kbd>Esc</kbd></td><td>Tooltip oder diese Hilfe schließen</td></tr>
+          <tr><td><kbd>R</kbd></td><td>Daten neu laden</td></tr>
           <tr><td><kbd>?</kbd></td><td>Diese Hilfe öffnen</td></tr>
         </tbody>
       </table>
+    </div>
+    <div id="help-install">
+      <h3>Als App installieren</h3>
+      <table>
+        <tbody>
+          <tr><td>iPhone, iPad</td><td>In Safari Teilen → „Zum Home-Bildschirm“. Die App hat dort eigenen Speicher: verbinde sie nach dem Installieren einmal mit GitHub.</td></tr>
+          <tr><td>Android</td><td>In Chrome Menü ⋮ → „App installieren“ oder das Symbol <svg class="ic" aria-hidden="true" style="vertical-align:-3px"><use href="#i-install"/></svg> oben in der Leiste.</td></tr>
+          <tr><td>Mac, PC</td><td>In Chrome oder Edge das Installieren-Symbol in der Adressleiste oder das Symbol oben; in Safari auf dem Mac Ablage → „Zum Dock hinzufügen“.</td></tr>
+        </tbody>
+      </table>
+      <p class="sub">Installieren geht nur über die GitHub Page oder einen lokalen Server, nicht in einer eingebetteten Vorschau. Die App lädt beim Öffnen und beim Zurückkehren nach mehr als 15 Minuten neu; dazwischen über <svg class="ic" aria-hidden="true" style="vertical-align:-3px"><use href="#i-refresh"/></svg> oder die Taste R. Ohne Verbindung zeigt sie den zuletzt geladenen Stand, wenn der Token auf dem Gerät gespeichert ist.</p>
     </div>
     <div>
       <h3>Bereiche</h3>
@@ -1018,7 +1054,13 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     let githubError = null;
     if (cred) {
       const data = await loadFromGithub(cred);
-      if (!data.error) return { ...data, repo: cred.repo, remembered: cred.remembered };
+      if (!data.error) {
+        if (cred.remembered) await writeSnapshot(cred.repo, data.texts); else await deleteSnapshot();
+        return { ...data, repo: cred.repo, remembered: cred.remembered };
+      }
+      // Offline: the last loaded data, if this device keeps it
+      const snap = data.network && cred.remembered ? await readSnapshot(cred.repo) : null;
+      if (snap) return { ...fromTexts(snap.texts, "github"), repo: cred.repo, remembered: true, offlineSince: snap.savedAt };
       githubError = data.error;
     }
     // 4. Generated example data, with the analysis result the Python script produced for it
@@ -1075,22 +1117,23 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     });
   }
   // Null when the token can read the repository, otherwise what went wrong and how to fix it
-  async function checkGithub(cred) {
+  async function probeGithub(cred) {
     let res;
     try {
       res = await githubRequest(cred, "");
     } catch {
-      return "GitHub ist nicht erreichbar. Besteht eine Internetverbindung? In einer eingebetteten Vorschau blockiert der Browser solche Anfragen.";
+      return { network: true, message: "GitHub ist nicht erreichbar. Besteht eine Internetverbindung? In einer eingebetteten Vorschau blockiert der Browser solche Anfragen." };
     }
     if (res.ok) return null;
-    if (res.status === 401) return "GitHub lehnt den Token ab: falsch kopiert, abgelaufen oder widerrufen. Erstelle einen neuen und verbinde erneut.";
-    if (res.status === 404) return `${cred.repo} wurde nicht gefunden. Stimmt der Name, und hat der Token Zugriff auf genau dieses Repository?`;
-    if (res.status === 403) return "GitHub verweigert den Zugriff. Hat der Token die Berechtigung „Contents: Read-only“? Sonst ist das stündliche Anfragelimit erreicht.";
-    return `GitHub antwortet mit Fehler ${res.status}. Versuche es in ein paar Minuten erneut.`;
+    if (res.status === 401) return { message: "GitHub lehnt den Token ab: falsch kopiert, abgelaufen oder widerrufen. Erstelle einen neuen und verbinde erneut." };
+    if (res.status === 404) return { message: `${cred.repo} wurde nicht gefunden. Stimmt der Name, und hat der Token Zugriff auf genau dieses Repository?` };
+    if (res.status === 403) return { message: "GitHub verweigert den Zugriff. Hat der Token die Berechtigung „Contents: Read-only“? Sonst ist das stündliche Anfragelimit erreicht." };
+    return { network: res.status >= 500, message: `GitHub antwortet mit Fehler ${res.status}. Versuche es in ein paar Minuten erneut.` };
   }
+  const checkGithub = async (cred) => (await probeGithub(cred))?.message ?? null;
   async function loadFromGithub(cred) {
-    const problem = await checkGithub(cred);
-    if (problem) return { error: problem };
+    const problem = await probeGithub(cred);
+    if (problem) return { error: problem.message, network: Boolean(problem.network) };
     const get = async (file) => {
       try {
         const res = await githubRequest(cred, `/contents/${file}`, true);
@@ -1102,7 +1145,33 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const [garmin, activities, hevy, insights] = await Promise.all(
       [GITHUB_FILES.garmin, GITHUB_FILES.activities, GITHUB_FILES.hevy, GITHUB_FILES.insights].map(get),
     );
-    return fromTexts({ garmin, activities, hevy, insights }, "github");
+    const texts = { garmin, activities, hevy, insights };
+    return { ...fromTexts(texts, "github"), texts };
+  }
+
+  // ---- offline snapshot
+
+  // Raw files of the last GitHub load, kept in Cache Storage only while the token is remembered
+  // on this device, so the installed app opens with the last known data when it is offline.
+  const SNAPSHOT_CACHE = "healthsync-data";
+  const SNAPSHOT_KEY = "snapshot.json";
+  async function writeSnapshot(repo, texts) {
+    try {
+      const cache = await caches.open(SNAPSHOT_CACHE);
+      await cache.put(SNAPSHOT_KEY, new Response(JSON.stringify({ repo, savedAt: Date.now(), texts }), { headers: { "Content-Type": "application/json" } }));
+    } catch { /* Cache Storage unavailable */ }
+  }
+  async function readSnapshot(repo) {
+    try {
+      const res = await (await caches.open(SNAPSHOT_CACHE)).match(SNAPSHOT_KEY);
+      const snap = res ? await res.json() : null;
+      return snap?.repo === repo ? snap : null;
+    } catch {
+      return null;
+    }
+  }
+  async function deleteSnapshot() {
+    try { await caches.delete(SNAPSHOT_CACHE); } catch { /* Cache Storage unavailable */ }
   }
 
   // One entry per data file for the "Datenquellen" table
@@ -2005,6 +2074,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   const dmy = (t) => fmtDate(t, { day: "2-digit", month: "2-digit", year: "numeric" });
+  // Time of day on this device, e.g. when the data was loaded
+  const clockOf = (ms) => new Date(ms).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
+  const dayOf = (ms) => new Date(ms).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
   const AREA_LABELS = {
     koerper: "Körper", erholung: "Erholung", schlaf: "Schlaf", kraft: "Kraft",
     aktivitaeten: "Aktivitäten", zusammenhaenge: "Zusammenhänge", daten: "Daten",
@@ -2177,16 +2249,25 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const h = lastWith("hrv7"), r = lastWith("rhr7");
     const st = recoveryStatus(h?.hrv7, h?.hrvLow, r?.rhr7, r?.rhr60);
     const fr = freshness(M);
-    $("status-line").replaceChildren(
-      ...(st ? [pill(st.level, st.long)] : []),
+    $("status-line").replaceChildren(...[
+      st ? pill(st.level, st.long) : null,
       html("span", { text: `Zeitraum ${ddmm(x0)} bis ${dmy(x1)}, ${fmt(Math.round((x1 - x0) / DAY) + 1)} Tage` }),
       fr.stale
         ? pill("warn", `Garmin-Daten vom ${ddmm(fr.t)}, ${fr.age} Tage alt`)
         : html("span", { text: `Stand ${longDate(fr.t ?? M.t1)}` }),
-      state.source === "demo" ? pill("warn", "Beispieldaten") : pill("good", state.source === "github" ? "Deine Daten von GitHub" : "Deine Daten"),
-    );
+      state.source === "demo" ? pill("warn", "Beispieldaten")
+        : state.offlineSince ? pill("warn", `Offline, Stand vom ${dayOf(state.offlineSince).slice(0, 6)} ${clockOf(state.offlineSince)}`)
+          : pill("good", state.source === "github" ? "Deine Daten von GitHub" : "Deine Daten"),
+      state.loadedAt && !state.offlineSince ? html("span", { text: `geladen ${clockOf(state.loadedAt)}` }) : null,
+    ].filter(Boolean));
 
     const parts = [];
+    if (state.offlineSince) {
+      parts.push(html("p", {}, [
+        html("strong", { text: "Offline. " }),
+        `GitHub ist gerade nicht erreichbar. Du siehst den Stand, der am ${dayOf(state.offlineSince)} um ${clockOf(state.offlineSince)} geladen wurde. Sobald die Verbindung wieder da ist, lädt die Seite neu.`,
+      ]));
+    }
     if (state.source === "demo") {
       const connect = html("button", { type: "button", class: "ghost-btn", text: state.githubError ? "Erneut verbinden" : "Mit GitHub verbinden" });
       connect.addEventListener("click", openConnect);
@@ -2356,10 +2437,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       b.addEventListener("click", onClick);
       return b;
     };
-    if (state.source === "github") {
+    if (state.source === "github" && state.offlineSince) {
+      row.replaceChildren(
+        html("span", { class: "sub", text: `Keine Verbindung zu GitHub. Angezeigt wird der Stand, der am ${dayOf(state.offlineSince)} um ${clockOf(state.offlineSince)} geladen wurde.` }),
+        button("Erneut versuchen", () => loadAndRender()),
+      );
+    } else if (state.source === "github") {
       row.replaceChildren(
         html("span", { class: "sub", text: `Verbunden mit ${state.dataRepo}. Der Token ist ${state.remembered ? "auf diesem Gerät gespeichert" : "nur für diesen Tab gespeichert"}.` }),
-        button("Verbindung trennen", () => { clearCredentials(); location.reload(); }),
+        button("Verbindung trennen", async () => { clearCredentials(); await deleteSnapshot(); location.reload(); }),
       );
     } else if (state.source === "demo") {
       row.replaceChildren(
@@ -3177,6 +3263,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       else if (e.key === "0") { e.preventDefault(); goTo("top"); }
       else if (e.key === "z" || e.key === "Z") { if (state.model) { e.preventDefault(); cycleRange(e.shiftKey ? -1 : 1); } }
       else if (e.key === "?") { e.preventDefault(); openHelp(); }
+      else if (e.key === "r" || e.key === "R") { e.preventDefault(); loadAndRender(); }
       else if (e.key === "Escape") hideTip();
     });
   }
@@ -3238,6 +3325,77 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderConnection();
   }
 
+  // Loads the data and draws the page. Runs at start, from the refresh button, when the app
+  // returns to the foreground after a while and when the connection comes back.
+  let loading = null;
+  function loadAndRender() {
+    if (!loading) {
+      loading = (async () => {
+        $("refresh").classList.add("busy");
+        $("refresh").disabled = true;
+        try {
+          const data = await loadData();
+          Object.assign(state, {
+            source: data.source, insightsBroken: Boolean(data.insightsBroken), githubError: data.githubError || null,
+            dataRepo: data.repo || null, remembered: Boolean(data.remembered), offlineSince: data.offlineSince || null,
+            insights: data.insights, loadedAt: Date.now(),
+          });
+          if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
+          state.model = buildModel(data.garmin, data.hevy, data.activities || []);
+          state.sourceInfo = describeSources(data);
+          if (!state.model) { renderNoData(); return; }
+          if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything
+          const lifts = loadLiftSelection(state.model);
+          state.liftNames = lifts.names;
+          state.liftCustom = lifts.custom;
+          state.model.lifts = lifts.names.map(state.model.computeLift);
+          buildLiftPicker();
+          renderRangeButtons();
+          render();
+        } finally {
+          $("refresh").classList.remove("busy");
+          $("refresh").disabled = false;
+          loading = null;
+        }
+      })();
+    }
+    return loading;
+  }
+
+  // Installable app: service worker and install button, only where the page links a manifest
+  // (GitHub Pages or a local server), never inside an embedded preview.
+  const REFRESH_AFTER_MS = 15 * 60 * 1000;
+  function setupApp() {
+    $("refresh").addEventListener("click", () => loadAndRender());
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && Date.now() - (state.loadedAt || 0) > REFRESH_AFTER_MS) loadAndRender();
+    });
+    window.addEventListener("online", () => { if (state.offlineSince) loadAndRender(); });
+
+    if (!document.querySelector('link[rel="manifest"]')) {
+      $("help-install").hidden = true;
+      return;
+    }
+    if ("serviceWorker" in navigator && window.isSecureContext) {
+      window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => { /* not available here */ }); });
+    }
+    let installPrompt = null;
+    const standalone = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      installPrompt = e;
+      $("install").hidden = standalone();
+    });
+    $("install").addEventListener("click", async () => {
+      if (!installPrompt) return openHelp();
+      installPrompt.prompt();
+      try { await installPrompt.userChoice; } catch { /* dismissed */ }
+      installPrompt = null;
+      $("install").hidden = true;
+    });
+    window.addEventListener("appinstalled", () => { $("install").hidden = true; });
+  }
+
   async function start() {
     try {
       const saved = localStorage.getItem("healthsync.range");
@@ -3247,6 +3405,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     } catch { /* storage unavailable */ }
     setupUi();
     setupConnect();
+    setupLiftPicker();
+    setupApp();
     renderRangeButtons();
     for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"]]) {
       $(id).addEventListener("click", () => {
@@ -3255,27 +3415,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         else renderRecentActivities(state.days.flatMap((d) => d.activities));
       });
     }
-
-    const data = await loadData();
-    state.source = data.source;
-    state.insightsBroken = Boolean(data.insightsBroken);
-    state.githubError = data.githubError || null;
-    state.dataRepo = data.repo || null;
-    state.remembered = Boolean(data.remembered);
-    if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
-    state.model = buildModel(data.garmin, data.hevy, data.activities || []);
-    state.insights = data.insights;
-    state.sourceInfo = describeSources(data);
-    if (!state.model) { renderNoData(); return; }
-    if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything
-    const lifts = loadLiftSelection(state.model);
-    state.liftNames = lifts.names;
-    state.liftCustom = lifts.custom;
-    state.model.lifts = lifts.names.map(state.model.computeLift);
-    setupLiftPicker();
-    buildLiftPicker();
-    renderRangeButtons();
-    render();
+    await loadAndRender();
     window.addEventListener("scroll", hideTip, { passive: true });
 
     // Deep link such as #kraft: open that area and scroll to it once the content has its final height

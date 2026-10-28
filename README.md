@@ -130,6 +130,33 @@ one account share the origin `<you>.github.io`, so scripts on your other Pages s
 keep that in mind if you publish other sites with third-party scripts. *Daten → Datenquellen*
 shows the connection and disconnects it.
 
+### Install as an app
+
+The dashboard is a Progressive Web App. On GitHub Pages (or `localhost`) it can be installed:
+
+| Device | How |
+|---|---|
+| iPhone, iPad | Safari → Share → *Add to Home Screen*. The installed app has its own storage, so connect it to GitHub once more after installing |
+| Android | Chrome → menu → *Install app*, or the install button in the dashboard's top bar |
+| Mac, PC | Chrome or Edge: install icon in the address bar or the dashboard's install button; Safari on the Mac: *File → Add to Dock* |
+
+The service worker in `dashboard/sw.js` loads the app files from the network first and keeps a
+copy for offline starts; data requests pass through it untouched. When the token is remembered,
+the page keeps the files of the last GitHub load in the browser's Cache Storage and shows them,
+marked as offline, when GitHub cannot be reached. Disconnecting deletes that copy. After a change
+to the app files, raise `VERSION` in `sw.js` so old caches are removed.
+
+### Keeping the data current
+
+| Step | When |
+|---|---|
+| The workflow in the data repository fetches the last 30 days and commits | Every morning at 06:30 UTC (08:30 in summer, 07:30 in winter in Central Europe), or on demand with *Run workflow* |
+| The dashboard on GitHub Pages reads the latest commit through the API | On every start, with the refresh button (key `R`), and automatically when the app comes back to the foreground after more than 15 minutes |
+| A local checkout | `git -C data pull` |
+
+The status line shows when the page loaded its data and warns when the newest Garmin day is two or
+more days old.
+
 ### Areas
 
 A bar at the top links to every area and holds the time range. Each area opens with one sentence
@@ -238,6 +265,7 @@ healthsync/
   csvstore.py     atomic CSV writes
 dashboard/
   index.html      static dashboard, sample data built in
+  manifest.webmanifest, sw.js, icons/   installable app
 docs/
   analysis.md     analysis method and how to read results
   data-reference.md   every column and the insights.json format
