@@ -11,6 +11,8 @@ from zoneinfo import ZoneInfo
 DATA_DIR = Path(os.environ.get("HEALTHSYNC_DATA_DIR", "data"))
 GARMIN_CSV = DATA_DIR / "garmin_daily.csv"
 ACTIVITIES_CSV = DATA_DIR / "garmin_activities.csv"
+CLIMBS_CSV = DATA_DIR / "garmin_climbs.csv"  # one row per logged boulder
+CLIMB_SESSIONS_CSV = DATA_DIR / "garmin_climb_sessions.csv"  # one row per bouldering session
 HEVY_CSV = DATA_DIR / "hevy_sets.csv"
 NUTRITION_CSV = DATA_DIR / "nutrition_daily.csv"
 INSIGHTS_JSON = DATA_DIR / "insights.json"
@@ -26,6 +28,7 @@ TOKEN_JSON = os.environ.get("GARMIN_TOKENS_JSON")  # seed tokens for CI, from `e
 # Garmin fetching
 GARMIN_REQUEST_DELAY_S = 0.6  # pause between days to stay well below rate limits
 GARMIN_REFRESH_DAYS = 3  # always re-fetch today and the previous N days (late syncs)
+CLIMB_REFRESH_DAYS = 7  # bouldering sessions this recent are fetched again (grades can be edited later)
 
 # Hevy fetching
 HEVY_API_URL = "https://api.hevyapp.com/v1/workouts"

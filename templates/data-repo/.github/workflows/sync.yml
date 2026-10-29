@@ -12,6 +12,14 @@ on:
         description: Days to fetch (use 365 for the initial backfill)
         required: false
         default: "30"
+      source:
+        description: "Source to fetch: all, garmin, activities, climbs, hevy or yazio (climbs with many days loads older bouldering sessions)"
+        required: false
+        default: "all"
+      garmin_dump_date:
+        description: "Optional, YYYY-MM-DD: attach the raw Garmin responses of that day as a private artifact"
+        required: false
+        default: ""
       yazio_dump_date:
         description: "Optional, YYYY-MM-DD: attach the raw YAZIO responses of that day as a private artifact"
         required: false
@@ -87,12 +95,30 @@ jobs:
           YAZIO_PASSWORD: ${{ secrets.YAZIO_PASSWORD }}
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
           DAYS: ${{ inputs.days || '30' }}
-        run: python -m healthsync sync --days "$DAYS"
+          SOURCE: ${{ inputs.source || 'all' }}
+        run: python -m healthsync sync --days "$DAYS" --source "$SOURCE"
 
       # Recomputes insights.json from whatever data is available, even after a partial sync.
       - name: Analyze relationships
         if: ${{ !cancelled() }}
         run: python -m healthsync analyze
+
+      # Only to check the field mapping once. The artifact contains health data and expires after a day.
+      - name: Dump raw Garmin data
+        if: ${{ !cancelled() && inputs.garmin_dump_date != '' }}
+        env:
+          GARMIN_TOKENS_JSON: ${{ secrets.GARMIN_TOKENS_JSON }}
+          DUMP_DATE: ${{ inputs.garmin_dump_date }}
+        run: python -m healthsync dump-raw --date "$DUMP_DATE"
+
+      - name: Upload raw Garmin data
+        if: ${{ !cancelled() && inputs.garmin_dump_date != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: garmin-raw
+          path: debug/garmin_raw_*.json
+          retention-days: 1
+          if-no-files-found: ignore
 
       - name: Save Garmin tokens
         if: ${{ !cancelled() && hashFiles('.garmin-tokens/garmin_tokens.json') != '' }}
@@ -116,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: yazio-raw
-          path: debug/
+          path: debug/yazio_raw_*.json
           retention-days: 1
           if-no-files-found: ignore
 

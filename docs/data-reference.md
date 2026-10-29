@@ -50,8 +50,44 @@ One row per activity recorded on the watch.
 | `aerobic_te`, `anaerobic_te` | 0–5 | Training Effect |
 | `location` | text | If Garmin provides it |
 
-Sport-specific details such as climbing routes are not part of the activity list. `dump-raw`
-saves the full details of a day's activities if you want to add such fields.
+Sport-specific details are not part of the activity list. For bouldering they are fetched
+separately, see the next two files. `dump-raw` saves the full details of a day's activities.
+
+## garmin_climbs.csv
+
+One row per boulder logged on the watch in bouldering mode: grade chosen before the boulder,
+LAP after it, then *Completed* or *Attempted*. Fetched per session from the activity's typed
+splits (`CLIMB_ACTIVE`), so the `activities` source has to run first. Sessions of the last
+`CLIMB_REFRESH_DAYS` (7) days are fetched again on every sync, because grades can still be
+edited in Garmin Connect.
+
+| Column | Unit | Notes |
+|---|---|---|
+| `date`, `activity_id` | | Session the boulder belongs to |
+| `climb_no` | | 1, 2, 3 … in the order climbed |
+| `start_time_local` | | When the route timer started |
+| `grade` | text | As shown on the watch, e.g. `6B+` or `V4` |
+| `grade_scale` | text | Garmin's name of the grading system, e.g. `VERMIN` for the V scale |
+| `grade_order` | | Garmin's sort order within the scale; higher is harder |
+| `status` | text | `completed` (top) or `attempted` |
+| `duration_s` | s | Route timer |
+| `rest_after_s` | s | Rest until the next boulder; empty after the last one |
+| `avg_hr`, `max_hr` | bpm | During the boulder |
+
+Garmin does not know which boulder in the gym an entry is. Three falls and a top on the same
+boulder are four rows, and a repeat of a boulder from last week is a new row.
+
+## garmin_climb_sessions.csv
+
+One row per bouldering session, also for sessions without logged boulders.
+
+| Column | Unit | Notes |
+|---|---|---|
+| `date`, `activity_id`, `start_time_local` | | As in garmin_activities.csv |
+| `climbs`, `completed`, `attempted` | count | Logged boulders, tops, attempts without top |
+| `wall_s`, `rest_s` | s | Sum of route timers and of rests between boulders |
+| `effort` | 1–10 | Perceived effort from the watch's self evaluation after saving; empty if skipped |
+| `feel` | 0–100 | Feel from the same evaluation: 0 very weak, 25 weak, 50 normal, 75 strong, 100 very strong |
 
 ## hevy_sets.csv
 

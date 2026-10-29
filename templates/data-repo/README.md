@@ -11,12 +11,19 @@ metrics and activities, Hevy sets and the relationship analysis.
 |---|---|
 | `garmin_daily.csv` | One row per day: weight, sleep, HRV, resting heart rate, Body Battery, steps, readiness |
 | `garmin_activities.csv` | One row per watch activity |
+| `garmin_climbs.csv` | One row per boulder logged on the watch: grade, completed or attempted, route timer, heart rate |
+| `garmin_climb_sessions.csv` | One row per bouldering session: boulders, tops, time on the wall, self evaluation |
 | `hevy_sets.csv` | One row per set |
 | `nutrition_daily.csv` | Optional, from YAZIO: calories, protein, carbohydrates, fat and water per logged day |
 | `insights.json` | Result of `python -m healthsync analyze` |
 
 The workflow in `.github/workflows/sync.yml` runs every morning. It checks out the public
 healthsync code, fetches the last 30 days and commits changed files.
+
+*Run workflow* takes optional inputs: `days`, `source` (for example `climbs` with `days` 2000 to
+load older bouldering sessions without touching the other sources) and a date for a raw dump of
+the Garmin or YAZIO responses of one day. The dump is attached to the run as a private artifact
+and expires after a day.
 
 ## Secrets
 

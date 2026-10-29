@@ -329,6 +329,11 @@ def dump_raw(day: date) -> Path:
         str(a["activityId"]): safe_call(client.get_activity, str(a["activityId"]))
         for a in activities if a.get("activityId")
     }
+    # One split per boulder for bouldering sessions, see climbs.py
+    raw["typed_splits"] = {
+        str(a["activityId"]): safe_call(client.get_activity_typed_splits, str(a["activityId"]))
+        for a in activities if a.get("activityId") and (a.get("activityType") or {}).get("typeKey") == "bouldering"
+    }
     save_tokens(client)
 
     config.DEBUG_DIR.mkdir(parents=True, exist_ok=True)

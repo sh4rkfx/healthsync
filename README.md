@@ -16,6 +16,7 @@ locally or once a day on GitHub Actions.
 |---|---|
 | `garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
 | `garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
+| `garmin_climbs.csv`, `garmin_climb_sessions.csv` | Bouldering from the watch: one row per logged boulder with grade, completed or attempted, route timer and heart rate; one row per session with tops, time on the wall and the self evaluation |
 | `hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
 | `nutrition_daily.csv` | Optional, from YAZIO: one row per logged day with calories, protein, carbohydrates, fat and water |
 | `insights.json` | Relationships between training, sleep and recovery that survive a statistical check, e.g. "1 hour later to bed: -2.0 ms HRV that night" |
@@ -249,7 +250,7 @@ and periods of illness are the two most common sources of misleading results. Se
 
 | Command | Purpose |
 |---|---|
-| `sync [--days N] [--source all\|garmin\|activities\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
+| `sync [--days N] [--source all\|garmin\|activities\|climbs\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
 | `analyze [--days N] [--top N]` | Test relationships and write `data/insights.json`. Prints the strongest findings |
 | `login` | Log in to Garmin with email and password and store tokens |
 | `export-tokens` | Print the Garmin tokens as JSON for the GitHub secret |
@@ -305,6 +306,7 @@ healthsync/
   config.py       paths, time zone, settings
   garmin.py       Garmin login, daily metrics, raw dumps
   activities.py   Garmin activities
+  climbs.py       boulders and self evaluation of bouldering sessions
   hevy.py         Hevy workouts and sets
   yazio.py        YAZIO daily food totals (unofficial app API)
   analyze.py      relationship analysis, insights.json
