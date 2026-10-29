@@ -164,7 +164,7 @@ button { font: inherit; }
   .bar .seg-host, .brand, .bar .icon-btn { display: none !important; }
   .bar-in { padding-block: 3px; padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
   .nav { justify-content: space-between; gap: 0; padding-right: 0; overflow: visible; -webkit-mask-image: none; mask-image: none; }
-  .nav a, .nav a.nav-top { display: inline-grid; place-items: center; width: 38px; height: 44px; padding: 0; border-radius: 10px; }
+  .nav a, .nav a.nav-top { display: inline-grid; place-items: center; width: 36px; height: 44px; padding: 0; border-radius: 10px; }
   .nav a svg.ic { width: 20px; height: 20px; }
   .nav a .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
@@ -396,6 +396,40 @@ ul.rows li:first-child { border-top: 0; }
 .pyramid .q { color: var(--ink); }
 .pyramid li.head { font-size: 11px; color: var(--muted); }
 .pyramid li.empty-row { display: block; }
+.muscles { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.muscles li { display: grid; grid-template-columns: 104px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 12.5px; }
+.muscles .m { color: var(--ink-2); }
+.muscles .bars { position: relative; display: flex; height: 13px; min-width: 0; }
+.muscles .bars i { display: block; height: 100%; background: var(--s1); }
+.muscles .bars i.p { border-radius: 2px 0 0 2px; }
+.muscles .bars i.s { opacity: 0.4; border-radius: 0 2px 2px 0; }
+.muscles .bars b { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--ink-2); }
+.muscles .n { text-align: right; font-variant-numeric: tabular-nums; }
+.tstatus { display: grid; gap: 12px; }
+.ts-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.ts-grid > div { padding: 8px 10px; border-radius: 9px; background: var(--area); display: grid; gap: 1px; min-width: 0; }
+.ts-grid .l { font-size: 11.5px; color: var(--ink-2); }
+.ts-grid .v { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.ts-grid .s { font-size: 11.5px; color: var(--ink-2); }
+.ts-block h4 { margin: 0 0 6px; font-size: 12.5px; font-weight: 600; }
+.ts-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ts-bars li { display: grid; grid-template-columns: 150px minmax(0, 1fr) 120px; gap: 8px; align-items: center; font-size: 12.5px; }
+.ts-bars .track { position: relative; height: 12px; border-radius: 3px; background: var(--grid); }
+.ts-bars .track .target { position: absolute; top: 0; bottom: 0; background: var(--band); border-left: 1px solid var(--s1); border-right: 1px solid var(--s1); }
+.ts-bars .track .val { position: absolute; top: 3px; bottom: 3px; left: 0; border-radius: 2px; background: var(--s1); }
+.ts-bars .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.ts-age { list-style: none; margin: 0; padding: 0; }
+.ts-age li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-top: 1px solid var(--grid); font-size: 12.5px; }
+.ts-age li:first-child { border-top: 0; }
+.ts-age .s { color: var(--ink-2); text-align: right; }
+@media (max-width: 599px) {
+  .ts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ts-bars li { grid-template-columns: minmax(0, 1fr) auto; gap: 3px 8px; }
+  .ts-bars .track { grid-column: 1 / -1; grid-row: 2; }
+  .ts-age li { flex-direction: column; gap: 1px; }
+  .ts-age .s { text-align: left; }
+  .muscles li { grid-template-columns: 92px minmax(0, 1fr) 36px; }
+}
 .pyramid li.head span { color: var(--muted); }
 .bsessions { list-style: none; margin: 0; padding: 0; }
 .bsessions li { display: grid; gap: 6px; padding: 10px 0; border-top: 1px solid var(--grid); }
@@ -562,6 +596,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-koerper" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3.5"/><path d="M6.5 9a3.5 3.5 0 0 1 7 0"/><path d="M10 9l1.7-2.2"/></g></symbol>
     <symbol id="i-erholung" viewBox="0 0 20 20"><path d="M2.5 10.5h3.2l1.8-4.5 3 9 2-4.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-schlaf" viewBox="0 0 20 20"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-fitness" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 16a8.5 8.5 0 1 1 17 0"/><path d="M12 16l4.5-5"/><path d="M3.5 16h2M18.5 16h2M12 7.5v1.8"/></g></symbol>
     <symbol id="i-sport" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="5"/><path d="M8.5 3l2.6 7.2M15.5 3l-2.6 7.2M12 13.2v3.6"/></g></symbol>
     <symbol id="i-hold" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5C4.5 10 8.5 6 13.5 6c3.5 0 6 2.2 6 5 0 4.5-4.5 8-10 8-3.2 0-5-1.4-5-3.5z"/><circle cx="13" cy="12" r="1.6"/></g></symbol>
     <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 12V6.5a1.5 1.5 0 0 1 3 0V11V5a1.5 1.5 0 0 1 3 0v6V6.5a1.5 1.5 0 0 1 3 0V14c0 4-2.6 7-6.2 7-2.4 0-4-1.1-5.2-3l-2.2-3.6a1.5 1.5 0 0 1 2.5-1.7L8 14z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -612,9 +647,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <a href="#erholung" class="tint-violet" data-tint title="Erholung (Taste 3)"><svg class="ic" aria-hidden="true"><use href="#i-erholung"/></svg><span class="lbl">Erholung</span></a>
       <a href="#schlaf" class="tint-violet" data-tint title="Schlaf (Taste 4)"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg><span class="lbl">Schlaf</span></a>
       <a href="#sport" class="tint-blue" data-tint title="Sport (Taste 5)"><svg class="ic" aria-hidden="true"><use href="#i-sport"/></svg><span class="lbl">Sport</span></a>
-      <a href="#aktivitaeten" class="tint-blue" data-tint title="Aktivitäten (Taste 6)"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg><span class="lbl">Aktivitäten</span></a>
-      <a href="#zusammenhaenge" class="tint-gray" data-tint title="Zusammenhänge (Taste 7)"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg><span class="lbl">Zusammenhänge</span></a>
-      <a href="#daten" class="tint-gray" data-tint title="Daten (Taste 8)"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg><span class="lbl">Daten</span></a>
+      <a href="#fitness" class="tint-blue" data-tint title="Fitness (Taste 6)"><svg class="ic" aria-hidden="true"><use href="#i-fitness"/></svg><span class="lbl">Fitness</span></a>
+      <a href="#aktivitaeten" class="tint-blue" data-tint title="Aktivitäten (Taste 7)"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg><span class="lbl">Aktivitäten</span></a>
+      <a href="#zusammenhaenge" class="tint-gray" data-tint title="Zusammenhänge (Taste 8)"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg><span class="lbl">Zusammenhänge</span></a>
+      <a href="#daten" class="tint-gray" data-tint title="Daten (Taste 9)"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg><span class="lbl">Daten</span></a>
     </nav>
     <div class="seg-host"><div class="seg small" role="group" aria-label="Zeitraum" data-range></div></div>
     <button class="icon-btn" id="install" data-action="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
@@ -704,6 +740,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Muskelmasse</span><span><i class="key-line" style="background:var(--s2)"></i>Fettmasse</span></div>
         <div class="chart-host" id="c-comp"></div>
       </div>
+      <div class="card span2" data-tab="Tempo" data-icon="trend">
+        <div class="card-head"><h3>Abnahmetempo</h3><p class="sub" id="rate-sub"></p></div>
+        <div class="info" hidden>
+          <p>Steigung einer Ausgleichsgeraden durch alle Wiegungen der jeweils letzten 28 Tage, in Prozent des Körpergewichts pro Woche. Die Gerade glättet Wasserschwankungen besser als zwei Einzelwerte. Bei etwa 0,5 bis 1 % pro Woche blieb in Studien mit Krafttraining die fettfreie Masse am besten erhalten (Helms und Kollegen 2014); schneller kostet eher Muskeln, langsamer dauert entsprechend länger.</p>
+          <p class="source">Quelle: garmin_daily.csv · weight_kg · mindestens 6 Wiegungen über mindestens 14 Tage</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>% pro Woche, 28 Tage</span><span><i class="key-dash"></i>−0,5 und −1 %</span></div>
+        <div class="chart-host" id="c-rate"></div>
+      </div>
     </div>
   </section>
 
@@ -733,6 +778,16 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tag</span><span><i class="key-dot" style="background:var(--other);opacity:1"></i>unvollständig</span><span><i class="key-dash"></i>Verbrauch (Garmin)</span></div>
         <div class="chart-host" id="c-kcal"></div>
+      </div>
+      <div class="card span2" data-tab="Verbrauch" data-icon="balance">
+        <div class="card-head"><h3>Tatsächlicher Verbrauch</h3><p class="sub" id="tdee-sub"></p></div>
+        <div class="info" hidden>
+          <p>Aus deinen eigenen Messungen berechnet: mittlere Aufnahme der vollständig geloggten Tage der letzten 28 Tage minus die Gewichtsänderung in dieser Zeit, umgerechnet mit 7.700 kcal pro kg. Nimmst du bei 2.000 kcal ein halbes Kilo pro Woche ab, liegt dein Verbrauch bei etwa 2.550 kcal. Das ist das Prinzip, mit dem auch Apps wie MacroFactor arbeiten.</p>
+          <p>Der Wert ist genauer als die Schätzung der Uhr, solange du vollständig loggst. Was beim Loggen fehlt, macht ihn zu niedrig. Wasser verschiebt das Gewicht kurzfristig; über 28 Tage gleicht sich das weitgehend aus. Gestrichelt zum Vergleich der Verbrauch laut Garmin im selben Zeitraum.</p>
+          <p class="source">Quelle: nutrition_daily.csv · calories_kcal · garmin_daily.csv · weight_kg, calories_total · mindestens 14 vollständige Tage und 6 Wiegungen in 28 Tagen</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>aus Aufnahme und Gewicht</span><span><i class="key-dash"></i>Garmin, Mittel 28 Tage</span></div>
+        <div class="chart-host" id="c-tdee"></div>
       </div>
       <div class="card" data-tab="Makros" data-icon="pie">
         <div class="card-head"><h3>Makronährstoffe pro Woche</h3><p class="sub" id="macro-sub"></p></div>
@@ -817,6 +872,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Sleep Score</span><span><i class="key-line" style="background:var(--s2)"></i>Readiness</span><span><i class="key-line" style="background:var(--s3)"></i>Body Battery</span></div>
         <div class="chart-host" id="c-scores"></div>
       </div>
+      <div class="card span2" data-tab="Schwankung" data-icon="layers">
+        <div class="card-head"><h3>Schwankung der HRV</h3><p class="sub" id="hrvcv-sub"></p></div>
+        <div class="info" hidden>
+          <p>Variationskoeffizient der logarithmierten HRV über 7 Nächte: wie stark die Werte von Nacht zu Nacht schwanken, unabhängig von ihrer Höhe. Steigt die Schwankung, während das 7-Tage-Mittel fällt, gilt das als frühes Zeichen nachlassender Erholung (Plews und Kollegen 2012, vor allem bei Ausdauersportlern untersucht). Eine allgemeingültige Grenze gibt es nicht; verglichen wird mit deinem eigenen 60-Tage-Mittel.</p>
+          <p class="source">Quelle: garmin_daily.csv · hrv_last_night_ms · mindestens 5 Nächte in 7 Tagen</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Schwankung, 7 Nächte</span><span><i class="key-dash"></i>Ø 60 Tage</span></div>
+        <div class="chart-host" id="c-hrvcv"></div>
+      </div>
     </div>
   </section>
 
@@ -860,6 +924,16 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="legend"><span><i class="key-dot solid" style="background:var(--s1)"></i>Sleep Score ab 80</span><span><i class="key-dot solid" style="background:var(--s2)"></i>Sleep Score unter 80</span></div>
         <div class="chart-host" id="c-sleep-hrv"></div>
+      </div>
+      <div class="card span2" data-tab="Regelmäßig" data-icon="calendar">
+        <div class="card-head"><h3>Regelmäßigkeit des Schlafs</h3><p class="sub" id="sri-sub"></p></div>
+        <div class="info" hidden>
+          <p>Sleep Regularity Index (SRI): die Wahrscheinlichkeit, dass du zu einer Uhrzeit heute im selben Zustand bist wie gestern, schlafend oder wach, umgerechnet auf −100 bis 100. 100 heißt jeden Tag exakt gleiche Zeiten. In einer Studie mit rund 60.000 Teilnehmern hing die Regelmäßigkeit stärker mit der Sterblichkeit zusammen als die Schlafdauer (Windred und Kollegen 2024).</p>
+          <p>Hier aus Einschlaf- und Aufwachzeit berechnet; nächtliches Aufwachen fehlt, der Wert liegt daher etwas höher als in Studien mit Minutendaten. Aussagekräftig ist dein Verlauf.</p>
+          <p class="source">Quelle: garmin_daily.csv · sleep_start_local, sleep_end_local · Mittel aus mindestens 4 Nachtpaaren in 7 Tagen</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>SRI, 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Nachtpaar</span></div>
+        <div class="chart-host" id="c-sri"></div>
       </div>
     </div>
   </section>
@@ -916,6 +990,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           <p class="source">Quelle: hevy_sets.csv · set_type ≠ warmup</p>
         </div>
         <div class="chart-host" id="c-volume"></div>
+      </div>
+      <div class="card span2" data-group="kraft" data-tab="Muskeln" data-icon="layers">
+        <div class="card-head"><h3>Sätze pro Muskelgruppe und Woche</h3><p class="sub" id="muscle-sub"></p></div>
+        <div class="info" hidden>
+          <p>Arbeitssätze im gewählten Zeitraum je Muskelgruppe, im Mittel pro Woche. Ein Satz zählt voll für die Hauptmuskelgruppe der Übung und halb für jede Nebenmuskelgruppe, die Hevy angibt. In der Meta-Analyse von Schoenfeld und Kollegen (2017) wuchsen Muskeln mit mehr Sätzen stärker, bis etwa 10 und mehr pro Woche und Muskel; die gestrichelte Linie markiert 10.</p>
+          <p class="source">Quelle: hevy_sets.csv · hevy_exercises.csv · primary_muscle_group, secondary_muscle_groups</p>
+        </div>
+        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>als Hauptmuskel</span><span><i class="key-rect" style="background:var(--s1);opacity:.4"></i>als Nebenmuskel, halb gezählt</span><span><i class="key-dash"></i>10 Sätze</span></div>
+        <ul class="muscles" id="muscles"></ul>
       </div>
       <div class="card span2" data-group="kraft" data-tab="Workouts" data-icon="list">
         <div class="card-head"><h3>Krafteinheiten nach Workout</h3><p class="sub" id="sessions-sub"></p></div>
@@ -974,6 +1057,72 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <ul class="bsessions" id="bsessions"></ul>
         <button class="ghost-btn" type="button" id="bsessions-more" hidden></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="area tint-blue" id="fitness" aria-labelledby="h-fitness">
+    <div class="area-head">
+      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-fitness"/></svg></span>
+      <h2 id="h-fitness">Fitness</h2>
+      <p class="area-sum" id="sum-fitness"></p>
+    </div>
+    <div class="info area-info" id="info-fitness" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>VO2max</span></td><td>Letzte Schätzung der Uhr in ml pro kg und Minute.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>5 km</span></td><td>Garmins Prognose für einen 5-km-Lauf.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg>Hill</span></td><td>Hill Score, 0 bis 100.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg>Endurance</span></td><td>Endurance Score mit Garmins Einstufung.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-bolt"/></svg>Status</span></td><td>Trainingsstatus laut Garmin, heute.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="area-body" id="b-fitness">
+      <div class="card span2" data-tab="VO2max" data-icon="pulse">
+        <div class="card-head"><h3>VO2max</h3><p class="sub" id="vo2-sub"></p></div>
+        <div class="info" hidden>
+          <p>Maximale Sauerstoffaufnahme, von der Uhr aus Läufen und Wanderungen mit Puls und Tempo geschätzt (Firstbeat), beim Radfahren nur mit Leistungsmesser. Die Schätzung weicht im Einzelfall um einige ml/kg/min vom Labortest ab; der Verlauf ist brauchbar. Die kardiorespiratorische Fitness gehört zu den stärksten Einzelprädiktoren der Lebenserwartung: In einer Meta-Analyse ging jedes zusätzliche MET, also 3,5 ml/kg/min, mit etwa 13 % geringerer Gesamtsterblichkeit einher (Kodama und Kollegen 2009).</p>
+          <p class="source">Quelle: garmin_fitness.csv · vo2max, vo2max_cycling, fitness_age · garmin_fitness_status.json</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Laufen, Gehen</span><span><i class="key-line" style="background:var(--s3)"></i>Rad</span></div>
+        <div class="chart-host" id="c-vo2"></div>
+      </div>
+      <div class="card span2" data-tab="Prognose" data-icon="clock">
+        <div class="card-head"><h3>Wettkampfprognose</h3><p class="sub" id="race-sub"></p></div>
+        <div class="info" hidden>
+          <p>Garmins Prognose, wie schnell du die Strecken bei bestem Einsatz und flachem Kurs laufen könntest. Sie beruht vor allem auf der VO2max und deinen Läufen; wer selten läuft, bekommt eher optimistische Werte für lange Strecken. Das Diagramm zeigt die 5 km, die Tabelle alle vier Strecken mit dem Tempo pro Kilometer und der Änderung im gewählten Zeitraum.</p>
+          <p class="source">Quelle: garmin_fitness.csv · race_5k_s, race_10k_s, race_half_s, race_marathon_s</p>
+        </div>
+        <div class="table-wrap"><table id="races"></table></div>
+        <div class="chart-host" id="c-race"></div>
+      </div>
+      <div class="card" data-tab="Hill" data-icon="aktivitaeten">
+        <div class="card-head"><h3>Hill Score</h3><p class="sub" id="hill-sub"></p></div>
+        <div class="info" hidden>
+          <p>Garmins Einschätzung, wie gut du bergauf läufst oder wanderst, 0 bis 100, aus zwei Teilen: Kraft (kurze, steile Anstiege) und Ausdauer (lange Anstiege). Er entsteht nur aus Aktivitäten mit Höhenmetern und GPS; ohne solche fällt er langsam.</p>
+          <p class="source">Quelle: garmin_fitness.csv · hill_score, hill_strength, hill_endurance</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Hill Score</span><span><i class="key-line" style="background:var(--s2)"></i>Kraft</span><span><i class="key-line" style="background:var(--s3)"></i>Ausdauer</span></div>
+        <div class="chart-host" id="c-hill"></div>
+      </div>
+      <div class="card" data-tab="Ausdauer" data-icon="trend">
+        <div class="card-head"><h3>Endurance Score</h3><p class="sub" id="endurance-sub"></p></div>
+        <div class="info" hidden>
+          <p>Garmins Maß für die Ausdauer über alle Sportarten, aus VO2max und der Trainingslast der letzten Wochen. Die gestrichelten Linien sind Garmins Stufen für dein Alter und Geschlecht. Wochenmittel bis zur Vorwoche, danach der aktuelle Wert.</p>
+          <p class="source">Quelle: garmin_fitness.csv · endurance_score · Stufen aus garmin_fitness_status.json</p>
+        </div>
+        <div class="chart-host" id="c-endurance"></div>
+      </div>
+      <div class="card span2" data-tab="Status" data-icon="bolt">
+        <div class="card-head"><h3>Trainingsstatus heute</h3><p class="sub" id="tstatus-sub"></p></div>
+        <div class="info" hidden>
+          <p><b>Trainingsstatus</b>: Garmins Urteil aus dem Verlauf von VO2max und Trainingslast. <b>Akute Last</b>: Trainingslast der letzten 7 Tage, gewichtet; <b>chronische Last</b>: der Durchschnitt der letzten 4 Wochen, mit dem Bereich, den Garmin für dich als passend ansieht. <b>Lastverhältnis</b>: akut geteilt durch chronisch; als Verletzungswarnung ist es umstritten (Impellizzeri und Kollegen 2020), deshalb ohne Ampel.</p>
+          <p><b>Lastfokus</b>: Trainingslast der letzten 4 Wochen nach Art, mit Garmins Zielbereichen. <b>Fitnessalter</b>: Garmins Vergleich deiner VO2max mit Altersnormen, darunter, was es laut Garmin senken würde.</p>
+          <p class="source">Quelle: garmin_fitness_status.json, jeden Morgen neu · Verlauf der Lasten in garmin_fitness.csv ab dem ersten Abruf</p>
+        </div>
+        <div class="tstatus" id="tstatus"></div>
       </div>
     </div>
   </section>
@@ -1184,7 +1333,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h3>Tastenkürzel</h3>
       <table>
         <tbody>
-          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Ernährung, Erholung, Schlaf, Sport, Aktivitäten, Zusammenhänge, Daten</td></tr>
+          <tr><td><kbd>1</kbd> bis <kbd>9</kbd></td><td>Zum Bereich springen: Körper, Ernährung, Erholung, Schlaf, Sport, Fitness, Aktivitäten, Zusammenhänge, Daten</td></tr>
           <tr><td><kbd>0</kbd></td><td>Zurück zum Überblick</td></tr>
           <tr><td><kbd>Z</kbd></td><td>Nächster Zeitraum; mit <kbd>Umschalt</kbd> der vorherige</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Im ausgewählten Diagramm einen Tag weiter; mit <kbd>Umschalt</kbd> eine Woche</td></tr>
@@ -1280,6 +1429,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     nutrition: "../data/nutrition_daily.csv",
     climbs: "../data/garmin_climbs.csv",
     climbSessions: "../data/garmin_climb_sessions.csv",
+    exercises: "../data/hevy_exercises.csv",
+    fitness: "../data/garmin_fitness.csv",
+    fitnessStatus: "../data/garmin_fitness_status.json",
   };
   // Private repository with the data files, read through the GitHub API when the page runs
   // without data next to it, e.g. on GitHub Pages. Only the default for the connect dialog.
@@ -1287,9 +1439,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const GITHUB_FILES = {
     garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json",
     nutrition: "nutrition_daily.csv", climbs: "garmin_climbs.csv", climbSessions: "garmin_climb_sessions.csv",
+    exercises: "hevy_exercises.csv", fitness: "garmin_fitness.csv", fitnessStatus: "garmin_fitness_status.json",
   };
-  // Every data file the page reads, in the order they are fetched
-  const FILE_KEYS = ["garmin", "activities", "hevy", "insights", "nutrition", "climbs", "climbSessions"];
+  // Every data file the page reads, in the order they are fetched; JSON_KEYS are JSON, the rest CSV
+  const FILE_KEYS = ["garmin", "activities", "hevy", "insights", "nutrition", "climbs", "climbSessions", "exercises", "fitness", "fitnessStatus"];
+  const JSON_KEYS = ["insights", "fitnessStatus"];
   // YAZIO days below this count as not fully logged and stay out of every mean (same value as
   // MIN_COMPLETE_KCAL in healthsync/analyze.py).
   const MIN_COMPLETE_KCAL = 1200;
@@ -1342,13 +1496,13 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   ];
   const DEFAULT_RANGE = 90;
   // Areas in page order; the position is also the keyboard shortcut (1 = Körper)
-  const AREAS = ["koerper", "ernaehrung", "erholung", "schlaf", "sport", "aktivitaeten", "zusammenhaenge", "daten"];
+  const AREAS = ["koerper", "ernaehrung", "erholung", "schlaf", "sport", "fitness", "aktivitaeten", "zusammenhaenge", "daten"];
   // Old links and the sports inside Sport: #kraft opens Sport with Kraft selected
   const GROUP_ALIAS = { kraft: ["sport", "kraft"], bouldern: ["sport", "bouldern"] };
   // Color family of each area (CSS classes tint-*); status colors are never used for areas
   const AREA_TINT = {
     koerper: "orange", ernaehrung: "orange", erholung: "violet", schlaf: "violet",
-    sport: "blue", aktivitaeten: "blue", zusammenhaenge: "gray", daten: "gray",
+    sport: "blue", fitness: "blue", aktivitaeten: "blue", zusammenhaenge: "gray", daten: "gray",
   };
   const PHONE = "(max-width: 759px)"; // same breakpoint as the CSS: icon bar, tabs, collapsed areas
   const STEP_GOAL = 8000;       // same target as docs/scores.md
@@ -1516,10 +1670,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     //    CSV text, plus insights as the parsed content of insights.json
     const embedded = window.HEALTHSYNC_DATA;
     if (embedded) {
-      const csvKeys = FILE_KEYS.filter((k) => k !== "insights");
+      const csvKeys = FILE_KEYS.filter((k) => !JSON_KEYS.includes(k));
       return {
         ...Object.fromEntries(csvKeys.map((k) => [k, parseCsv(embedded[k] || "")])),
-        insights: embedded.insights || null, source: "embedded",
+        insights: embedded.insights || null, fitnessStatus: embedded.fitnessStatus || null, source: "embedded",
         found: Object.fromEntries(FILE_KEYS.map((k) => [k, embedded[k] != null])),
       };
     }
@@ -1552,14 +1706,13 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   // Parsed data from the raw file contents; null means the file does not exist
   function fromTexts(texts, source) {
-    const insightsText = texts.insights;
-    let insights = null;
-    try { insights = insightsText ? JSON.parse(insightsText) : null; } catch { insights = null; }
-    const csvKeys = FILE_KEYS.filter((k) => k !== "insights");
+    const json = (text) => { try { return text ? JSON.parse(text) : null; } catch { return null; } };
+    const insights = json(texts.insights), fitnessStatus = json(texts.fitnessStatus);
+    const csvKeys = FILE_KEYS.filter((k) => !JSON_KEYS.includes(k));
     return {
       ...Object.fromEntries(csvKeys.map((k) => [k, texts[k] ? parseCsv(texts[k]) : []])),
-      insights, source, insightsBroken: insightsText != null && insights == null,
-      found: { ...Object.fromEntries(csvKeys.map((k) => [k, texts[k] != null])), insights: insights != null },
+      insights, fitnessStatus, source, insightsBroken: texts.insights != null && insights == null,
+      found: { ...Object.fromEntries(csvKeys.map((k) => [k, texts[k] != null])), insights: insights != null, fitnessStatus: fitnessStatus != null },
     };
   }
 
@@ -1673,6 +1826,12 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       entry("nutrition", "YAZIO Ernährung", file("nutrition"), data.nutrition || [], remote
         ? "Optional. Entsteht, wenn das Daten-Repository das Secret `YAZIO_TOKENS_JSON` hat oder für einen Lauf `YAZIO_EMAIL` und `YAZIO_PASSWORD`; danach Run workflow mit 365 Tagen."
         : "Optional. Einrichten mit `python -m healthsync yazio-login`, dann `python -m healthsync sync --source yazio --days 365`.", true),
+      entry("fitness", "Garmin Fitness", file("fitness"), data.fitness || [], remote
+        ? "Entsteht beim nächsten Lauf des Workflows. Die letzten 12 Monate holt Run workflow mit source `fitness` und days `365`."
+        : "Abrufen mit `python -m healthsync sync --source fitness --days 365`.", true),
+      entry("exercises", "Hevy Übungen", file("exercises"), data.exercises || [], remote
+        ? "Entsteht beim nächsten Lauf des Workflows zusammen mit den Hevy-Sätzen."
+        : "Abrufen mit `python -m healthsync sync --source hevy`.", true),
       entry("climbs", "Garmin Bouldern", file("climbs"), data.climbs || [], remote
         ? "Entsteht beim nächsten Lauf des Workflows. Ältere Sessions holt Run workflow mit source `climbs` und days `2000`."
         : "Abrufen mit `python -m healthsync sync --source climbs --days 2000`.", true),
@@ -1894,7 +2053,57 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         }
       });
     }
-    return { garmin, hevy, activities, nutrition, climbs, climbSessions };
+    const exercises = DEMO_EXERCISES.map(([title, primary, secondary]) => ({ exercise_template_id: "", title, primary_muscle_group: primary, secondary_muscle_groups: secondary }));
+    const { fitness, fitnessStatus } = demoFitness(end, climbRnd);
+    return { garmin, hevy, activities, nutrition, climbs, climbSessions, exercises, fitness, fitnessStatus };
+  }
+
+  const DEMO_EXERCISES = [
+    ["Bench Press (Barbell)", "chest", "triceps|shoulders"], ["Pull Up (Weighted)", "lats", "biceps|upper_back"],
+    ["Incline Bench Press (Dumbbell)", "chest", "shoulders|triceps"], ["Squat (Barbell)", "quadriceps", "glutes|hamstrings"],
+    ["Romanian Deadlift (Barbell)", "hamstrings", "glutes|lower_back"], ["Overhead Press (Barbell)", "shoulders", "triceps"],
+    ["Deadlift (Barbell)", "lower_back", "glutes|hamstrings|upper_back"], ["Bulgarian Split Squat (Dumbbell)", "quadriceps", "glutes"],
+  ];
+
+  // VO2max every one to three weeks, race predictions daily from it, hill score after summer hikes,
+  // weekly endurance score and today's status
+  function demoFitness(end, rnd) {
+    const fitness = [];
+    for (let k = 180; k >= 0; k--) {
+      const t = end - k * DAY, date = tToIso(t), f = 1 - k / 180;
+      const vo2 = 44 + 1.6 * f + Math.sin(k / 17) * 0.4;
+      const row = { date };
+      if (k % 11 === 3) row.vo2max = (vo2 + (rnd() - 0.5) * 0.4).toFixed(1);
+      const t5 = Math.round(1840 - (vo2 - 44) * 55);
+      Object.assign(row, { race_5k_s: t5, race_10k_s: Math.round(t5 * 2.19), race_half_s: Math.round(t5 * 5.09), race_marathon_s: Math.round(t5 * 11.7) });
+      const month = new Date(t).getUTCMonth();
+      if (month >= 5 && month <= 8 && k % 3 === 0) {
+        const s = Math.round(16 + 4 * f + rnd() * 2), e = Math.round(18 + 5 * f + rnd() * 2);
+        Object.assign(row, { hill_strength: s, hill_endurance: e, hill_score: Math.round((s + e) * 0.82) });
+      }
+      if (dow(t) === 1 || k === 0) row.endurance_score = Math.round(4800 + 350 * f + Math.sin(k / 9) * 120);
+      fitness.push(row);
+    }
+    const fitnessStatus = {
+      date: tToIso(end), training_status: "PRODUCTIVE_1", training_paused: false,
+      acute_load: 198, chronic_load: 176, chronic_load_min: 140.8, chronic_load_max: 264, acwr: 1.1, acwr_status: "OPTIMAL",
+      load_balance: {
+        aerobic_low: { load: 317.4, target_min: 123, target_max: 335 },
+        aerobic_high: { load: 42, target_min: 263, target_max: 474 },
+        anaerobic: { load: 208.4, target_min: 0, target_max: 211 },
+      },
+      load_balance_feedback: "AEROBIC_HIGH_SHORTAGE",
+      fitness_age: 37.1, achievable_fitness_age: 32.6, chronological_age: 38,
+      fitness_age_components: {
+        bodyFat: { value: 21.4, targetValue: 16.8, potentialAge: 35.0, priority: 1 },
+        vigorousMinutesAvg: { value: 12, targetValue: 75, potentialAge: 36.4, priority: 2 },
+        vigorousDaysAvg: { value: 1, targetValue: 3, potentialAge: 36.4, priority: 3 },
+        rhr: { value: 47 },
+      },
+      endurance_score: 5150,
+      endurance_limits: { intermediate: 5100, trained: 5800, well_trained: 6600, expert: 7300, superior: 8100, elite: 8800 },
+    };
+    return { fitness, fitnessStatus };
   }
 
   // Sessions of the last 16 weeks logged boulder by boulder with a slowly rising level; older ones
@@ -1956,7 +2165,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
   }
 
-  function buildModel(garminRows, hevyRows, activityRows, nutritionRows = [], climbRows = [], climbSessionRows = []) {
+  function buildModel(garminRows, hevyRows, activityRows, nutritionRows = [], climbRows = [], climbSessionRows = [], extra = {}) {
     const byDate = new Map();
     for (const r of garminRows) if (r.date) byDate.set(r.date.slice(0, 10), r);
     const foodByDate = new Map();
@@ -1980,7 +2189,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       .map((r) => ({
         t: isoToT(r.date), exercise: r.exercise, type: (r.set_type || "normal").toLowerCase(),
         weight: num(r.weight_kg) ?? 0, reps: num(r.reps), workout: r.workout_id,
-        title: r.workout_title, startMin: utcToLocalMinutes(r.start_time),
+        title: r.workout_title, startMin: utcToLocalMinutes(r.start_time), template: r.exercise_template_id || "",
         grip: GRIP_EXERCISES[String(r.exercise || "").trim().toLowerCase()] || null,
       }));
     // Grip measurements: best set per hand and day. Everything else below works without them.
@@ -2075,6 +2284,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       d.mid = d.bed != null ? (d.bed + d.wake) / 2 : null;
     }
     rollingMean(days, "bed", "bed7", 7, 3);
+    deriveTrends(days);
 
     // Body weight on a given day: latest 7-day mean on or before it.
     let lastWeight = null;
@@ -2136,7 +2346,74 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       hasNutrition: foodByDate.size > 0,
       exercises, defaultLifts, computeLift, lifts: defaultLifts.map(computeLift),
       grip, bouldering, boulderScale: bouldering.scale,
+      sets, muscles: muscleMap(extra.exercises || []), fitness: parseFitness(extra.fitness || []),
     };
+  }
+
+  // ---- derived trends: rate of weight change, energy use from the scale, HRV variability, sleep regularity
+
+  // Least-squares slope (per day) of points {t, v}
+  function slope(points) {
+    const n = points.length;
+    if (n < 2) return null;
+    const mx = points.reduce((a, p) => a + p.t, 0) / n, my = points.reduce((a, p) => a + p.v, 0) / n;
+    let sxy = 0, sxx = 0;
+    for (const p of points) { sxy += (p.t - mx) * (p.v - my); sxx += (p.t - mx) ** 2; }
+    return sxx ? (sxy / sxx) * DAY : null;
+  }
+  // Minutes in which two sleep windows (bed, wake relative to midnight of the wake-up day) differ
+  function windowMismatch(a, b) {
+    const overlap = Math.max(0, Math.min(a.wake, b.wake) - Math.max(a.bed, b.bed));
+    return (a.wake - a.bed) + (b.wake - b.bed) - 2 * overlap;
+  }
+  const RATE_WINDOW = 28;
+  function deriveTrends(days) {
+    for (let i = 0; i < days.length; i++) {
+      const d = days[i], win = days.slice(Math.max(0, i - RATE_WINDOW + 1), i + 1);
+      // Weight: slope over the last 28 days, at least 6 weigh-ins spanning 14 days
+      const w = win.filter((x) => x.weight != null).map((x) => ({ t: x.t, v: x.weight }));
+      const span = w.length ? (w[w.length - 1].t - w[0].t) / DAY : 0;
+      const kgPerDay = w.length >= 6 && span >= 14 ? slope(w) : null;
+      const meanW = w.length ? mean(w.map((p) => p.v)) : null;
+      d.wRate = kgPerDay != null ? (kgPerDay * 7 / meanW) * 100 : null;
+      d.wKgWeek = kgPerDay != null ? kgPerDay * 7 : null;
+      // Energy use = mean intake on complete days minus the change in stored energy
+      const eaten = win.filter((x) => x.kcal != null).map((x) => x.kcal);
+      d.tdee = kgPerDay != null && eaten.length >= 14 ? mean(eaten) - kgPerDay * KCAL_PER_KG : null;
+      const burned = win.map((x) => x.burnedFull).filter((v) => v != null);
+      d.burned28 = burned.length >= 14 ? mean(burned) : null;
+      // HRV: coefficient of variation of ln(HRV) over 7 nights
+      const ln = days.slice(Math.max(0, i - 6), i + 1).filter((x) => x.hrv > 0).map((x) => Math.log(x.hrv));
+      if (ln.length >= 5) {
+        const m = mean(ln), sd = Math.sqrt(ln.reduce((a, v) => a + (v - m) ** 2, 0) / (ln.length - 1));
+        d.hrvCv = (sd / m) * 100;
+      } else d.hrvCv = null;
+      // Sleep regularity: share of the 1,440 minutes in the same state as 24 hours earlier
+      const p = days[i - 1];
+      d.sriPair = p && d.bed != null && p.bed != null ? 200 * (1 - windowMismatch(d, p) / 1440) - 100 : null;
+    }
+    rollingMean(days, "hrvCv", "hrvCv60", 60, 20);
+    rollingMean(days, "sriPair", "sri7", 7, 4);
+  }
+
+  // Hevy muscle groups per exercise, by template id and, for files without ids, by title
+  function muscleMap(rows) {
+    const map = new Map();
+    for (const r of rows) {
+      const m = { primary: r.primary_muscle_group || null, secondary: String(r.secondary_muscle_groups || "").split("|").filter(Boolean) };
+      if (r.exercise_template_id) map.set(`id:${r.exercise_template_id}`, m);
+      if (r.title) map.set(`title:${String(r.title).toLowerCase()}`, m);
+    }
+    return map;
+  }
+
+  function parseFitness(rows) {
+    return rows.filter((r) => r.date).map((r) => ({
+      t: isoToT(r.date), vo2: num(r.vo2max), vo2Bike: num(r.vo2max_cycling),
+      r5: num(r.race_5k_s), r10: num(r.race_10k_s), rHalf: num(r.race_half_s), rFull: num(r.race_marathon_s),
+      hill: num(r.hill_score), hillS: num(r.hill_strength), hillE: num(r.hill_endurance), endurance: num(r.endurance_score),
+      acute: num(r.acute_load), chronic: num(r.chronic_load), acwr: num(r.acwr), fitnessAge: num(r.fitness_age),
+    })).sort((a, b) => a.t - b.t);
   }
 
   // "_6A_PLUS" -> "6A+", "_5" -> "5", "V4" -> "V4"
@@ -2341,7 +2618,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const x = (t) => f.m.l + ((t - o.x0) / Math.max(DAY, o.x1 - o.x0)) * f.pw;
     const y = (v) => f.m.t + (1 - (v - ys.lo) / (ys.hi - ys.lo)) * f.ph;
 
-    drawYAxis(f, ys, y, (v) => fmt(v, ys.digits), o.zero);
+    drawYAxis(f, ys, y, (v) => (o.tickFmt ? o.tickFmt(v) : fmt(v, ys.digits)), o.zero);
     const ax = svg("g", {}, f.root);
     svg("line", { x1: f.m.l, x2: f.m.l + f.pw, y1: f.m.t + f.ph, y2: f.m.t + f.ph, class: "axisline" }, ax);
     let lastX = -Infinity;
@@ -2736,7 +3013,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const clockOf = (ms) => new Date(ms).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
   const dayOf = (ms) => new Date(ms).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
   const AREA_LABELS = {
-    koerper: "Körper", ernaehrung: "Ernährung", erholung: "Erholung", schlaf: "Schlaf", sport: "Sport",
+    koerper: "Körper", ernaehrung: "Ernährung", erholung: "Erholung", schlaf: "Schlaf", sport: "Sport", fitness: "Fitness",
     aktivitaeten: "Aktivitäten", zusammenhaenge: "Zusammenhänge", daten: "Daten",
   };
 
@@ -2897,6 +3174,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderStrengthSessions(M, x0, x1);
     renderGrip(M, x0, x1);
     renderBouldering(M, x0, x1);
+    renderMuscles(M, x0, x1);
+    renderTrends(M, days, x0, x1, lastWith);
+    renderFitness(M, x0, x1);
     renderActivities(M, days, x0);
     renderNutrition(M, days, x0, x1);
     renderInsights();
@@ -3036,8 +3316,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Körper
     const wIn = days.filter((d) => d.weight7 != null), fIn = days.filter((d) => d.fat7 != null), mIn = days.filter((d) => d.muscle7 != null);
     const dW = change(wIn, "weight7"), dF = change(fIn, "fat7"), dM = change(mIn, "muscle7");
+    const rate = lastWith("wRate");
     put("koerper", wIn.length
       ? [chip("koerper", `${fmt(wIn[wIn.length - 1].weight7, 1)} kg`), chip(direction(dW, 0.05), `${fmtSigned(dW, 1)} kg`),
+        rate && rate.t >= x0 ? chip("trend", `${fmtSigned(rate.wRate, 1)} %/Woche`, rate.wRate < -1 ? "warn" : "neutral") : null,
         dF != null ? chip("layers", `Fett ${fmtSigned(dF, 1)} kg`) : null, dM != null ? chip("kraft", `Muskel ${fmtSigned(dM, 1)} kg`) : null]
       : [chip("koerper", "Keine Messung im Zeitraum")],
     wIn.length
@@ -3116,6 +3398,20 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       goalPct != null ? chip("target", `Ziel an ${fmt(goalPct)} %`, goalPct < 50 ? "warn" : "neutral") : null,
     ], (acts.length ? `${acts.length} Aktivitäten, ${fmt(hours / weeks, 1)} Stunden pro Woche.` : "Keine Aktivitäten der Uhr im Zeitraum.")
       + (stepDays.length ? ` Schritte durchschnittlich ${fmt(mean(stepDays.map((d) => d.steps)))}, Ziel an ${fmt(goalPct)} % der Tage.` : ""));
+
+    // Fitness
+    const F = M.fitness, fs = state.fitnessStatus;
+    const lastF = (key) => [...F].reverse().find((r) => r[key] != null) || null;
+    const vo2 = lastF("vo2"), race = lastF("r5"), hill = lastF("hill"), endu = lastF("endurance");
+    put("fitness", F.length || fs ? [
+      vo2 ? chip("pulse", `VO2max ${fmt(vo2.vo2, 1)}`) : null,
+      race ? chip("clock", `5 km ${fmtRace(race.r5)}`) : null,
+      hill ? chip("aktivitaeten", `Hill ${fmt(hill.hill)}`) : null,
+      endu ? chip("trend", `Endurance ${fmt(endu.endurance)}`) : null,
+      fs?.training_status ? chip("bolt", statusLabel(fs.training_status)) : null,
+    ] : [chip("fitness", "Noch keine Fitnessdaten")],
+    [vo2 ? `VO2max ${fmt(vo2.vo2, 1)}` : null, race ? `5 km in ${fmtRace(race.r5)}` : null, hill ? `Hill Score ${fmt(hill.hill)}` : null,
+      endu ? `Endurance Score ${fmt(endu.endurance)}` : null, fs?.training_status ? `Status ${statusLabel(fs.training_status)}` : null].filter(Boolean).join(", ") + ".");
 
     // Zusammenhänge
     const ins = state.insights;
@@ -3541,6 +3837,257 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     );
     $("recent-sub").textContent = inRange.length ? `${shown.length} von ${inRange.length}, neueste oben` : "";
     toggleMore("recent-more", "recent", inRange.length);
+  }
+
+  // ---- derived trends
+
+  function renderTrends(M, days, x0, x1, lastWith) {
+    const series = (key) => days.map((d) => ({ t: d.t, v: d[key] }));
+    // Körper: rate of weight change
+    const r = lastWith("wRate");
+    $("rate-sub").textContent = r && r.t >= x0
+      ? `${fmtSigned(r.wRate, 2)} % pro Woche · ${fmtSigned(r.wKgWeek, 2)} kg pro Woche, Stand ${ddmm(r.t)}`
+      : "Zu wenige Wiegungen: nötig sind 6 in 28 Tagen";
+    mount("c-rate", (host) => timeChart(host, {
+      x0, x1, label: "Gewichtsänderung in Prozent des Körpergewichts pro Woche, gleitend über 28 Tage", zero: true,
+      refs: [{ v: -0.5, label: "−0,5 %" }, { v: -1, label: "−1 %" }],
+      empty: "Zu wenige Wiegungen im Zeitraum: nötig sind mindestens 6 über 14 Tage.",
+      series: [{ label: "pro Woche", color: "var(--s1)", data: series("wRate"), fmt: (v) => `${fmtSigned(v, 2)} %`, endLabel: true }],
+    }));
+
+    // Ernährung: energy use from intake and weight
+    const e = lastWith("tdee");
+    const card = $("c-tdee").closest(".card");
+    card.hidden = !M.hasNutrition;
+    if (M.hasNutrition) {
+      const garminNow = e ? e.burned28 : null;
+      $("tdee-sub").textContent = e && e.t >= x0
+        ? `≈ ${fmt(Math.round(e.tdee / 10) * 10)} kcal pro Tag` + (garminNow ? ` · Garmin ${fmt(Math.round(garminNow / 10) * 10)} (${fmtSigned(((garminNow - e.tdee) / e.tdee) * 100)} %)` : "") + `, Stand ${ddmm(e.t)}`
+        : "Noch zu wenige Daten: nötig sind 14 vollständig geloggte Tage und 6 Wiegungen in 28 Tagen";
+      mount("c-tdee", (host) => timeChart(host, {
+        x0, x1, label: "Tatsächlicher Energieverbrauch aus Aufnahme und Gewichtsverlauf, verglichen mit Garmin",
+        empty: "Noch zu wenige Daten: nötig sind 14 vollständig geloggte Tage und 6 Wiegungen innerhalb von 28 Tagen.",
+        series: [
+          { label: "aus Aufnahme und Gewicht", color: "var(--s1)", data: series("tdee"), fmt: kcalText, endLabel: true },
+          { label: "Garmin, 28 Tage", kind: "dashed", color: "var(--ink-2)", data: days.map((d) => ({ t: d.t, v: d.tdee != null ? d.burned28 : null })), fmt: kcalText },
+        ],
+      }));
+    }
+
+    // Erholung: HRV variability
+    const c = lastWith("hrvCv");
+    $("hrvcv-sub").textContent = c && c.t >= x0
+      ? `${fmt(c.hrvCv, 1)} %` + (c.hrvCv60 != null ? ` · Ø 60 Tage ${fmt(c.hrvCv60, 1)} %` : "") + (c.hrv7 != null ? ` · HRV-Mittel ${fmt(c.hrv7)} ms` : "")
+      : "Zu wenige Nächte mit HRV";
+    mount("c-hrvcv", (host) => timeChart(host, {
+      x0, x1, label: "Variationskoeffizient der logarithmierten HRV über 7 Nächte in Prozent", floor: 0,
+      series: [
+        { label: "Ø 60 Tage", kind: "dashed", color: "var(--ink-2)", data: series("hrvCv60"), fmt: (v) => `${fmt(v, 1)} %` },
+        { label: "7 Nächte", color: "var(--s1)", data: series("hrvCv"), fmt: (v) => `${fmt(v, 1)} %`, endLabel: true },
+      ],
+    }));
+
+    // Schlaf: regularity
+    const s = lastWith("sri7");
+    const mids = days.slice(-7).map((d) => d.mid).filter((v) => v != null);
+    const midSd = mids.length >= 4 ? Math.sqrt(mids.reduce((a, v) => a + (v - mean(mids)) ** 2, 0) / (mids.length - 1)) : null;
+    $("sri-sub").textContent = s && s.t >= x0
+      ? `SRI ${fmt(s.sri7)}` + (midSd != null ? ` · Schlafmitte schwankt um ± ${fmt(midSd)} min` : "")
+      : "Zu wenige Nächte mit Schlafzeiten";
+    mount("c-sri", (host) => timeChart(host, {
+      x0, x1, label: "Sleep Regularity Index, 7-Tage-Mittel, 100 heißt jeden Tag gleiche Zeiten", ceil: 100,
+      series: [
+        { label: "Nachtpaar", kind: "dots", color: "var(--s1)", data: series("sriPair"), fmt: (v) => fmt(v) },
+        { label: "7 Tage", color: "var(--s1)", data: series("sri7"), fmt: (v) => fmt(v), endLabel: true },
+      ],
+    }));
+  }
+
+  // ---- Sport: sets per muscle group
+
+  const MUSCLE_LABELS = {
+    chest: "Brust", lats: "Latissimus", upper_back: "Oberer Rücken", lower_back: "Unterer Rücken", traps: "Trapez",
+    shoulders: "Schultern", biceps: "Bizeps", triceps: "Trizeps", forearms: "Unterarme", neck: "Nacken",
+    quadriceps: "Quadrizeps", hamstrings: "Beinbeuger", glutes: "Gesäß", calves: "Waden", abductors: "Abduktoren",
+    adductors: "Adduktoren", abdominals: "Bauch", full_body: "Ganzkörper", cardio: "Cardio", other: "Sonstige",
+  };
+  const MUSCLE_TARGET = 10;
+  function renderMuscles(M, x0, x1) {
+    const weeks = Math.max(1, (Math.min(x1, M.t1) - x0) / DAY / 7 + 1 / 7);
+    const groups = new Map(), unknown = new Set();
+    let total = 0;
+    for (const s of M.sets) {
+      if (s.t < x0 || s.t > x1 || !HARD_SET_TYPES.has(s.type)) continue;
+      const m = M.muscles.get(`id:${s.template}`) || M.muscles.get(`title:${String(s.exercise || "").toLowerCase()}`);
+      total += 1;
+      if (!m || !m.primary) { unknown.add(s.exercise); continue; }
+      const add = (key, share) => { const g = groups.get(key) || { key, p: 0, s: 0 }; g[share] += share === "p" ? 1 : 0.5; groups.set(key, g); };
+      add(m.primary, "p");
+      for (const sec of m.secondary) if (sec !== m.primary) add(sec, "s");
+    }
+    const rows = [...groups.values()].map((g) => ({ ...g, perWeek: (g.p + g.s) / weeks })).sort((a, b) => b.perWeek - a.perWeek);
+    const max = Math.max(MUSCLE_TARGET * 1.3, ...rows.map((r) => r.perWeek));
+    $("muscle-sub").textContent = !M.muscles.size
+      ? "Noch keine Muskelgruppen: hevy_exercises.csv entsteht beim nächsten Abruf"
+      : rows.length ? `${rows.filter((r) => r.perWeek >= MUSCLE_TARGET).length} von ${rows.length} Muskelgruppen mit mindestens ${MUSCLE_TARGET} Sätzen pro Woche`
+        + (unknown.size ? ` · ${unknown.size} Übungen ohne Angabe` : "") : "Keine Arbeitssätze im Zeitraum";
+    $("muscles").replaceChildren(...(rows.length ? rows.map((r) => html("li", { "aria-label": `${MUSCLE_LABELS[r.key] || r.key}: ${fmt(r.perWeek, 1)} Sätze pro Woche` }, [
+      html("span", { class: "m", text: MUSCLE_LABELS[r.key] || r.key }),
+      html("span", { class: "bars" }, [
+        html("i", { class: "p", style: `width:${((100 * r.p / weeks) / max).toFixed(1)}%` }),
+        html("i", { class: "s", style: `width:${((100 * r.s / weeks) / max).toFixed(1)}%` }),
+        html("b", { style: `left:${((100 * MUSCLE_TARGET) / max).toFixed(1)}%` }),
+      ]),
+      html("span", { class: "n", text: fmt(r.perWeek, 1) }),
+    ])) : [html("li", { style: "display:block" }, [html("div", { class: "empty", text: M.muscles.size ? "Keine Arbeitssätze im Zeitraum." : "Die Muskelgruppen der Übungen kommen mit dem nächsten Abruf aus Hevy." })])]));
+  }
+
+  // ---- Fitness
+
+  const fmtRace = (s) => {
+    if (s == null) return "–";
+    const t = Math.round(s), h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), sec = t % 60;
+    return h ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}` : `${m}:${String(sec).padStart(2, "0")}`;
+  };
+  const TRAINING_STATUS = {
+    PRODUCTIVE: "Produktiv", MAINTAINING: "Erhaltend", RECOVERY: "Erholung", UNPRODUCTIVE: "Unproduktiv", PEAKING: "Höchstform",
+    OVERREACHING: "Überlastung", DETRAINING: "Leistungsabbau", STRAINED: "Strapaziert", NO_STATUS: "Kein Status", PAUSED: "Pausiert",
+  };
+  const statusLabel = (phrase) => {
+    const key = Object.keys(TRAINING_STATUS).sort((a, b) => b.length - a.length).find((k) => String(phrase || "").startsWith(k));
+    return key ? TRAINING_STATUS[key] : String(phrase || "–");
+  };
+  const ACWR_STATUS = { OPTIMAL: "optimal", LOW: "niedrig", HIGH: "hoch", VERY_HIGH: "sehr hoch", NONE: "–" };
+  const BALANCE_LABELS = { aerobic_low: "Aerob niedrig", aerobic_high: "Aerob hoch", anaerobic: "Anaerob" };
+  const BALANCE_FEEDBACK = {
+    BALANCED: "Ausgewogen", AEROBIC_LOW_SHORTAGE: "Zu wenig lockeres Ausdauertraining", AEROBIC_HIGH_SHORTAGE: "Zu wenig intensives Ausdauertraining",
+    ANAEROBIC_SHORTAGE: "Zu wenig anaerobes Training", AEROBIC_LOW_FOCUS: "Schwerpunkt lockeres Ausdauertraining",
+    AEROBIC_HIGH_FOCUS: "Schwerpunkt intensives Ausdauertraining", ANAEROBIC_FOCUS: "Schwerpunkt anaerobes Training", NO_DATA: "Keine Daten",
+  };
+  const ENDURANCE_LEVELS = [["intermediate", "Mittel"], ["trained", "Trainiert"], ["well_trained", "Gut trainiert"], ["expert", "Experte"], ["superior", "Überragend"], ["elite", "Elite"]];
+  const AGE_COMPONENTS = {
+    bodyFat: ["Körperfett", (c) => `${fmt(c.value, 1)} %`, (c) => (c.targetValue != null ? `Ziel ${fmt(c.targetValue, 1)} %` : "")],
+    bmi: ["BMI", (c) => fmt(c.value, 1), (c) => (c.targetValue != null ? `Ziel ${fmt(c.targetValue, 1)}` : "")],
+    vigorousMinutesAvg: ["Intensive Minuten pro Woche", (c) => fmt(c.value), (c) => (c.targetValue != null ? `Ziel ${fmt(c.targetValue)}` : "")],
+    vigorousDaysAvg: ["Tage mit intensiver Aktivität pro Woche", (c) => fmt(c.value, 1), (c) => (c.targetValue != null ? `Ziel ${fmt(c.targetValue)}` : "")],
+    rhr: ["Ruhepuls", (c) => `${fmt(c.value)} bpm`, () => ""],
+  };
+
+  function renderFitness(M, x0, x1) {
+    const F = M.fitness.filter((r) => r.t >= x0 && r.t <= x1);
+    const pts = (key) => F.filter((r) => r[key] != null).map((r) => ({ t: r.t, v: r[key] }));
+    const last = (key) => [...M.fitness].reverse().find((r) => r[key] != null) || null;
+    const fs = state.fitnessStatus;
+
+    // VO2max
+    const v = last("vo2");
+    $("vo2-sub").textContent = v
+      ? `${fmt(v.vo2, 1)} ml/kg/min, Stand ${ddmm(v.t)}` + (fs?.fitness_age != null ? ` · Fitnessalter ${fmt(fs.fitness_age, 1)}${fs.chronological_age ? ` bei ${fs.chronological_age} Jahren` : ""}` : "")
+      : "Noch keine VO2max";
+    const vo2Fmt = (x) => fmt(x, 1);
+    mount("c-vo2", (host) => timeChart(host, {
+      x0, x1, label: "VO2max in Millilitern pro Kilogramm und Minute",
+      empty: "Keine VO2max im Zeitraum. Die Uhr schätzt sie aus Läufen oder Wanderungen im Freien mit GPS und Puls.",
+      series: [
+        { label: "Laufen, Gehen", color: "var(--s1)", data: pts("vo2"), fmt: vo2Fmt, markers: true, endLabel: true, maxGap: 120 * DAY },
+        { label: "Rad", color: "var(--s3)", data: pts("vo2Bike"), fmt: vo2Fmt, markers: true, endLabel: true, maxGap: 120 * DAY },
+      ],
+    }));
+
+    // Race predictions
+    const r = last("r5");
+    const first = F.find((x) => x.r5 != null);
+    $("race-sub").textContent = r ? `Stand ${ddmm(r.t)}` + (first && first !== r ? ` · Änderung seit ${ddmm(first.t)}` : "") : "Noch keine Prognose";
+    const dist = [["5 km", "r5", 5], ["10 km", "r10", 10], ["Halbmarathon", "rHalf", 21.0975], ["Marathon", "rFull", 42.195]];
+    $("races").replaceChildren(...(r ? [
+      html("thead", {}, html("tr", {}, ["Strecke", "Zeit", "Tempo", "Änderung"].map((h, i) => html("th", { scope: "col", class: i === 0 ? "l" : "", text: h })))),
+      html("tbody", {}, dist.filter(([, k]) => r[k] != null).map(([label, k, km]) => {
+        const change = first && first !== r && first[k] != null ? r[k] - first[k] : null;
+        return html("tr", {}, [
+          html("td", { class: "l", text: label }), html("td", { text: fmtRace(r[k]) }), html("td", { text: `${fmtRace(r[k] / km)} /km` }),
+          html("td", { text: change == null ? "–" : `${change <= 0 ? "−" : "+"}${fmtRace(Math.abs(change))}` }),
+        ]);
+      })),
+    ] : []));
+    mount("c-race", (host) => timeChart(host, {
+      x0, x1, label: "Prognose für 5 Kilometer in Minuten, niedriger ist schneller", height: 180,
+      tickFmt: (m) => fmtRace(m * 60),
+      empty: "Keine Prognose im Zeitraum.",
+      series: [{ label: "5 km", color: "var(--s1)", data: pts("r5").map((p) => ({ t: p.t, v: p.v / 60 })), fmt: (m) => fmtRace(m * 60), endLabel: true, maxGap: 30 * DAY }],
+    }));
+
+    // Hill score
+    const h = last("hill");
+    $("hill-sub").textContent = h ? `${fmt(h.hill)} · Kraft ${fmt(h.hillS)} · Ausdauer ${fmt(h.hillE)}, Stand ${ddmm(h.t)}` : "Noch kein Hill Score";
+    mount("c-hill", (host) => timeChart(host, {
+      x0, x1, label: "Hill Score mit den Teilwerten Kraft und Ausdauer, 0 bis 100", floor: 0,
+      empty: "Kein Hill Score im Zeitraum. Er entsteht aus Läufen und Wanderungen mit Höhenmetern.",
+      series: [
+        { label: "Hill Score", color: "var(--s1)", data: pts("hill"), fmt: (x) => fmt(x), endLabel: true, maxGap: 60 * DAY },
+        { label: "Kraft", color: "var(--s2)", data: pts("hillS"), fmt: (x) => fmt(x), maxGap: 60 * DAY },
+        { label: "Ausdauer", color: "var(--s3)", data: pts("hillE"), fmt: (x) => fmt(x), maxGap: 60 * DAY },
+      ],
+    }));
+
+    // Endurance score with Garmin's levels
+    const e = last("endurance");
+    const limits = fs?.endurance_limits || {};
+    const level = e ? [...ENDURANCE_LEVELS].reverse().find(([k]) => limits[k] != null && e.endurance >= limits[k]) : null;
+    const next = e ? ENDURANCE_LEVELS.find(([k]) => limits[k] != null && e.endurance < limits[k]) : null;
+    $("endurance-sub").textContent = e
+      ? `${fmt(e.endurance)}${level ? ` · ${level[1]}` : Object.keys(limits).length ? " · unter Mittel" : ""}${next ? ` · ${fmt(limits[next[0]] - e.endurance)} bis ${next[1]}` : ""}`
+      : "Noch kein Endurance Score";
+    const vals = pts("endurance").map((p) => p.v);
+    const refs = vals.length ? ENDURANCE_LEVELS.filter(([k]) => limits[k] != null && limits[k] >= Math.min(...vals) - 900 && limits[k] <= Math.max(...vals) + 900)
+      .map(([k, label]) => ({ v: limits[k], label })) : [];
+    mount("c-endurance", (host) => timeChart(host, {
+      x0, x1, label: "Endurance Score, Wochenmittel", refs,
+      empty: "Kein Endurance Score im Zeitraum.",
+      series: [{ label: "Endurance Score", color: "var(--s1)", data: pts("endurance"), fmt: (x) => fmt(x), endLabel: true, markers: true, maxGap: 21 * DAY }],
+    }));
+
+    // Today's status
+    const box = $("tstatus");
+    if (!fs) {
+      $("tstatus-sub").textContent = "Noch keine Daten";
+      box.replaceChildren(html("div", { class: "empty", text: "garmin_fitness_status.json entsteht beim nächsten Abruf." }));
+      return;
+    }
+    $("tstatus-sub").textContent = `Stand ${ddmm(isoToT(fs.date))}`;
+    const tile = (l, val, s) => html("div", {}, [html("span", { class: "l", text: l }), html("span", { class: "v", text: val }), html("span", { class: "s", text: s })]);
+    const parts = [html("div", { class: "ts-grid" }, [
+      tile("Trainingsstatus", statusLabel(fs.training_status), fs.training_paused ? "pausiert" : ""),
+      tile("Akute Last", fs.acute_load != null ? fmt(fs.acute_load) : "–", "letzte 7 Tage"),
+      tile("Chronische Last", fs.chronic_load != null ? fmt(fs.chronic_load) : "–", fs.chronic_load_min != null && fs.chronic_load_max != null ? `passend ${fmt(fs.chronic_load_min)}–${fmt(fs.chronic_load_max)}` : "Ø 4 Wochen"),
+      tile("Lastverhältnis", fs.acwr != null ? fmt(fs.acwr, 1) : "–", ACWR_STATUS[fs.acwr_status] || ""),
+    ])];
+    if (fs.load_balance) {
+      const max = Math.max(...Object.values(fs.load_balance).flatMap((b) => [b?.load ?? 0, b?.target_max ?? 0])) * 1.08 || 1;
+      parts.push(html("div", { class: "ts-block" }, [
+        html("h4", { text: `Lastfokus, 4 Wochen · ${BALANCE_FEEDBACK[fs.load_balance_feedback] || fs.load_balance_feedback || ""}` }),
+        html("ul", { class: "ts-bars" }, Object.entries(fs.load_balance).filter(([, b]) => b).map(([k, b]) => html("li", {}, [
+          html("span", { text: BALANCE_LABELS[k] || k }),
+          html("span", { class: "track", role: "img", "aria-label": `${BALANCE_LABELS[k] || k}: ${fmt(b.load)}, Ziel ${fmt(b.target_min)} bis ${fmt(b.target_max)}` }, [
+            html("i", { class: "target", style: `left:${(100 * (b.target_min ?? 0) / max).toFixed(1)}%;width:${(100 * ((b.target_max ?? 0) - (b.target_min ?? 0)) / max).toFixed(1)}%` }),
+            html("i", { class: "val", style: `width:${(100 * (b.load ?? 0) / max).toFixed(1)}%` }),
+          ]),
+          html("span", { class: "n", text: `${fmt(b.load)} · Ziel ${fmt(b.target_min)}–${fmt(b.target_max)}` }),
+        ]))),
+      ]));
+    }
+    if (fs.fitness_age != null) {
+      const comps = Object.entries(fs.fitness_age_components || {}).filter(([k, c]) => AGE_COMPONENTS[k] && c && c.value != null)
+        .sort((a, b) => (a[1].priority ?? 9) - (b[1].priority ?? 9));
+      parts.push(html("div", { class: "ts-block" }, [
+        html("h4", { text: `Fitnessalter ${fmt(fs.fitness_age, 1)}` + (fs.achievable_fitness_age != null ? ` · erreichbar ${fmt(fs.achievable_fitness_age, 1)}` : "") }),
+        html("ul", { class: "ts-age" }, comps.map(([k, c]) => {
+          const [label, val, target] = AGE_COMPONENTS[k];
+          const gain = c.potentialAge != null ? `Fitnessalter ${fmt(c.potentialAge, 1)} erreichbar` : "";
+          return html("li", {}, [html("span", { text: `${label}: ${val(c)}` }), html("span", { class: "s", text: [target(c), gain].filter(Boolean).join(" · ") })]);
+        })),
+      ]));
+    }
+    box.replaceChildren(...parts);
   }
 
   // ---- Sport: Handkraft and Bouldern
@@ -4472,10 +5019,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           Object.assign(state, {
             source: data.source, insightsBroken: Boolean(data.insightsBroken), githubError: data.githubError || null,
             dataRepo: data.repo || null, remembered: Boolean(data.remembered), offlineSince: data.offlineSince || null,
-            insights: data.insights, loadedAt: Date.now(),
+            insights: data.insights, fitnessStatus: data.fitnessStatus || null, loadedAt: Date.now(),
           });
           if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
-          state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || [], data.climbs || [], data.climbSessions || []);
+          state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || [], data.climbs || [], data.climbSessions || [],
+            { exercises: data.exercises || [], fitness: data.fitness || [] });
           state.sourceInfo = describeSources(data);
           if (!state.model) { renderNoData(); return; }
           if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything

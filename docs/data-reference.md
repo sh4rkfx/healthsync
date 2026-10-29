@@ -93,6 +93,26 @@ One row per bouldering session, also for sessions without logged boulders.
 | `effort` | 1–10 | Perceived effort from the watch's self evaluation after saving; empty if skipped |
 | `feel` | 0–100 | Feel from the same evaluation: 0 very weak, 25 weak, 50 normal, 75 strong, 100 very strong |
 
+## garmin_fitness.csv
+
+One row per day on which Garmin reports at least one of these values. Each sync replaces the
+window it fetched (at most 365 days, the limit of the race predictor).
+
+| Column | Unit | Notes |
+|---|---|---|
+| `date` | | |
+| `vo2max`, `vo2max_cycling` | ml/kg/min | Only on days the watch updated the estimate |
+| `race_5k_s`, `race_10k_s`, `race_half_s`, `race_marathon_s` | s | Garmin's race predictor, daily |
+| `hill_score`, `hill_strength`, `hill_endurance` | 0–100 | |
+| `endurance_score` | points | Weekly mean on the week's first day, today's value on today |
+| `acute_load`, `chronic_load`, `acwr`, `fitness_age`, `training_status` | | Only reported for today, so their history starts with the first sync |
+
+## garmin_fitness_status.json
+
+Today's training status, acute and chronic load with Garmin's suitable chronic range, the load
+focus of the last four weeks with target ranges, fitness age with its components, and the
+endurance score's level limits. Overwritten on every sync.
+
 ## hevy_sets.csv
 
 One row per set.
@@ -112,6 +132,11 @@ The exercises „Right-hand Grip Strength“ and „Left-hand Grip Strength“ (
 „Handkraft links“; `GRIP_EXERCISES` in `healthsync/config.py`) hold grip-strength measurements, one
 set per try with the dynamometer reading as `weight_kg` and 1 rep.
 They are left out of hard sets, tonnage and strength form in the analysis and the dashboard.
+
+## hevy_exercises.csv
+
+One row per exercise template used in `hevy_sets.csv`, from the Hevy API: `exercise_template_id`,
+`title`, `type`, `primary_muscle_group`, `secondary_muscle_groups` (joined with `|`), `is_custom`.
 
 ## nutrition_daily.csv
 

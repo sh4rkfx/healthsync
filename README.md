@@ -17,7 +17,9 @@ locally or once a day on GitHub Actions.
 | `garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
 | `garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
 | `garmin_climbs.csv`, `garmin_climb_sessions.csv` | Bouldering from the watch: one row per logged boulder with grade, completed or attempted, route timer and heart rate; one row per session with tops, time on the wall and the self evaluation |
+| `garmin_fitness.csv`, `garmin_fitness_status.json` | VO2max, race predictions for 5 km to marathon, hill and endurance score per day; today's training status, acute and chronic load, load focus and fitness age |
 | `hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
+| `hevy_exercises.csv` | Primary and secondary muscle groups of every exercise in `hevy_sets.csv` |
 | `nutrition_daily.csv` | Optional, from YAZIO: one row per logged day with calories, protein, carbohydrates, fat and water |
 | `insights.json` | Relationships between training, sleep and recovery that survive a statistical check, e.g. "1 hour later to bed: -2.0 ms HRV that night" |
 | Dashboard | Charts and tables for all of the above, locally or on GitHub Pages, no build step |
@@ -196,24 +198,25 @@ example resting heart rate more than 2.5 bpm above its 60-day mean or protein un
 
 | Width | Layout |
 |---|---|
-| Phone, under 760 px | Icon bar with all nine targets, date with range, refresh and help in the header. Areas start collapsed; an open area shows one card at a time, chosen with icon tabs |
+| Phone, under 760 px | Icon bar with all ten targets, date with range, refresh and help in the header. Areas start collapsed; an open area shows one card at a time, chosen with icon tabs |
 | Tablet, 760 to 1279 px | Icon bar with range control; every card of an area is visible, two columns from 900 px |
 | Desktop, 1280 px and wider | The same with the area names in the bar |
 
 | Area | Content |
 |---|---|
 | Overview | Tiles for the last 7 days: weight, calories and protein (with YAZIO data), HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps. Each tile links to its area |
-| Körper | Weight with 7-day mean, change in fat and muscle mass |
-| Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means |
-| Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery |
-| Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV |
-| Sport | A switch between **Kraft** and **Bouldern**. Kraft: estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night, grip strength per hand. Bouldern: hardest top and hardest attempt per session with the number of tops, a grade pyramid with the share of tops, and the latest sessions with tops of all logged boulders, time on the wall and in the gym, heart rate and the watch's self evaluation. Boulders appear only when each one is logged with LAP on the watch |
+| Körper | Weight with 7-day mean, change in fat and muscle mass, rate of change in % of body weight per week from a 28-day regression line |
+| Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means. Actual energy use from intake and weight change over 28 days, against Garmin's estimate |
+| Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery, night-to-night variability of HRV (coefficient of variation of ln HRV over 7 nights) |
+| Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV, Sleep Regularity Index from bed and wake times |
+| Sport | A switch between **Kraft** and **Bouldern**. Kraft: estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night, grip strength per hand, hard sets per muscle group and week (secondary muscles count half). Bouldern: hardest top and hardest attempt per session with the number of tops, a grade pyramid with the share of tops, and the latest sessions with tops of all logged boulders, time on the wall and in the gym, heart rate and the watch's self evaluation. Boulders appear only when each one is logged with LAP on the watch |
+| Fitness | VO2max, Garmin's race predictions with pace, hill score with strength and endurance, endurance score against Garmin's levels, today's training status with acute and chronic load, load focus and fitness age |
 | Aktivitäten | Weekly active time per sport, steps against the 8,000 target, totals per sport, recent activities |
 | Zusammenhänge | The results of `healthsync analyze` as a list with effect, ρ and days, the strongest eight first, plus scatter plots for training load, tonnage and sleep against recovery and performance |
 | Daten | Data source and connection, status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
 
 The page warns when the newest Garmin day is two or more days old, which usually means the daily
-workflow has stopped. Keyboard shortcuts: `1` to `8` jump to the areas in the order above, `0`
+workflow has stopped. Keyboard shortcuts: `1` to `9` jump to the areas in the order above, `0`
 back to the overview, `Z` switches the time range, `?` opens the help. Range, collapsed areas
 (separately for phones), the chosen tab per area, the sport shown in Sport, main lifts and the findings
 filter are remembered in the browser. Old links to `#kraft` open Sport with Kraft selected.
@@ -252,7 +255,7 @@ and periods of illness are the two most common sources of misleading results. Se
 
 | Command | Purpose |
 |---|---|
-| `sync [--days N] [--source all\|garmin\|activities\|climbs\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
+| `sync [--days N] [--source all\|garmin\|activities\|climbs\|fitness\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
 | `analyze [--days N] [--top N]` | Test relationships and write `data/insights.json`. Prints the strongest findings |
 | `login` | Log in to Garmin with email and password and store tokens |
 | `export-tokens` | Print the Garmin tokens as JSON for the GitHub secret |
@@ -309,6 +312,7 @@ healthsync/
   garmin.py       Garmin login, daily metrics, raw dumps
   activities.py   Garmin activities
   climbs.py       boulders and self evaluation of bouldering sessions
+  fitness.py      VO2max, race predictions, hill and endurance score, training status
   hevy.py         Hevy workouts and sets
   yazio.py        YAZIO daily food totals (unofficial app API)
   analyze.py      relationship analysis, insights.json
