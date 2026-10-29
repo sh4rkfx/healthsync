@@ -249,6 +249,10 @@ a.tile:focus-visible { outline-offset: -3px; }
 .tile .delta.warn { color: var(--warn-ink); font-weight: 500; }
 .tile .delta.crit { color: var(--crit-ink); font-weight: 500; }
 .tiles-note { font-size: 11.5px; color: var(--muted); margin: 6px 2px 0; }
+.tiles-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 4px 0 0 2px; }
+.tiles-foot .tiles-note { margin: 0; }
+.tiles-foot .info-btn { margin: 0 -4px 0 0; }
+#ueberblick > .info { margin-top: 6px; }
 @media (max-width: 759px) { .tile { padding: 10px 12px 8px; } .tile .value { font-size: 22px; } }
 .tile .area-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); white-space: nowrap; }
 .tile .area-tag svg.ic { width: 13px; height: 13px; }
@@ -285,16 +289,17 @@ a.tile:hover .area-tag { color: var(--ink); }
   background: var(--area); border: 1px solid var(--ring); border-radius: 16px;
   padding: 18px 18px 20px; display: grid; gap: 16px; min-width: 0;
 }
-.area-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.area-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 4px 8px; align-items: center; }
+.area-head .info-btn { grid-column: 3; grid-row: 1; margin: 0; }
 .area-head { cursor: pointer; }
 .area-icon {
   grid-row: 1 / span 2; align-self: start; width: 38px; height: 38px; border-radius: 10px;
   background: var(--t-bg, var(--ink)); color: var(--t-fg, var(--surface)); display: grid; place-items: center;
 }
 .area-icon svg.ic { width: 21px; height: 21px; }
-.area-sum { grid-column: 2 / 4; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.area-sum { grid-column: 2 / 5; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .area-toggle {
-  grid-column: 3; grid-row: 1; display: inline-flex; align-items: center; gap: 6px;
+  grid-column: 4; grid-row: 1; display: inline-flex; align-items: center; gap: 6px;
   font-size: 12.5px; color: var(--ink-2); background: transparent; border: 1px solid var(--ring); border-radius: 7px;
   padding: 5px 9px; cursor: pointer;
 }
@@ -350,6 +355,14 @@ ul.rows li:first-child { border-top: 0; }
 .info-btn[aria-expanded="true"] { background: var(--ink); color: var(--surface); }
 .info { background: var(--area); border: 1px solid var(--ring); border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: var(--ink-2); display: grid; gap: 6px; }
 .info p { max-width: 75ch; }
+.info-table { width: auto; max-width: 75ch; font-size: 12px; }
+.info-table th, .info-table td { white-space: normal; text-align: left; vertical-align: top; padding: 5px 10px 5px 0; position: static; background: none; border-bottom: 1px solid var(--ring); }
+.info-table th { font-size: 11.5px; color: var(--muted); }
+.info-table td:first-child { white-space: nowrap; }
+.info-table tr:last-child td { border-bottom: 0; }
+.info-table .chip:not(.good):not(.warn):not(.crit) { background: var(--surface); }
+.info-table td svg.ic { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
+.info-table .chip svg.ic { margin-right: 0; }
 .source { font-family: var(--font-mono); font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11.5px; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -579,7 +592,27 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   <section id="ueberblick" aria-label="Überblick, letzte 7 Tage">
     <div class="tiles" id="tiles"><div class="loading">Daten werden geladen …</div></div>
-    <p class="tiles-note">Werte: 7-Tage-Mittel · Pfeil: ggü. Vorwoche · farbig nur bei Abweichung</p>
+    <div class="tiles-foot" id="tiles-foot">
+      <p class="tiles-note">Werte: 7-Tage-Mittel · Pfeil: ggü. Vorwoche · farbig nur bei Abweichung</p>
+    </div>
+    <div class="info" id="info-tiles" hidden>
+      <p>Die Kacheln zeigen immer die letzten 7 Tage, unabhängig vom gewählten Zeitraum. Die kleine Kurve zeigt die letzten 28 Tage; ein Tipp auf die Kachel springt zum Bereich. „Stand TT.MM.“ erscheint, wenn der neueste Wert älter als 2 Tage ist.</p>
+      <table class="info-table">
+        <thead><tr><th scope="col">Kachel</th><th scope="col">Wert und Zeile darunter</th></tr></thead>
+        <tbody>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-koerper"/></svg>Gewicht</td><td>7-Tage-Mittel; darunter die Änderung gegenüber dem 7-Tage-Mittel von vor einer Woche.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>Kalorien</td><td>7-Tage-Mittel der vollständig geloggten Tage; darunter, wie viele der letzten 7 Tage vollständig geloggt sind, ohne heute. Nur mit YAZIO.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-egg"/></svg>Eiweiß</td><td>7-Tage-Mittel in g pro kg Körpergewicht; grün ab 1,6 g/kg, gelb darunter. Nur mit YAZIO.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>HRV</td><td>7-Tage-Mittel; darunter Garmins Normalbereich. Grün im Bereich, gelb darunter, rot mehr als 8 % unter der Untergrenze.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg>Ruhepuls</td><td>7-Tage-Mittel; darunter der Abstand zum 60-Tage-Mittel. Gelb ab +2,5 bpm, rot ab +5 bpm.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-bolt"/></svg>Readiness</td><td>Garmins Wert des neuesten Tages, kein Mittel; gelb bei Niedrig oder Sehr niedrig. „zuletzt“ heißt: heute noch kein Wert.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg>Schlaf</td><td>Mittlere Schlafdauer der letzten 7 Nächte; darunter mittlere Einschlafzeit und Sleep Score.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Sätze</td><td>Summe der Arbeitssätze der letzten 7 Tage; darunter die Differenz zu den 7 Tagen davor und die Zahl der Einheiten.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg>Aktiv</td><td>Stunden aller Aufzeichnungen der Uhr in den letzten 7 Tagen; darunter die Differenz zu den 7 Tagen davor und die Zahl der Aktivitäten.</td></tr>
+          <tr><td><svg class="ic" aria-hidden="true"><use href="#i-steps"/></svg>Schritte</td><td>7-Tage-Mittel; darunter, an wie vielen der letzten 7 Tage das Ziel von 8.000 Schritten erreicht wurde.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="area tint-orange" id="koerper" aria-labelledby="h-koerper">
@@ -587,6 +620,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-koerper"/></svg></span>
       <h2 id="h-koerper">Körper</h2>
       <p class="area-sum" id="sum-koerper"></p>
+    </div>
+    <div class="info area-info" id="info-koerper" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-koerper"/></svg>kg</span></td><td>Neuestes 7-Tage-Mittel des Gewichts.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg>± kg</span></td><td>Änderung des 7-Tage-Mittels vom ersten bis zum letzten Tag im Zeitraum; Pfeil ab 0,05 kg.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg>Fett</span></td><td>Änderung der Fettmasse, ebenso berechnet.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Muskel</span></td><td>Änderung der Muskelmasse, ebenso berechnet.</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="area-body" id="b-koerper">
       <div class="card" data-tab="Gewicht" data-icon="koerper">
@@ -615,6 +659,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-ernaehrung"/></svg></span>
       <h2 id="h-ernaehrung">Ernährung</h2>
       <p class="area-sum" id="sum-ernaehrung"></p>
+    </div>
+    <div class="info area-info" id="info-ernaehrung" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>kcal</span></td><td>Mittel der vollständig geloggten Tage im Zeitraum.</td></tr>
+          <tr><td><span class="chip good"><svg class="ic" aria-hidden="true"><use href="#i-egg"/></svg>g/kg</span></td><td>Eiweiß pro kg Körpergewicht im selben Mittel; grün ab 1,6 g/kg, gelb darunter.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-balance"/></svg>kcal/Tag</span></td><td>Mittlere Energiebilanz: YAZIO minus Verbrauch laut Garmin. Minus heißt Defizit.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Tage</span></td><td>Vollständig geloggte Tage (ab 1.200 kcal, ohne heute) von allen Tagen im Zeitraum.</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="area-body" id="b-ernaehrung">
       <div class="card span2" data-tab="Kalorien" data-icon="flame">
@@ -669,6 +724,18 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h2 id="h-erholung">Erholung</h2>
       <p class="area-sum" id="sum-erholung"></p>
     </div>
+    <div class="info area-info" id="info-erholung" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip good"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Normal</span></td><td>Neuestes 7-Tage-Mittel der HRV im Normalbereich und Ruhepuls höchstens 2,5 bpm über dem 60-Tage-Mittel.</td></tr>
+          <tr><td><span class="chip warn"><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>Reduziert</span></td><td>HRV unter dem Normalbereich oder Ruhepuls mehr als 2,5 bpm darüber.</td></tr>
+          <tr><td><span class="chip crit"><svg class="ic" aria-hidden="true"><use href="#i-alert"/></svg>Deutlich reduziert</span></td><td>HRV mehr als 8 % unter der Untergrenze oder Ruhepuls mehr als 5 bpm darüber.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>HRV</span></td><td>Neuestes 7-Tage-Mittel; gelb unter dem Normalbereich.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg>Puls</span></td><td>Ruhepuls im 7-Tage-Mittel, in Klammern der Abstand zum 60-Tage-Mittel; gelb ab +2,5 bpm.</td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="area-body" id="b-erholung">
       <div class="card" data-tab="HRV" data-icon="pulse">
         <div class="card-head"><h3>HRV über Nacht</h3><p class="sub" id="hrv-sub"></p></div>
@@ -706,6 +773,16 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h2 id="h-schlaf">Schlaf</h2>
       <p class="area-sum" id="sum-schlaf"></p>
     </div>
+    <div class="info area-info" id="info-schlaf" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg>Dauer</span></td><td>Mittlere Schlafdauer pro Nacht im Zeitraum.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>Zeiten</span></td><td>Mittlere Einschlaf- und Aufwachzeit.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Wochenende</span></td><td>Verschiebung der Schlafmitte in Freitag- und Samstagnächten gegenüber Werktagen (sozialer Jetlag); gelb ab einer Stunde.</td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="area-body" id="b-schlaf">
       <div class="card span2" data-tab="Zeiten" data-icon="clock">
         <div class="card-head"><h3>Schlafenszeiten</h3><p class="sub" id="sleep-times-sub"></p></div>
@@ -739,6 +816,16 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-kraft"/></svg></span>
       <h2 id="h-kraft">Kraft</h2>
       <p class="area-sum" id="sum-kraft"></p>
+    </div>
+    <div class="info area-info" id="info-kraft" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Einheiten</span></td><td>Hevy-Workouts im Zeitraum; Einheiten, die nur die Uhr kennt, zählen nicht.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-bars"/></svg>Sätze/Woche</span></td><td>Arbeitssätze ohne Aufwärmsätze, im Mittel pro Woche.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg>Übung ± kg</span></td><td>e1RM der ersten Hauptübung: letzte minus erste Einheit im Zeitraum.</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="area-body" id="b-kraft">
       <div class="card span2" data-tab="e1RM" data-icon="trend">
@@ -781,6 +868,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       </div>
       <div class="card span2" data-tab="Einheiten" data-icon="calendar">
         <div class="card-head"><h3>Letzte Krafteinheiten</h3><p class="sub" id="sessions-recent-sub"></p></div>
+        <div class="info" hidden>
+          <p>Jede Zeile ist eine Einheit, neueste oben. <b>ohne Uhr</b>: in Hevy geloggt, aber keine Kraft-Aufzeichnung der Uhr, die höchstens drei Stunden daneben startet; Dauer, Puls und Trainingslast fehlen dann. <b>ohne Hevy</b>: nur die Uhr hat aufgezeichnet; Sätze und Tonnage fehlen.</p>
+          <p>HRV Folgenacht ist die HRV der Nacht nach der Einheit minus das 7-Tage-Mittel bis zum Trainingstag. <b>mit weiterer Aktivität</b> heißt: Am selben Tag gab es noch eine Aufzeichnung, etwa Bouldern oder eine Radfahrt, die den Wert mit beeinflusst. Solche Tage fehlen im Mittel der Tabelle darüber.</p>
+          <p class="source">Quelle: hevy_sets.csv · garmin_activities.csv (strength_training) · garmin_daily.csv · hrv_last_night_ms</p>
+        </div>
         <div class="table-wrap wide"><table id="sessions"></table></div>
         <button class="ghost-btn" type="button" id="sessions-more" hidden></button>
       </div>
@@ -792,6 +884,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-aktivitaeten"/></svg></span>
       <h2 id="h-aktivitaeten">Aktivitäten</h2>
       <p class="area-sum" id="sum-aktivitaeten"></p>
+    </div>
+    <div class="info area-info" id="info-aktivitaeten" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg>h/Woche</span></td><td>Dauer aller Aufzeichnungen der Uhr, im Mittel pro Woche.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>Aktivitäten</span></td><td>Zahl der Aufzeichnungen im Zeitraum.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-steps"/></svg>Schritte</span></td><td>Mittlere Schritte pro Tag.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-target"/></svg>Ziel</span></td><td>Anteil der Tage mit mindestens 8.000 Schritten; gelb unter 50 %.</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="area-body" id="b-aktivitaeten">
       <div class="card span2" data-tab="Woche" data-icon="bars">
@@ -814,10 +917,19 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       </div>
       <div class="card span2" data-tab="Sportarten" data-icon="layers">
         <div class="card-head"><h3>Sportarten im Zeitraum</h3><p class="sub">Summen und Mittel je Sportart</p></div>
+        <div class="info" hidden>
+          <p>Alle Aufzeichnungen der Uhr im gewählten Zeitraum, je Sportart zusammengefasst. Trainingslast ist Garmins Wert pro Aktivität aus dem geschätzten Sauerstoffdefizit (EPOC); <b>Ø Last</b> teilt die Summe durch die Zahl der Aktivitäten. <b>Ø Puls</b> ist das Mittel der Durchschnittspulse, nicht nach Dauer gewichtet.</p>
+          <p>Welche Garmin-Typen zu welcher Sportart gehören, legt <code>SPORTS</code> oben im Skript fest; was nirgends passt, steht unter Sonstiges.</p>
+          <p class="source">Quelle: garmin_activities.csv · type, duration_min, distance_km, elevation_gain_m, training_load, avg_hr</p>
+        </div>
         <div class="table-wrap wide"><table id="sports"></table></div>
       </div>
       <div class="card span2" data-tab="Letzte" data-icon="list">
         <div class="card-head"><h3>Letzte Aktivitäten</h3><p class="sub" id="recent-sub"></p></div>
+        <div class="info" hidden>
+          <p>Jede Aufzeichnung der Uhr einzeln, neueste oben. <b>Last</b> ist Garmins Trainingslast der Aktivität. <b>Aerober TE</b> (Training Effect) ist Garmins Einschätzung der Wirkung auf die Ausdauer: unter 1 keine, 1 bis 1,9 gering, 2 bis 2,9 erhaltend, 3 bis 3,9 verbessernd, 4 bis 4,9 stark verbessernd, 5 überlastend.</p>
+          <p class="source">Quelle: garmin_activities.csv · duration_min, distance_km, elevation_gain_m, avg_hr, training_load, aerobic_te</p>
+        </div>
         <div class="table-wrap wide"><table id="recent"></table></div>
         <button class="ghost-btn" type="button" id="recent-more" hidden></button>
       </div>
@@ -829,6 +941,16 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-zusammenhaenge"/></svg></span>
       <h2 id="h-zusammenhaenge">Zusammenhänge</h2>
       <p class="area-sum" id="sum-zusammenhaenge"></p>
+    </div>
+    <div class="info area-info" id="info-zusammenhaenge" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>belastbar</span></td><td>Zusammenhänge, die der Korrektur für viele gleichzeitige Tests standhalten.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg>Paare</span></td><td>Zahl der getesteten Kombinationen aus Ursache und Wirkung.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Zeitraum</span></td><td>Tage, über die die Auswertung lief. Sie entsteht täglich im Workflow und hängt nicht vom oben gewählten Zeitraum ab.</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="area-body" id="b-zusammenhaenge">
       <div class="card span2" data-tab="Ergebnisse" data-icon="list">
@@ -874,9 +996,25 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h2 id="h-daten">Daten</h2>
       <p class="area-sum" id="sum-daten"></p>
     </div>
+    <div class="info area-info" id="info-daten" hidden>
+      <table class="info-table">
+        <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Quellen</span></td><td>Grün, wenn alle Dateien geladen sind. Gelb, wenn eine fehlt oder der neueste Garmin-Tag 2 oder mehr Tage zurückliegt.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-cloud"/></svg>GitHub</span></td><td>Woher die Seite liest und wann sie geladen hat; sonst <b>Lokal</b> (Ordner data/) oder <b>Beispieldaten</b>.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>Tage</span></td><td>Kalendertage, für die insgesamt Daten vorliegen.</td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="area-body" id="b-daten">
       <div class="card span2" data-tab="Quellen" data-icon="daten">
         <div class="card-head"><h3>Datenquellen</h3><p class="sub">Was geladen ist und wie aktuell</p></div>
+        <div class="info" hidden>
+          <p>Oben steht, woher die Seite liest: aus deinem Daten-Repository auf GitHub, aus dem Ordner data/ neben dem Dashboard oder aus im Browser erzeugten Beispieldaten. Darunter eine Zeile pro Datei mit Zahl der Einträge und dem ersten und letzten Datum.</p>
+          <p><b>geladen</b>: gelesen und aktuell. <b>Tage alt</b>: Der neueste Garmin-Tag liegt 2 oder mehr Tage zurück. <b>leer</b>, <b>fehlt</b> und <b>unlesbar</b> nennen darunter die Abhilfe. <b>nicht eingerichtet</b> gilt nur für das optionale YAZIO.</p>
+          <p>Der Workflow im Daten-Repository holt die Daten täglich um 07:30 Uhr, während der Sommerzeit um 08:30 Uhr. GitHub startet geplante Läufe oft einige Minuten bis über eine Stunde später.</p>
+          <p class="source">Quelle: garmin_daily.csv · garmin_activities.csv · hevy_sets.csv · nutrition_daily.csv · insights.json · Workflow: .github/workflows/sync.yml</p>
+        </div>
         <div class="card-tools" id="connection"></div>
         <ul class="rows" id="sources"></ul>
       </div>
@@ -889,6 +1027,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       </div>
       <div class="card span2" data-tab="Tage" data-icon="calendar">
         <div class="card-head"><h3>Tagesdaten</h3><p class="sub">Alle Werte, neuester Tag oben</p></div>
+        <div class="info" hidden>
+          <p>Die ungeglätteten Werte jedes Kalendertags im gewählten Zeitraum; – heißt kein Wert. Schlaf, HRV, Body Battery und Readiness eines Datums gehören zur Nacht davor. <b>unvollst.</b> markiert YAZIO-Tage unter 1.200 kcal und den laufenden Tag; sie zählen in keinem Mittelwert.</p>
+          <p class="source">Quelle: garmin_daily.csv · hevy_sets.csv · garmin_activities.csv · nutrition_daily.csv</p>
+        </div>
         <details class="daily" id="daily-details">
           <summary id="daily-summary">Tabelle anzeigen</summary>
           <div class="table-wrap wide scroll"><table id="daily"></table></div>
@@ -896,6 +1038,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       </div>
       <div class="card span2" id="glossar" data-tab="Begriffe" data-icon="info">
         <div class="card-head"><h3>So wird gerechnet</h3><p class="sub">Begriffe und Berechnungen</p></div>
+        <div class="info" hidden>
+          <p>Kurzfassung der Begriffe und Formeln aus den Karten. Jede Spalte der CSV-Dateien und die statistische Methode der Zusammenhänge sind im Code-Repository ausführlich beschrieben.</p>
+          <p class="source">Quelle: docs/data-reference.md · docs/analysis.md · docs/scores.md</p>
+        </div>
         <dl class="glossary">
           <div><dt>7-Tage-Mittel</dt><dd>Mittelwert aller vorhandenen Werte der letzten 7 Kalendertage einschließlich des Tages selbst. Tage ohne Messung zählen nicht mit.</dd></div>
           <div><dt>Zeitversatz</dt><dd>Garmin-Werte eines Datums gehören zur Nacht davor. Training am Montag wirkt also auf die Werte vom Dienstag.</dd></div>
@@ -3723,20 +3869,29 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     try { saved = JSON.parse(localStorage.getItem(collapsedKey()) || "null"); } catch { saved = null; }
     for (const area of saved ?? (onPhone() ? AREAS : [])) if (AREAS.includes(area)) setCollapsed(area, true);
 
-    // "?" on every card with an explanation
-    document.querySelectorAll(".card").forEach((card, i) => {
-      const info = card.querySelector(":scope > .info"), head = card.querySelector(":scope > .card-head");
-      if (!info || !head) return;
-      info.id = info.id || `info-${i}`;
-      const title = head.querySelector("h3")?.textContent || "diese Karte";
-      const btn = html("button", { type: "button", class: "info-btn", "aria-expanded": "false", "aria-controls": info.id, "aria-label": `Erklärung zu ${title}`, title: "Was zeigt das?" }, [icon("info")]);
-      btn.addEventListener("click", () => {
+    // Info button for every explanation: cards, area heads and the overview tiles.
+    // stopPropagation keeps a click in an area head from collapsing the area.
+    const infoButton = (info, label) => {
+      const btn = html("button", { type: "button", class: "info-btn", "aria-expanded": "false", "aria-controls": info.id, "aria-label": `Erklärung zu ${label}`, title: "Was zeigt das?" }, [icon("info")]);
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
         const open = btn.getAttribute("aria-expanded") !== "true";
         btn.setAttribute("aria-expanded", String(open));
         info.hidden = !open;
       });
-      head.append(btn);
+      return btn;
+    };
+    document.querySelectorAll(".card").forEach((card, i) => {
+      const info = card.querySelector(":scope > .info"), head = card.querySelector(":scope > .card-head");
+      if (!info || !head) return;
+      info.id = info.id || `info-${i}`;
+      head.append(infoButton(info, head.querySelector("h3")?.textContent || "diese Karte"));
     });
+    for (const area of AREAS) {
+      const section = $(area), info = section?.querySelector(":scope > .info"), h2 = section?.querySelector(".area-head h2");
+      if (info && h2) h2.after(infoButton(info, `den Chips von ${AREA_LABELS[area]}`));
+    }
+    $("tiles-foot").append(infoButton($("info-tiles"), "den Kacheln"));
 
     // In-page links (navigation, tiles, help) open a collapsed target before scrolling to it
     document.addEventListener("click", (e) => {

@@ -191,7 +191,7 @@ with an icon each, and can be collapsed; the chips stay visible. Areas come in f
 Körper and Ernährung orange, Erholung and Schlaf violet, Kraft and Aktivitäten blue, Zusammenhänge
 and Daten gray. Green, yellow and red are reserved for status and appear only past a threshold, for
 example resting heart rate more than 2.5 bpm above its 60-day mean or protein under 1.6 g/kg. The
-**ⓘ** on a card explains what it shows and which columns it reads.
+**ⓘ** on every card explains what it shows and which columns it reads. The ⓘ next to an area title explains its summary chips and their color thresholds, and the ⓘ below the overview explains each tile.
 
 | Width | Layout |
 |---|---|
