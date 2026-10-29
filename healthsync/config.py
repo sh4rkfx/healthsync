@@ -12,6 +12,7 @@ DATA_DIR = Path(os.environ.get("HEALTHSYNC_DATA_DIR", "data"))
 GARMIN_CSV = DATA_DIR / "garmin_daily.csv"
 ACTIVITIES_CSV = DATA_DIR / "garmin_activities.csv"
 HEVY_CSV = DATA_DIR / "hevy_sets.csv"
+NUTRITION_CSV = DATA_DIR / "nutrition_daily.csv"
 INSIGHTS_JSON = DATA_DIR / "insights.json"
 DEBUG_DIR = Path("debug")
 
@@ -29,6 +30,12 @@ GARMIN_REFRESH_DAYS = 3  # always re-fetch today and the previous N days (late s
 # Hevy fetching
 HEVY_API_URL = "https://api.hevyapp.com/v1/workouts"
 HEVY_PAGE_SIZE = 10  # maximum allowed by the API
+
+# YAZIO: unofficial app API. Tokens live in a file (local runs, CI cache) or in YAZIO_TOKENS_JSON (CI seed).
+YAZIO_API_URL = os.environ.get("YAZIO_API_URL", "https://yzapi.yazio.com/v15")
+YAZIO_TOKEN_DIR = Path(os.environ.get("YAZIO_TOKEN_DIR", Path.home() / ".yazio"))
+YAZIO_TOKENS_JSON = os.environ.get("YAZIO_TOKENS_JSON")
+YAZIO_REQUEST_DELAY_S = 0.3
 
 
 class SetupError(RuntimeError):

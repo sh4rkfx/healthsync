@@ -12,6 +12,7 @@ metrics and activities, Hevy sets and the relationship analysis.
 | `garmin_daily.csv` | One row per day: weight, sleep, HRV, resting heart rate, Body Battery, steps, readiness |
 | `garmin_activities.csv` | One row per watch activity |
 | `hevy_sets.csv` | One row per set |
+| `nutrition_daily.csv` | Optional, from YAZIO: calories, protein, carbohydrates, fat and water per logged day |
 | `insights.json` | Result of `python -m healthsync analyze` |
 
 The workflow in `.github/workflows/sync.yml` runs every morning. It checks out the public
@@ -25,6 +26,7 @@ Under *Settings → Secrets and variables → Actions → Repository secrets*:
 |---|---|
 | `GARMIN_TOKENS_JSON` | Output of `python -m healthsync export-tokens` |
 | `HEVY_API_KEY` | Hevy API key from hevy.com/settings?developer |
+| `YAZIO_TOKENS_JSON` | Optional. Output of `python -m healthsync yazio-tokens`. Without it, YAZIO is skipped |
 
 ## Working locally
 

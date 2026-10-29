@@ -30,6 +30,7 @@ jobs:
     timeout-minutes: 30
     env:
       GARMIN_TOKEN_DIR: .garmin-tokens # inside the workspace so hashFiles() can see it
+      YAZIO_TOKEN_DIR: .yazio-tokens
       HEALTHSYNC_DATA_DIR: data # the checkout of this repository, see below
     steps:
       - name: Check out the healthsync code
@@ -64,9 +65,19 @@ jobs:
           key: garmin-tokens-${{ github.run_id }}
           restore-keys: garmin-tokens-
 
+      # Same idea for YAZIO: the refresh token may rotate, so the newest one is carried in the cache.
+      # Optional: without the YAZIO_TOKENS_JSON secret and a cached token, YAZIO is skipped.
+      - name: Restore YAZIO tokens
+        uses: actions/cache/restore@v4
+        with:
+          path: .yazio-tokens
+          key: yazio-tokens-${{ github.run_id }}
+          restore-keys: yazio-tokens-
+
       - name: Fetch data
         env:
           GARMIN_TOKENS_JSON: ${{ secrets.GARMIN_TOKENS_JSON }}
+          YAZIO_TOKENS_JSON: ${{ secrets.YAZIO_TOKENS_JSON }}
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
           DAYS: ${{ inputs.days || '30' }}
         run: python -m healthsync sync --days "$DAYS"
@@ -82,6 +93,13 @@ jobs:
         with:
           path: .garmin-tokens
           key: garmin-tokens-${{ github.run_id }}
+
+      - name: Save YAZIO tokens
+        if: ${{ !cancelled() && hashFiles('.yazio-tokens/yazio_tokens.json') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .yazio-tokens
+          key: yazio-tokens-${{ github.run_id }}
 
       # Runs even if one source failed, so partial data is not lost.
       - name: Commit updated data

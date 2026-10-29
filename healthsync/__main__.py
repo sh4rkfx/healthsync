@@ -8,7 +8,7 @@ import sys
 from collections.abc import Callable
 from datetime import date
 
-from . import activities, config, garmin, hevy
+from . import activities, config, garmin, hevy, yazio
 
 log = logging.getLogger("healthsync")
 
@@ -16,6 +16,7 @@ SOURCES: dict[str, Callable[..., None]] = {
     "garmin": garmin.sync,
     "activities": activities.sync,
     "hevy": hevy.sync,
+    "yazio": yazio.sync,
 }
 
 
@@ -31,6 +32,9 @@ def cmd_sync(args: argparse.Namespace) -> int:
     selected = list(SOURCES) if args.source == "all" else [args.source]
     failed = []
     for name in selected:
+        if name == "yazio" and args.source == "all" and not yazio.is_configured():
+            log.info("yazio: not set up, skipped (run `yazio-login` to enable it)")
+            continue
         try:
             SOURCES[name](args.days, refresh=args.refresh)
         except config.SetupError as exc:
@@ -74,6 +78,23 @@ def cmd_export_tokens(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_yazio_login(_: argparse.Namespace) -> int:
+    yazio.login_interactive()
+    print(f"YAZIO tokens saved to {config.YAZIO_TOKEN_DIR}")
+    return 0
+
+
+def cmd_yazio_tokens(_: argparse.Namespace) -> int:
+    print(yazio.export_tokens())
+    return 0
+
+
+def cmd_dump_yazio(args: argparse.Namespace) -> int:
+    path = yazio.dump_raw(args.date)
+    print(f"Raw YAZIO responses written to {path} (contains health data, do not commit)")
+    return 0
+
+
 def cmd_dump_raw(args: argparse.Namespace) -> int:
     path = garmin.dump_raw(args.date)
     print(f"Raw Garmin responses written to {path} (contains health data, do not commit)")
@@ -102,6 +123,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     export = commands.add_parser("export-tokens", help="print Garmin tokens for the GitHub secret")
     export.set_defaults(handler=cmd_export_tokens)
+
+    yazio_login = commands.add_parser("yazio-login", help="log in to YAZIO with email/password and save tokens")
+    yazio_login.set_defaults(handler=cmd_yazio_login)
+
+    yazio_tokens = commands.add_parser("yazio-tokens", help="print YAZIO tokens for the GitHub secret")
+    yazio_tokens.set_defaults(handler=cmd_yazio_tokens)
+
+    dump_yazio = commands.add_parser("dump-yazio", help="save raw YAZIO responses for one day")
+    dump_yazio.add_argument("--date", type=date.fromisoformat, default=config.today(), help="YYYY-MM-DD")
+    dump_yazio.set_defaults(handler=cmd_dump_yazio)
 
     dump = commands.add_parser("dump-raw", help="save raw Garmin responses for one day")
     dump.add_argument("--date", type=date.fromisoformat, default=config.today(), help="YYYY-MM-DD")

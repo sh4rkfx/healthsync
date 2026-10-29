@@ -68,6 +68,22 @@ One row per set.
 | `weight_kg`, `reps`, `rpe` | |
 | `duration_s`, `distance_m` | For timed or cardio sets |
 
+## nutrition_daily.csv
+
+Optional, from YAZIO (unofficial app API). One row per day with at least one food or water entry;
+days without entries have no row. Calories, protein, carbohydrates and fat are the sums over all
+meals of the day.
+
+| Column | Notes |
+|---|---|
+| `date` | Local calendar day |
+| `calories_kcal` | Energy intake. Empty on days with water entries but no food |
+| `protein_g`, `carbs_g`, `fat_g` | Grams per day, rounded to 0.1 |
+| `water_ml` | Logged water intake |
+
+A partly logged day is indistinguishable from a day of low intake. Check the mapping against your
+data with `python -m healthsync dump-yazio --date <day>` after the first login.
+
 ## insights.json
 
 Written by `python -m healthsync analyze`. Method: [analysis.md](analysis.md).

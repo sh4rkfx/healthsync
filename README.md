@@ -17,6 +17,7 @@ locally or once a day on GitHub Actions.
 | `garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
 | `garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
 | `hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
+| `nutrition_daily.csv` | Optional, from YAZIO: one row per logged day with calories, protein, carbohydrates, fat and water |
 | `insights.json` | Relationships between training, sleep and recovery that survive a statistical check, e.g. "1 hour later to bed: -2.0 ms HRV that night" |
 | Dashboard | Charts and tables for all of the above, locally or on GitHub Pages, no build step |
 
@@ -95,6 +96,25 @@ the last 30 days every morning, recomputes the analysis and commits changed file
 
 The workflow uses `sh4rkfx/healthsync` for the code. For a fork, set the repository variable
 `HEALTHSYNC_CODE_REPO` in the data repository to `<you>/healthsync`.
+
+### Food intake from YAZIO (optional)
+
+YAZIO has no public API. `healthsync` uses the private API of the YAZIO app, with the app's own
+client credentials, to read the five daily totals (calories, protein, carbohydrates, fat, water).
+It is unofficial, can break or be blocked without notice, and YAZIO's terms may not allow it.
+Without the steps below, YAZIO is skipped.
+
+1. Locally, run `python -m healthsync yazio-login`. The password is typed hidden and never stored,
+   only the tokens are saved to `~/.yazio`.
+2. Check the mapping against your real data: `python -m healthsync dump-yazio --date 2026-10-28`
+   writes the raw responses to `debug/`, then `python -m healthsync sync --source yazio --days 14`.
+3. Add the secret `YAZIO_TOKENS_JSON` to the data repository, with the output of
+   `python -m healthsync yazio-tokens`. With the GitHub CLI:
+   `python -m healthsync yazio-tokens | gh secret set YAZIO_TOKENS_JSON --repo <you>/healthsync-data`.
+
+Like the Garmin tokens, the latest YAZIO tokens are carried from run to run in the Actions cache.
+If a run fails with `YAZIO refused the login`, repeat steps 1 and 3. Days without any entry produce
+no row, and a day that is only partly logged looks like a low-intake day.
 
 Garmin may hand out a new refresh token whenever it refreshes a session, which would make the
 secret outdated after the first run. The workflow therefore carries the latest tokens from run to
@@ -210,11 +230,14 @@ and periods of illness are the two most common sources of misleading results. Se
 
 | Command | Purpose |
 |---|---|
-| `sync [--days N] [--source all\|garmin\|activities\|hevy] [--refresh]` | Fetch data and update the CSV files. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
+| `sync [--days N] [--source all\|garmin\|activities\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
 | `analyze [--days N] [--top N]` | Test relationships and write `data/insights.json`. Prints the strongest findings |
 | `login` | Log in to Garmin with email and password and store tokens |
 | `export-tokens` | Print the Garmin tokens as JSON for the GitHub secret |
 | `dump-raw [--date YYYY-MM-DD]` | Save all raw Garmin responses of one day to `debug/`, to check the field mapping |
+| `yazio-login` | Log in to YAZIO with email and password and store tokens |
+| `yazio-tokens` | Print the YAZIO tokens as JSON for the GitHub secret |
+| `dump-yazio [--date YYYY-MM-DD]` | Save the raw YAZIO responses of one day to `debug/` |
 | `-v` before any command | Debug logging |
 
 All commands are run as `python -m healthsync <command>`.
@@ -227,6 +250,9 @@ All commands are run as `python -m healthsync <command>`.
 | `GARMIN_TOKENS_JSON` | none | Garmin tokens as JSON, used in CI when no token file exists |
 | `GARMIN_TOKEN_DIR` | `~/.garminconnect` | Where Garmin tokens are stored |
 | `GARMIN_EMAIL`, `GARMIN_PASSWORD` | none | Optional, skips the prompts of `login` |
+| `YAZIO_TOKENS_JSON` | none | YAZIO tokens as JSON, used in CI when no token file exists |
+| `YAZIO_TOKEN_DIR` | `~/.yazio` | Where YAZIO tokens are stored |
+| `YAZIO_EMAIL`, `YAZIO_PASSWORD` | none | Optional, skips the prompts of `yazio-login` |
 | `HEALTHSYNC_DATA_DIR` | `data` | Folder for the CSV and JSON files |
 | `HEALTHSYNC_TZ` | `Europe/Vienna` | Time zone for local dates, sleep times and Hevy timestamps |
 
@@ -247,7 +273,7 @@ All commands are run as `python -m healthsync <command>`.
   repository ignores `data/` and `debug/`.
 - The sync runs in the private repository, so its logs, the Actions cache with the Garmin tokens
   and the secrets never touch this public repository.
-- The Garmin password is never stored, neither locally nor on GitHub.
+- The Garmin and YAZIO passwords are never stored, neither locally nor on GitHub. Only tokens are.
 - The dashboard token can only read the data repository. Revoke it on GitHub if a device is lost.
 - Anyone with write access to the data repository can change its workflow and read its secrets. Do not add collaborators.
 - Raw dumps from `dump-raw` contain health data. They stay in `debug/`, which is not committed.
@@ -261,6 +287,7 @@ healthsync/
   garmin.py       Garmin login, daily metrics, raw dumps
   activities.py   Garmin activities
   hevy.py         Hevy workouts and sets
+  yazio.py        YAZIO daily food totals (unofficial app API)
   analyze.py      relationship analysis, insights.json
   csvstore.py     atomic CSV writes
 dashboard/
@@ -287,5 +314,5 @@ The workflow in `.github/workflows/test.yml` runs both on every push.
 ## Disclaimer
 
 healthsync uses the unofficial `garminconnect` library, which can break when Garmin changes its
-private API. The Hevy API is official but requires Hevy Pro. Nothing here is medical advice; the
+private API. The optional YAZIO import uses YAZIO's private app API in the same way. The Hevy API is official but requires Hevy Pro. Nothing here is medical advice; the
 numbers come from consumer devices and their estimates.
