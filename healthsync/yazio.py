@@ -46,9 +46,13 @@ def _token_file() -> Path:
     return config.YAZIO_TOKEN_DIR / _TOKEN_FILE_NAME
 
 
+def _has_credentials() -> bool:
+    return bool(os.environ.get("YAZIO_EMAIL") and os.environ.get("YAZIO_PASSWORD"))
+
+
 def is_configured() -> bool:
-    """True if tokens exist, so a plain `sync` should include YAZIO without prompting."""
-    return _token_file().exists() or bool(config.YAZIO_TOKENS_JSON)
+    """True if tokens or login credentials exist, so a plain `sync` includes YAZIO without prompting."""
+    return _token_file().exists() or bool(config.YAZIO_TOKENS_JSON) or _has_credentials()
 
 
 def _load_tokens() -> dict[str, Any] | None:
@@ -102,7 +106,11 @@ def _token_request(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def login_interactive() -> dict[str, Any]:
-    """Log in with email and password and store the tokens. The password is never saved."""
+    """Log in with email and password and store the tokens. The password is never saved.
+
+    YAZIO_EMAIL and YAZIO_PASSWORD skip the prompts. In CI they come from repository secrets: set
+    them for the first run, then delete the password secret again (the tokens are kept in the cache).
+    """
     email = os.environ.get("YAZIO_EMAIL") or input("YAZIO email: ").strip()
     password = os.environ.get("YAZIO_PASSWORD") or getpass.getpass("YAZIO password: ")
     tokens = _token_request({"username": email, "password": password, "grant_type": "password"})
@@ -135,20 +143,32 @@ class _Api:
     def __init__(self) -> None:
         tokens = _load_tokens()
         if tokens is None:
-            if config.running_in_ci():
+            if config.running_in_ci() and not _has_credentials():
                 raise config.SetupError(
-                    "No YAZIO tokens. Run `python -m healthsync yazio-login` locally, then store the output "
-                    "of `yazio-tokens` in the YAZIO_TOKENS_JSON secret."
+                    "No YAZIO tokens. Run `python -m healthsync yazio-login` locally and store the output of "
+                    "`yazio-tokens` in the YAZIO_TOKENS_JSON secret, or set the YAZIO_EMAIL and "
+                    "YAZIO_PASSWORD secrets for one run."
                 )
             tokens = login_interactive()
-        if _expired(tokens):
-            tokens = _refresh(tokens)
+        elif _expired(tokens):
+            tokens = self._renew(tokens)
         else:
             _save_tokens(tokens)  # also seeds the token file from the secret, so rotations persist
         self.tokens = tokens
         retry = Retry(total=4, backoff_factor=2, status_forcelist=(429, 500, 502, 503, 504), allowed_methods=("GET",))
         self.session = requests.Session()
         self.session.mount("https://", HTTPAdapter(max_retries=retry))
+
+    @staticmethod
+    def _renew(tokens: dict[str, Any]) -> dict[str, Any]:
+        """Refresh the tokens; log in again with YAZIO_EMAIL and YAZIO_PASSWORD if that fails and they are set."""
+        try:
+            return _refresh(tokens)
+        except config.SetupError:
+            if not _has_credentials():
+                raise
+            log.warning("YAZIO: token refresh failed, logging in again with the stored credentials")
+            return login_interactive()
 
     def get(self, path: str, **params: str) -> Any:
         for attempt in (1, 2):
@@ -157,7 +177,7 @@ class _Api:
                 headers={"Authorization": f"Bearer {self.tokens['access_token']}"},
             )
             if response.status_code == 401 and attempt == 1:
-                self.tokens = _refresh(self.tokens)
+                self.tokens = self._renew(self.tokens)
                 continue
             if response.status_code == 401:
                 raise config.SetupError("YAZIO rejected the refreshed token. Run `yazio-login` again.")

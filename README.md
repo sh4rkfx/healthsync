@@ -112,6 +112,13 @@ Without the steps below, YAZIO is skipped.
    `python -m healthsync yazio-tokens`. With the GitHub CLI:
    `python -m healthsync yazio-tokens | gh secret set YAZIO_TOKENS_JSON --repo <you>/healthsync-data`.
 
+Without a local setup, GitHub can do the login: add the secrets `YAZIO_EMAIL` and `YAZIO_PASSWORD`
+to the data repository and start the workflow once. It logs in, and the tokens stay in the Actions
+cache. Then **delete `YAZIO_PASSWORD`** again. If you keep it, the workflow logs in again by itself
+when the tokens stop working, at the price of a stored password. To check the mapping, start the
+workflow with `yazio_dump_date` set: the raw responses of that day are attached to the run as a
+private artifact for one day.
+
 Like the Garmin tokens, the latest YAZIO tokens are carried from run to run in the Actions cache.
 If a run fails with `YAZIO refused the login`, repeat steps 1 and 3. Days without any entry produce
 no row, and a day that is only partly logged looks like a low-intake day.

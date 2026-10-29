@@ -27,6 +27,7 @@ Under *Settings → Secrets and variables → Actions → Repository secrets*:
 | `GARMIN_TOKENS_JSON` | Output of `python -m healthsync export-tokens` |
 | `HEVY_API_KEY` | Hevy API key from hevy.com/settings?developer |
 | `YAZIO_TOKENS_JSON` | Optional. Output of `python -m healthsync yazio-tokens`. Without it, YAZIO is skipped |
+| `YAZIO_EMAIL`, `YAZIO_PASSWORD` | Optional alternative: the workflow logs in itself. Delete `YAZIO_PASSWORD` after the first successful run |
 
 ## Working locally
 

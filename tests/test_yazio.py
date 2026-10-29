@@ -92,6 +92,45 @@ def test_missing_tokens_in_ci_fail_with_instructions(tmp_path, monkeypatch):
         yazio._Api()
 
 
+def test_ci_logs_in_with_credentials_from_secrets_and_stores_tokens(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "YAZIO_TOKEN_DIR", tmp_path)
+    monkeypatch.setattr(config, "YAZIO_TOKENS_JSON", None)
+    monkeypatch.setenv("CI", "true")
+    monkeypatch.setenv("YAZIO_EMAIL", "a@b.c")
+    monkeypatch.setenv("YAZIO_PASSWORD", "pw")
+    seen = {}
+
+    def fake_request(payload):
+        seen.update(payload)
+        return {"access_token": "t", "refresh_token": "r"}
+
+    monkeypatch.setattr(yazio, "_token_request", fake_request)
+    assert yazio.is_configured()
+    assert yazio._Api().tokens["access_token"] == "t"
+    assert (seen["username"], seen["grant_type"]) == ("a@b.c", "password")
+    assert json.loads((tmp_path / "yazio_tokens.json").read_text())["refresh_token"] == "r"  # password is not stored
+    assert "pw" not in (tmp_path / "yazio_tokens.json").read_text()
+
+
+def test_failed_refresh_falls_back_to_credentials_only_if_set(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "YAZIO_TOKEN_DIR", tmp_path)
+    monkeypatch.delenv("YAZIO_EMAIL", raising=False)
+    monkeypatch.delenv("YAZIO_PASSWORD", raising=False)
+
+    def request(payload):
+        if payload["grant_type"] == "refresh_token":
+            raise config.SetupError("refused")
+        return {"access_token": "relogin"}
+
+    monkeypatch.setattr(yazio, "_token_request", request)
+    stale = {"access_token": "x", "refresh_token": "r", "expires_at": time.time() - 10}
+    with pytest.raises(config.SetupError):
+        yazio._Api._renew(stale)
+    monkeypatch.setenv("YAZIO_EMAIL", "a@b.c")
+    monkeypatch.setenv("YAZIO_PASSWORD", "pw")
+    assert yazio._Api._renew(stale)["access_token"] == "relogin"
+
+
 class FakeApi:
     def __init__(self, days):
         self.days = days

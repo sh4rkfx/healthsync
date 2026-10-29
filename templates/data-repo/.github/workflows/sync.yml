@@ -12,6 +12,10 @@ on:
         description: Days to fetch (use 365 for the initial backfill)
         required: false
         default: "30"
+      yazio_dump_date:
+        description: "Optional, YYYY-MM-DD: attach the raw YAZIO responses of that day as a private artifact"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -78,6 +82,9 @@ jobs:
         env:
           GARMIN_TOKENS_JSON: ${{ secrets.GARMIN_TOKENS_JSON }}
           YAZIO_TOKENS_JSON: ${{ secrets.YAZIO_TOKENS_JSON }}
+          # Optional: log in from here. Set both for one run, then delete YAZIO_PASSWORD again.
+          YAZIO_EMAIL: ${{ secrets.YAZIO_EMAIL }}
+          YAZIO_PASSWORD: ${{ secrets.YAZIO_PASSWORD }}
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
           DAYS: ${{ inputs.days || '30' }}
         run: python -m healthsync sync --days "$DAYS"
@@ -93,6 +100,25 @@ jobs:
         with:
           path: .garmin-tokens
           key: garmin-tokens-${{ github.run_id }}
+
+      # Only to check the field mapping once. The artifact contains health data and expires after a day.
+      - name: Dump raw YAZIO data
+        if: ${{ !cancelled() && inputs.yazio_dump_date != '' }}
+        env:
+          YAZIO_TOKENS_JSON: ${{ secrets.YAZIO_TOKENS_JSON }}
+          YAZIO_EMAIL: ${{ secrets.YAZIO_EMAIL }}
+          YAZIO_PASSWORD: ${{ secrets.YAZIO_PASSWORD }}
+          DUMP_DATE: ${{ inputs.yazio_dump_date }}
+        run: python -m healthsync dump-yazio --date "$DUMP_DATE"
+
+      - name: Upload raw YAZIO data
+        if: ${{ !cancelled() && inputs.yazio_dump_date != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: yazio-raw
+          path: debug/
+          retention-days: 1
+          if-no-files-found: ignore
 
       - name: Save YAZIO tokens
         if: ${{ !cancelled() && hashFiles('.yazio-tokens/yazio_tokens.json') != '' }}
