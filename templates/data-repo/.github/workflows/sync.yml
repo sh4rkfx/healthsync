@@ -38,9 +38,12 @@ jobs:
           repository: ${{ env.CODE_REPO }}
           persist-credentials: false
 
+      # Always the current tip of main. Without `ref`, a delayed scheduled run can start from an
+      # older commit and then fail to rebase onto the newer data commit.
       - name: Check out this data repository
         uses: actions/checkout@v4
         with:
+          ref: main
           path: data
 
       - uses: actions/setup-python@v5
