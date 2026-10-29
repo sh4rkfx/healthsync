@@ -54,6 +54,14 @@ img { max-width: 100%; }
   --pill-warn: rgba(250, 178, 25, 0.22);
   --pill-crit: rgba(208, 59, 59, 0.13);
   --note: #fff4d6;
+  /* Color families of the areas: Körper and Ernährung orange, Erholung and Schlaf violet,
+     Kraft and Aktivitäten blue, Zusammenhänge and Daten gray. Status colors stay reserved. */
+  --t-orange-fg: #a64a14; --t-orange-bg: #fbe9dc;
+  --t-violet-fg: #5e40b8; --t-violet-bg: #ede8fb;
+  --t-blue-fg: #1f5bb0; --t-blue-bg: #e2ecfa;
+  --t-gray-fg: #4f4e4a; --t-gray-bg: #e6e5df;
+  --chip: #eceae3;
+  --good-ink: #17722f; --warn-ink: #805300; --crit-ink: #a8231b;
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
@@ -66,6 +74,12 @@ img { max-width: 100%; }
     --band: rgba(57, 135, 229, 0.17);
     --pill-good: rgba(12, 163, 12, 0.20); --pill-warn: rgba(250, 178, 25, 0.18); --pill-crit: rgba(208, 59, 59, 0.24);
     --note: #2a2414;
+    --t-orange-fg: #f2a36e; --t-orange-bg: rgba(242, 163, 110, 0.16);
+    --t-violet-fg: #b9a6f6; --t-violet-bg: rgba(185, 166, 246, 0.16);
+    --t-blue-fg: #8ab7f2; --t-blue-bg: rgba(138, 183, 242, 0.16);
+    --t-gray-fg: #c3c2b7; --t-gray-bg: rgba(255, 255, 255, 0.08);
+    --chip: #2a2a27;
+    --good-ink: #74d37f; --warn-ink: #f2c35b; --crit-ink: #f29086;
     color-scheme: dark;
   }
 }
@@ -77,6 +91,12 @@ img { max-width: 100%; }
   --band: rgba(57, 135, 229, 0.17);
   --pill-good: rgba(12, 163, 12, 0.20); --pill-warn: rgba(250, 178, 25, 0.18); --pill-crit: rgba(208, 59, 59, 0.24);
   --note: #2a2414;
+  --t-orange-fg: #f2a36e; --t-orange-bg: rgba(242, 163, 110, 0.16);
+  --t-violet-fg: #b9a6f6; --t-violet-bg: rgba(185, 166, 246, 0.16);
+  --t-blue-fg: #8ab7f2; --t-blue-bg: rgba(138, 183, 242, 0.16);
+  --t-gray-fg: #c3c2b7; --t-gray-bg: rgba(255, 255, 255, 0.08);
+  --chip: #2a2a27;
+  --good-ink: #74d37f; --warn-ink: #f2c35b; --crit-ink: #f29086;
   color-scheme: dark;
 }
 
@@ -93,6 +113,7 @@ p { margin: 0; }
 a { color: inherit; }
 .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .sub { color: var(--ink-2); font-size: 13px; }
+.card-head .sub { font-size: 12.5px; }
 .mono { font-family: var(--font-mono); }
 :focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; border-radius: 4px; }
 svg.ic { width: 16px; height: 16px; flex: none; }
@@ -120,6 +141,9 @@ button { font: inherit; }
 .nav a:hover { background: var(--grid); color: var(--ink); }
 .nav a[aria-current="true"] { background: var(--ink); color: var(--surface); }
 .nav a svg.ic { width: 15px; height: 15px; }
+.nav a[data-tint] svg.ic { color: var(--t-fg); }
+.nav a[aria-current="true"] svg.ic { color: inherit; }
+.nav a.nav-top { display: none; }
 @media (max-width: 1099px) {
   .nav { padding-right: 28px; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
 }
@@ -134,11 +158,45 @@ button { font: inherit; }
 .icon-btn.busy svg.ic { animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .icon-btn.busy svg.ic { animation: none; } .icon-btn.busy { opacity: 0.55; } }
+/* Phone: the bar holds only the area icons, all nine fit without scrolling. Range, refresh and
+   help move into the header row. */
 @media (max-width: 759px) {
-  .bar .seg-host, .brand { display: none; }
+  .bar .seg-host, .brand, .bar .icon-btn { display: none !important; }
+  .bar-in { padding-block: 3px; padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
+  .nav { justify-content: space-between; gap: 0; padding-right: 0; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .nav a, .nav a.nav-top { display: inline-grid; place-items: center; width: 38px; height: 44px; padding: 0; border-radius: 10px; }
+  .nav a svg.ic { width: 20px; height: 20px; }
+  .nav a .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 @media (min-width: 760px) {
-  .top .seg-host { display: none; }
+  .top-tools { display: none !important; }
+}
+/* The overview icon replaces the brand; below 1280px the areas show icons only, so nothing scrolls */
+@media (min-width: 760px) {
+  .brand { display: none; }
+  .nav a.nav-top { display: inline-flex; padding-inline: 8px; }
+  .nav a.nav-top .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (min-width: 760px) and (max-width: 1279px) {
+  .nav { -webkit-mask-image: none; mask-image: none; padding-right: 0; }
+  .nav a { padding: 8px 9px; }
+  .nav a svg.ic { width: 18px; height: 18px; }
+  .nav a .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+.top-tools { display: flex; align-items: center; gap: 8px; }
+@media (max-width: 759px) {
+  .top-row { flex-wrap: nowrap; align-items: center; gap: 10px; }
+  .top .title { flex: 1; min-width: 0; }
+  .top h1 { font-size: 22px; }
+  .top-tools { gap: 6px; }
+  .top-tools .icon-btn { width: 40px; height: 40px; }
+  .top-tools .range-select { height: 40px; padding: 0 26px 0 10px; background-position: right 7px center; }
+}
+.top-tools .icon-btn { width: 44px; height: 44px; }
+.range-select {
+  height: 44px; padding: 0 30px 0 12px; border-radius: 10px; border: 1px solid var(--ring-strong);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f4e4a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center / 16px;
+  color: var(--ink); font: inherit; font-weight: 500; -webkit-appearance: none; appearance: none; cursor: pointer;
 }
 
 /* Range control */
@@ -160,7 +218,8 @@ button { font: inherit; }
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 18px;
 }
-.top { display: grid; gap: 10px; }
+.top { display: grid; gap: 8px; }
+.top .eyebrow { margin-bottom: -4px; }
 .top-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 16px; }
 .top .title { display: grid; gap: 6px; min-width: 0; }
 .status-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; color: var(--ink-2); font-size: 13px; }
@@ -183,7 +242,14 @@ code { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; 
 a.tile:hover { background: var(--area); }
 a.tile:focus-visible { outline-offset: -3px; }
 .tile-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-width: 0; }
-.tile .label { font-size: 12px; color: var(--ink-2); }
+.tile .label { font-size: 12px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.tile .label svg.ic { width: 14px; height: 14px; color: var(--t-fg); }
+.tile .delta svg.ic { width: 13px; height: 13px; }
+.tile .delta.good { color: var(--good-ink); font-weight: 500; }
+.tile .delta.warn { color: var(--warn-ink); font-weight: 500; }
+.tile .delta.crit { color: var(--crit-ink); font-weight: 500; }
+.tiles-note { font-size: 11.5px; color: var(--muted); margin: 6px 2px 0; }
+@media (max-width: 759px) { .tile { padding: 10px 12px 8px; } .tile .value { font-size: 22px; } }
 .tile .area-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); white-space: nowrap; }
 .tile .area-tag svg.ic { width: 13px; height: 13px; }
 a.tile:hover .area-tag { color: var(--ink); }
@@ -192,6 +258,17 @@ a.tile:hover .area-tag { color: var(--ink); }
 .tile .delta { font-size: 12px; color: var(--ink-2); min-height: 18px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
 .tile svg.spark { display: block; width: 100%; height: 28px; margin-top: 3px; }
 .tiles .loading { grid-column: 1 / -1; padding: 28px 16px; color: var(--muted); text-align: center; }
+
+/* Chips: icon plus short value. Neutral by default; status colors only past a threshold. */
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px 3px 7px; border-radius: 999px; font-size: 12px; font-weight: 500; white-space: nowrap; background: var(--chip); color: var(--ink-2); line-height: 1.4; }
+.chip svg.ic { width: 14px; height: 14px; }
+.chip.good { background: var(--pill-good); color: var(--good-ink); }
+.chip.warn { background: var(--pill-warn); color: var(--warn-ink); }
+.chip.crit { background: var(--pill-crit); color: var(--crit-ink); }
+.tint-orange { --t-fg: var(--t-orange-fg); --t-bg: var(--t-orange-bg); }
+.tint-violet { --t-fg: var(--t-violet-fg); --t-bg: var(--t-violet-bg); }
+.tint-blue { --t-fg: var(--t-blue-fg); --t-bg: var(--t-blue-bg); }
+.tint-gray { --t-fg: var(--t-gray-fg); --t-bg: var(--t-gray-bg); }
 
 /* Pills and badges */
 .pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px 1px 4px; border-radius: 999px; font-size: 12px; font-weight: 500; color: var(--ink); white-space: nowrap; }
@@ -209,12 +286,13 @@ a.tile:hover .area-tag { color: var(--ink); }
   padding: 18px 18px 20px; display: grid; gap: 16px; min-width: 0;
 }
 .area-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.area-head { cursor: pointer; }
 .area-icon {
   grid-row: 1 / span 2; align-self: start; width: 38px; height: 38px; border-radius: 10px;
-  background: var(--ink); color: var(--surface); display: grid; place-items: center;
+  background: var(--t-bg, var(--ink)); color: var(--t-fg, var(--surface)); display: grid; place-items: center;
 }
 .area-icon svg.ic { width: 21px; height: 21px; }
-.area-sum { grid-column: 2 / 4; color: var(--ink-2); font-size: 13.5px; max-width: 80ch; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.area-sum { grid-column: 2 / 4; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .area-toggle {
   grid-column: 3; grid-row: 1; display: inline-flex; align-items: center; gap: 6px;
   font-size: 12.5px; color: var(--ink-2); background: transparent; border: 1px solid var(--ring); border-radius: 7px;
@@ -225,12 +303,38 @@ a.tile:hover .area-tag { color: var(--ink); }
 .area-toggle[aria-expanded="false"] svg.ic { transform: rotate(-90deg); }
 .area-body { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 900px) { .area-body { grid-template-columns: repeat(2, minmax(0, 1fr)); } .span2 { grid-column: 1 / -1; } }
-@media (max-width: 599px) {
-  .area { padding: 14px 10px 12px; border-radius: 14px; gap: 14px; }
-  .area-head { padding-inline: 4px; }
-  .area-sum { grid-column: 1 / -1; margin-top: 4px; }
+@media (max-width: 759px) {
+  .area { padding: 12px 10px; border-radius: 14px; gap: 12px; }
+  .area-head { padding-inline: 2px; }
+  .area-icon { grid-row: 1; width: 34px; height: 34px; }
+  .area-sum { grid-column: 1 / -1; }
+  .area-toggle { border: 0; padding: 6px; }
   .area-toggle .t { display: none; }
+  .area-toggle svg.ic { width: 20px; height: 20px; }
 }
+/* Phone: one card per area at a time, chosen with icon tabs */
+.tabs { display: none; }
+@media (max-width: 759px) {
+  .tabs { display: flex; gap: 2px; padding: 3px; background: var(--surface); border: 1px solid var(--ring); border-radius: 11px; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: 1 0 auto; min-width: 60px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); font-size: 11px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: var(--surface); font-weight: 500; }
+  .tabs button svg.ic { width: 18px; height: 18px; }
+  .area-body.tabbed > .card:not(.on) { display: none; }
+}
+
+/* Lists instead of wide tables: results and data sources */
+ul.rows { list-style: none; margin: 0; padding: 0; display: grid; }
+ul.rows li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--grid); min-width: 0; }
+ul.rows li:first-child { border-top: 0; }
+.ri-main { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.ri-title { font-size: 13px; font-weight: 500; }
+.ri-sub { font-size: 12px; color: var(--ink-2); }
+.ri-side { flex: none; display: grid; justify-items: end; gap: 2px; text-align: right; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ri-side b { font-size: 13px; color: var(--ink); font-weight: 600; }
+.ri-bar { height: 4px; border-radius: 2px; background: var(--grid); margin-top: 5px; max-width: 220px; }
+.ri-bar i { display: block; height: 4px; border-radius: 2px; background: var(--ink-2); }
+.ri-hint { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
 
 /* Cards */
 .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 14px 16px 12px; display: grid; gap: 8px; align-content: start; min-width: 0; }
@@ -238,16 +342,16 @@ a.tile:hover .area-tag { color: var(--ink); }
 .card-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: start; }
 .card-head > :not(.info-btn) { grid-column: 1; }
 .info-btn {
-  grid-column: 2; grid-row: 1 / span 2; width: 24px; height: 24px; border-radius: 50%;
-  border: 1px solid var(--ring-strong); background: transparent; color: var(--ink-2);
-  font-size: 12px; font-weight: 600; cursor: pointer; display: grid; place-items: center; line-height: 1;
+  grid-column: 2; grid-row: 1 / span 2; width: 34px; height: 34px; margin: -6px -8px 0 0; border-radius: 50%;
+  border: 0; background: transparent; color: var(--ink-2); cursor: pointer; display: grid; place-items: center;
 }
-.info-btn:hover { color: var(--ink); border-color: var(--ink); }
-.info-btn[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.info-btn svg.ic { width: 19px; height: 19px; }
+.info-btn:hover { color: var(--ink); background: var(--area); }
+.info-btn[aria-expanded="true"] { background: var(--ink); color: var(--surface); }
 .info { background: var(--area); border: 1px solid var(--ring); border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: var(--ink-2); display: grid; gap: 6px; }
 .info p { max-width: 75ch; }
 .source { font-family: var(--font-mono); font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink-2); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11.5px; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .key-line { width: 14px; height: 2px; border-radius: 1px; display: inline-block; }
 .key-dash { width: 14px; height: 0; border-top: 2px dashed var(--ink-2); display: inline-block; opacity: 0.7; }
@@ -405,6 +509,29 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-daten" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="13" rx="2"/><path d="M3 8h14M3 12.2h14M8 3.5v13"/></g></symbol>
     <symbol id="i-refresh" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10.5a6 6 0 1 1-1.9-4.9"/><path d="M15.5 3v3.5H12"/></g></symbol>
     <symbol id="i-install" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5v9M6.5 9l3.5 3.5L13.5 9"/><path d="M4 14v1.5A1.5 1.5 0 0 0 5.5 17h9a1.5 1.5 0 0 0 1.5-1.5V14"/></g></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.2 1.2-3.8 2.5-5 .3 1.8 1.2 2.8 2.5 3 0-3-1-5.5 0-8z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 3c3.5 0 6.5 5.5 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.5 8.5 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.9"/></symbol>
+    <symbol id="i-pie" viewBox="0 0 24 24"><path d="M12 3v9h9M12 3a9 9 0 1 0 9 9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-balance" viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7h14M5 7l-2.5 6a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h3l2-6 4 12 3-9 2 3h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M5 20V10M10 20V4M15 20v-7M20 20v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 10h16M10 10v9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><path d="M8 3c2 0 3 2.5 3 5s-1 4-3 4-3-1.5-3-4 1-5 3-5zM6 15h4v2a2 2 0 0 1-4 0zM16 7c2 0 3 2.5 3 5s-1 4-3 4-3-1.5-3-4 1-5 3-5zM14 19h4v1a2 2 0 0 1-4 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3zM12 10v4M12 17v.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 7l10 10M17 9v8H9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flat" viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/></g></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.5 1.5A3.3 3.3 0 0 0 7 18z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></g></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 20 20"><path d="M5.5 8l4.5 4.5L14.5 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
@@ -413,30 +540,37 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   <div class="bar-in">
     <a class="brand" href="#top" title="Zum Überblick (Taste 0)">healthsync</a>
     <nav class="nav" id="nav" aria-label="Bereiche">
-      <a href="#koerper" title="Taste 1"><svg class="ic" aria-hidden="true"><use href="#i-koerper"/></svg>Körper</a>
-      <a href="#erholung" title="Taste 2"><svg class="ic" aria-hidden="true"><use href="#i-erholung"/></svg>Erholung</a>
-      <a href="#schlaf" title="Taste 3"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg>Schlaf</a>
-      <a href="#kraft" title="Taste 4"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Kraft</a>
-      <a href="#aktivitaeten" title="Taste 5"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg>Aktivitäten</a>
-      <a href="#ernaehrung" title="Taste 6"><svg class="ic" aria-hidden="true"><use href="#i-ernaehrung"/></svg>Ernährung</a>
-      <a href="#zusammenhaenge" title="Taste 7"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg>Zusammenhänge</a>
-      <a href="#daten" title="Taste 8"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg>Daten</a>
+      <a href="#top" class="nav-top" title="Überblick (Taste 0)"><svg class="ic" aria-hidden="true"><use href="#i-ueberblick"/></svg><span class="lbl">Überblick</span></a>
+      <a href="#koerper" class="tint-orange" data-tint title="Körper (Taste 1)"><svg class="ic" aria-hidden="true"><use href="#i-koerper"/></svg><span class="lbl">Körper</span></a>
+      <a href="#ernaehrung" class="tint-orange" data-tint title="Ernährung (Taste 2)"><svg class="ic" aria-hidden="true"><use href="#i-ernaehrung"/></svg><span class="lbl">Ernährung</span></a>
+      <a href="#erholung" class="tint-violet" data-tint title="Erholung (Taste 3)"><svg class="ic" aria-hidden="true"><use href="#i-erholung"/></svg><span class="lbl">Erholung</span></a>
+      <a href="#schlaf" class="tint-violet" data-tint title="Schlaf (Taste 4)"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg><span class="lbl">Schlaf</span></a>
+      <a href="#kraft" class="tint-blue" data-tint title="Kraft (Taste 5)"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg><span class="lbl">Kraft</span></a>
+      <a href="#aktivitaeten" class="tint-blue" data-tint title="Aktivitäten (Taste 6)"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg><span class="lbl">Aktivitäten</span></a>
+      <a href="#zusammenhaenge" class="tint-gray" data-tint title="Zusammenhänge (Taste 7)"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg><span class="lbl">Zusammenhänge</span></a>
+      <a href="#daten" class="tint-gray" data-tint title="Daten (Taste 8)"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg><span class="lbl">Daten</span></a>
     </nav>
     <div class="seg-host"><div class="seg small" role="group" aria-label="Zeitraum" data-range></div></div>
-    <button class="icon-btn" id="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
-    <button class="icon-btn" id="refresh" type="button" aria-label="Daten neu laden" title="Daten neu laden (Taste R)"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></button>
-    <button class="icon-btn" id="help-open" type="button" aria-haspopup="dialog" aria-label="Hilfe und Tastenkürzel" title="Hilfe und Tastenkürzel (Taste ?)">?</button>
+    <button class="icon-btn" id="install" data-action="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
+    <button class="icon-btn" id="refresh" data-action="refresh" type="button" aria-label="Daten neu laden" title="Daten neu laden (Taste R)"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+    <button class="icon-btn" id="help-open" data-action="help" type="button" aria-haspopup="dialog" aria-label="Hilfe und Tastenkürzel" title="Hilfe und Tastenkürzel (Taste ?)">?</button>
   </div>
 </div>
 
 <div class="wrap" id="top">
   <header class="top">
+    <span class="eyebrow" id="eyebrow">Garmin Connect · Hevy</span>
     <div class="top-row">
       <div class="title">
-        <span class="eyebrow" id="eyebrow">Garmin Connect · Hevy</span>
-        <h1>Training und Erholung</h1>
+        <h1 id="title">Training und Erholung</h1>
       </div>
-      <div class="seg-host"><div class="seg" role="group" aria-label="Zeitraum" data-range></div></div>
+      <div class="top-tools">
+        <label class="vh" for="range-select">Zeitraum</label>
+        <select id="range-select" class="range-select"></select>
+        <button class="icon-btn" data-action="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
+        <button class="icon-btn" data-action="refresh" type="button" aria-label="Daten neu laden" title="Daten neu laden"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+        <button class="icon-btn" data-action="help" type="button" aria-haspopup="dialog" aria-label="Hilfe" title="Hilfe">?</button>
+      </div>
     </div>
     <div class="status-line" id="status-line" role="status"><span>Daten werden geladen …</span></div>
   </header>
@@ -445,26 +579,27 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   <section id="ueberblick" aria-label="Überblick, letzte 7 Tage">
     <div class="tiles" id="tiles"><div class="loading">Daten werden geladen …</div></div>
+    <p class="tiles-note">Werte: 7-Tage-Mittel · Pfeil: ggü. Vorwoche · farbig nur bei Abweichung</p>
   </section>
 
-  <section class="area" id="koerper" aria-labelledby="h-koerper">
+  <section class="area tint-orange" id="koerper" aria-labelledby="h-koerper">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-koerper"/></svg></span>
       <h2 id="h-koerper">Körper</h2>
       <p class="area-sum" id="sum-koerper"></p>
     </div>
     <div class="area-body" id="b-koerper">
-      <div class="card">
+      <div class="card" data-tab="Gewicht" data-icon="koerper">
         <div class="card-head"><h3>Körpergewicht</h3><p class="sub" id="weight-sub"></p></div>
         <div class="info" hidden>
           <p>Punkte sind einzelne Messungen, die Linie ist das 7-Tage-Mittel. Schwankungen um ein Kilogramm von Tag zu Tag kommen von Wasser und Mageninhalt; beurteile deshalb die Linie.</p>
           <p class="source">Quelle: garmin_daily.csv · weight_kg · Garmin Index-Waage, erste Messung des Tages</p>
         </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Einzelmessung</span></div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Einzelmessung</span></div>
         <div class="chart-host" id="c-weight"></div>
       </div>
-      <div class="card">
-        <div class="card-head"><h3>Fett- und Muskelmasse</h3><p class="sub" id="comp-sub">Veränderung seit Beginn des Zeitraums, 7-Tage-Mittel</p></div>
+      <div class="card" data-tab="Fett, Muskel" data-icon="layers">
+        <div class="card-head"><h3>Fett- und Muskelmasse</h3><p class="sub" id="comp-sub"></p></div>
         <div class="info" hidden>
           <p>Die Waage schätzt Fett und Muskeln über den elektrischen Widerstand des Körpers. Einzelwerte sind ungenau und hängen vom Wasserhaushalt ab; brauchbar ist der Trend über mehrere Wochen.</p>
           <p class="source">Quelle: garmin_daily.csv · fat_mass_kg, muscle_mass_kg</p>
@@ -475,67 +610,120 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area" id="erholung" aria-labelledby="h-erholung">
+  <section class="area tint-orange" id="ernaehrung" aria-labelledby="h-ernaehrung">
+    <div class="area-head">
+      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-ernaehrung"/></svg></span>
+      <h2 id="h-ernaehrung">Ernährung</h2>
+      <p class="area-sum" id="sum-ernaehrung"></p>
+    </div>
+    <div class="area-body" id="b-ernaehrung">
+      <div class="card span2" data-tab="Kalorien" data-icon="flame">
+        <div class="card-head"><h3>Kalorien pro Tag</h3><p class="sub" id="kcal-sub"></p></div>
+        <div class="info" hidden>
+          <p>Punkte sind die in YAZIO geloggten Tage, die Linie ist das 7-Tage-Mittel aus vollständig geloggten Tagen. Tage unter 1.200 kcal gelten als unvollständig, etwa weil eine Mahlzeit fehlt; sie erscheinen grau und zählen in keinem Mittelwert. Der laufende Tag zählt erst ab morgen. Die gestrichelte Linie ist der Gesamtverbrauch laut Garmin; die Uhr schätzt ihn aus Puls und Bewegung, Abweichungen von 10 bis 20 % sind üblich.</p>
+          <p class="source">Quelle: nutrition_daily.csv · calories_kcal (YAZIO) · Verbrauch: garmin_daily.csv · calories_total · Grenze: <code>MIN_COMPLETE_KCAL</code> oben im Skript</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tag</span><span><i class="key-dot" style="background:var(--other);opacity:1"></i>unvollständig</span><span><i class="key-dash"></i>Verbrauch (Garmin)</span></div>
+        <div class="chart-host" id="c-kcal"></div>
+      </div>
+      <div class="card" data-tab="Makros" data-icon="pie">
+        <div class="card-head"><h3>Makronährstoffe pro Woche</h3><p class="sub" id="macro-sub"></p></div>
+        <div class="info" hidden>
+          <p>Mittlere Energie pro vollständig geloggtem Tag, aufgeteilt nach Herkunft: Eiweiß und Kohlenhydrate mit 4 kcal pro Gramm, Fett mit 9 kcal pro Gramm. Die Summe liegt meist wenige Prozent neben den Kalorien von YAZIO, weil Ballaststoffe, Alkohol und Rundung dort anders eingehen. Der Tooltip zeigt die Gramm pro Tag.</p>
+          <p class="source">Quelle: nutrition_daily.csv · protein_g, carbs_g, fat_g</p>
+        </div>
+        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>Eiweiß</span><span><i class="key-rect" style="background:var(--s2)"></i>Kohlenhydrate</span><span><i class="key-rect" style="background:var(--s3)"></i>Fett</span></div>
+        <div class="chart-host" id="c-macros"></div>
+      </div>
+      <div class="card" data-tab="Eiweiß" data-icon="egg">
+        <div class="card-head"><h3>Eiweiß pro Kilogramm Körpergewicht</h3><p class="sub" id="protein-sub"></p></div>
+        <div class="info" hidden>
+          <p>Eiweiß des Tages geteilt durch das 7-Tage-Mittel des Körpergewichts. In der Meta-Analyse von Morton und Kollegen (2018, 49 Studien) steigt der Zuwachs an fettfreier Masse durch Krafttraining bis etwa 1,6 g pro kg und Tag; darüber flacht er ab, die obere Grenze des Vertrauensbereichs lag bei 2,2 g pro kg. In einem Kaloriendefizit empfehlen Übersichtsarbeiten eher den oberen Bereich.</p>
+          <p class="source">Quelle: nutrition_daily.csv · protein_g · Körpergewicht aus garmin_daily.csv</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>1,6 und 2,2 g/kg</span></div>
+        <div class="chart-host" id="c-protein"></div>
+      </div>
+      <div class="card" data-tab="Bilanz" data-icon="balance">
+        <div class="card-head"><h3>Energiebilanz und Gewicht</h3><p class="sub" id="balance-sub"></p></div>
+        <div class="info" hidden>
+          <p>Aufnahme laut YAZIO minus Verbrauch laut Garmin, nur an vollständig geloggten Tagen. Die Umrechnung in Kilogramm nimmt 7.700 kcal pro kg Körpergewicht an. Dass erwartete und gemessene Änderung nicht genau übereinstimmen, ist normal: Die Uhr schätzt den Verbrauch, beim Loggen fehlen oft Kleinigkeiten, und Wasser verschiebt das Gewicht um mehr als ein Kilogramm. Aussagekräftig ist, ob beide in dieselbe Richtung zeigen und wie groß der Abstand über Wochen bleibt.</p>
+          <p class="source">Quelle: nutrition_daily.csv · calories_kcal · garmin_daily.csv · calories_total, weight_kg</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>ausgeglichen</span></div>
+        <div class="chart-host" id="c-balance"></div>
+      </div>
+      <div class="card" data-tab="HRV" data-icon="pulse">
+        <div class="card-head"><h3>Kalorien und HRV der Folgenacht</h3><p class="sub" id="kcal-hrv-sub"></p></div>
+        <div class="info" hidden>
+          <p>Jeder Punkt ist ein vollständig geloggter Tag: waagrecht die Kalorien des Tages, senkrecht die HRV der folgenden Nacht im Vergleich zum 7-Tage-Mittel bis zu diesem Tag. Die statistische Prüfung aller Nährstoffe gegen Erholung und Schlaf steht unter Zusammenhänge.</p>
+        </div>
+        <div class="chart-host" id="c-kcal-hrv"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="area tint-violet" id="erholung" aria-labelledby="h-erholung">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-erholung"/></svg></span>
       <h2 id="h-erholung">Erholung</h2>
       <p class="area-sum" id="sum-erholung"></p>
     </div>
     <div class="area-body" id="b-erholung">
-      <div class="card">
+      <div class="card" data-tab="HRV" data-icon="pulse">
         <div class="card-head"><h3>HRV über Nacht</h3><p class="sub" id="hrv-sub"></p></div>
         <div class="info" hidden>
           <p>Die Herzfrequenzvariabilität misst, wie stark der Abstand zwischen zwei Herzschlägen im Schlaf schwankt. Liegt das 7-Tage-Mittel mehrere Tage unter deinem Normalbereich, sind Belastung, wenig Schlaf, Alkohol oder ein Infekt die üblichen Gründe. Eine einzelne niedrige Nacht sagt wenig.</p>
           <p class="source">Quelle: garmin_daily.csv · hrv_last_night_ms, hrv_baseline_low_ms, hrv_baseline_high_ms · Werte eines Datums gehören zur Nacht davor</p>
         </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Einzelne Nacht</span><span><i class="key-band"></i>Normalbereich (Garmin)</span></div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Einzelne Nacht</span><span><i class="key-band"></i>Normalbereich</span></div>
         <div class="chart-host" id="c-hrv"></div>
       </div>
-      <div class="card">
+      <div class="card" data-tab="Ruhepuls" data-icon="heart">
         <div class="card-head"><h3>Ruhepuls</h3><p class="sub" id="rhr-sub"></p></div>
         <div class="info" hidden>
           <p>Niedrigster Puls des Tages. Liegt das 7-Tage-Mittel mehrere Tage über dem 60-Tage-Mittel, ist der Körper oft noch mit Erholung oder einem Infekt beschäftigt.</p>
           <p class="source">Quelle: garmin_daily.csv · resting_hr</p>
         </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>60-Tage-Mittel</span></div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>Ø 60 Tage</span></div>
         <div class="chart-host" id="c-rhr"></div>
       </div>
-      <div class="card span2">
-        <div class="card-head"><h3>Garmin-Scores</h3><p class="sub">Sleep Score, Training Readiness und Body Battery, jeweils 7-Tage-Mittel auf der Skala 0 bis 100</p></div>
+      <div class="card span2" data-tab="Scores" data-icon="bars">
+        <div class="card-head"><h3>Garmin-Scores</h3><p class="sub" id="scores-sub"></p></div>
         <div class="info" hidden>
           <p>Readiness und Body Battery rechnet Garmin teilweise aus Schlaf und HRV. Sie sind deshalb keine unabhängigen Messungen, sondern Zusammenfassungen der Werte oben.</p>
           <p class="source">Quelle: garmin_daily.csv · sleep_score, readiness_score, body_battery_wake (ersatzweise body_battery_high)</p>
         </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Sleep Score</span><span><i class="key-line" style="background:var(--s2)"></i>Training Readiness (morgens)</span><span><i class="key-line" style="background:var(--s3)"></i>Body Battery beim Aufwachen</span></div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Sleep Score</span><span><i class="key-line" style="background:var(--s2)"></i>Readiness</span><span><i class="key-line" style="background:var(--s3)"></i>Body Battery</span></div>
         <div class="chart-host" id="c-scores"></div>
       </div>
     </div>
   </section>
 
-  <section class="area" id="schlaf" aria-labelledby="h-schlaf">
+  <section class="area tint-violet" id="schlaf" aria-labelledby="h-schlaf">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-schlaf"/></svg></span>
       <h2 id="h-schlaf">Schlaf</h2>
       <p class="area-sum" id="sum-schlaf"></p>
     </div>
     <div class="area-body" id="b-schlaf">
-      <div class="card span2">
+      <div class="card span2" data-tab="Zeiten" data-icon="clock">
         <div class="card-head"><h3>Schlafenszeiten</h3><p class="sub" id="sleep-times-sub"></p></div>
         <div class="info" hidden>
           <p>Jeder Balken ist eine Nacht vom Einschlafen bis zum Aufwachen, der Abend oben, der Morgen unten. Garmin überschätzt die Schlafdauer im Mittel um etwa eine halbe bis drei viertel Stunde; die Zeiten selbst sind brauchbar.</p>
           <p class="source">Quelle: garmin_daily.csv · sleep_start_local, sleep_end_local</p>
         </div>
-        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>Nacht vor einem Werktag</span><span><i class="key-rect" style="background:var(--s2)"></i>Freitag- und Samstagnacht</span></div>
+        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>vor Werktag</span><span><i class="key-rect" style="background:var(--s2)"></i>Fr- und Sa-Nacht</span></div>
         <div class="chart-host" id="c-sleep-times"></div>
       </div>
-      <div class="card">
+      <div class="card" data-tab="Woche" data-icon="table">
         <div class="card-head"><h3>Werktage und Wochenende</h3><p class="sub" id="sleep-week-sub"></p></div>
         <div class="info" hidden>
           <p>Werktage sind die Nächte von Sonntag bis Donnerstag, Wochenende die Freitag- und Samstagnacht. Die Schlafmitte liegt zwischen Einschlafen und Aufwachen; wie weit sie sich am Wochenende verschiebt, heißt sozialer Jetlag. Ab etwa einer Stunde bringen Studien ihn mit schlechterem Schlaf in Verbindung.</p>
         </div>
         <div class="table-wrap"><table id="sleep-week"></table></div>
       </div>
-      <div class="card">
+      <div class="card" data-tab="HRV" data-icon="pulse">
         <div class="card-head"><h3>Späte Nächte und HRV</h3><p class="sub" id="sleep-hrv-sub"></p></div>
         <div class="info" hidden>
           <p>Jeder Punkt ist eine Nacht: waagrecht die Einschlafzeit, senkrecht die HRV dieser Nacht im Vergleich zum 7-Tage-Mittel bis zum Vortag. Die Trendlinie nutzt nur Nächte mit Sleep Score ab 80, damit kurze oder gestörte Nächte die Steigung nicht bestimmen.</p>
@@ -546,15 +734,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area" id="kraft" aria-labelledby="h-kraft">
+  <section class="area tint-blue" id="kraft" aria-labelledby="h-kraft">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-kraft"/></svg></span>
       <h2 id="h-kraft">Kraft</h2>
       <p class="area-sum" id="sum-kraft"></p>
     </div>
     <div class="area-body" id="b-kraft">
-      <div class="card span2">
-        <div class="card-head"><h3>Geschätztes 1RM der Hauptübungen</h3><p class="sub">Bester Arbeitssatz jeder Einheit, umgerechnet auf eine Wiederholung</p></div>
+      <div class="card span2" data-tab="e1RM" data-icon="trend">
+        <div class="card-head"><h3>Geschätztes 1RM der Hauptübungen</h3><p class="sub">Bester Satz je Einheit, auf 1 Wiederholung umgerechnet</p></div>
         <div class="info" hidden>
           <p>Epley-Formel: Last × (1 + Wiederholungen / 30), aus Sätzen mit bis zu 10 Wiederholungen, ohne Aufwärmsätze. Bei Klimmzügen und Dips zählt das Körpergewicht mit. Welche Übungen hier stehen, wählst du über „Übungen wählen“. Ohne eigene Auswahl gilt <code>MAIN_LIFTS</code> oben im Skript, und ohne Treffer dort erscheinen die vier häufigsten.</p>
           <p class="source">Quelle: hevy_sets.csv · weight_kg, reps, set_type · Körpergewicht aus garmin_daily.csv</p>
@@ -575,7 +763,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="lifts" id="lifts"></div>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Sätze" data-icon="bars">
         <div class="card-head"><h3>Arbeitssätze pro Woche</h3><p class="sub" id="volume-sub"></p></div>
         <div class="info" hidden>
           <p>Gezählt werden alle Sätze außer Aufwärmsätzen. Der Tooltip zeigt zusätzlich Tonnage, Einheiten und die Trainingslast, die die Uhr beim Krafttraining gemessen hat.</p>
@@ -583,7 +771,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="chart-host" id="c-volume"></div>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Workouts" data-icon="list">
         <div class="card-head"><h3>Krafteinheiten nach Workout</h3><p class="sub" id="sessions-sub"></p></div>
         <div class="info" hidden>
           <p>Hevy kennt Sätze und Gewichte, die Uhr Dauer, Puls und Trainingslast. Beide werden über Datum und Startzeit verknüpft, wenn sie höchstens drei Stunden auseinanderliegen. HRV und Ruhepuls zeigen die Abweichung vom 7-Tage-Mittel in der Nacht nach der Einheit, nur von Tagen ohne weitere Aktivität.</p>
@@ -591,7 +779,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="table-wrap wide"><table id="by-workout"></table></div>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Einheiten" data-icon="calendar">
         <div class="card-head"><h3>Letzte Krafteinheiten</h3><p class="sub" id="sessions-recent-sub"></p></div>
         <div class="table-wrap wide"><table id="sessions"></table></div>
         <button class="ghost-btn" type="button" id="sessions-more" hidden></button>
@@ -599,14 +787,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area" id="aktivitaeten" aria-labelledby="h-aktivitaeten">
+  <section class="area tint-blue" id="aktivitaeten" aria-labelledby="h-aktivitaeten">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-aktivitaeten"/></svg></span>
       <h2 id="h-aktivitaeten">Aktivitäten</h2>
       <p class="area-sum" id="sum-aktivitaeten"></p>
     </div>
     <div class="area-body" id="b-aktivitaeten">
-      <div class="card span2">
+      <div class="card span2" data-tab="Woche" data-icon="bars">
         <div class="card-head"><h3>Aktive Zeit pro Woche nach Sportart</h3><p class="sub" id="act-sub"></p></div>
         <div class="info" hidden>
           <p>Dauer aller Aufzeichnungen der Uhr. Welche Garmin-Aktivitätstypen zu welcher Sportart gehören, legt <code>SPORTS</code> oben im Skript fest.</p>
@@ -615,20 +803,20 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         <div class="legend" id="act-legend"></div>
         <div class="chart-host" id="c-activity"></div>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Schritte" data-icon="steps">
         <div class="card-head"><h3>Schritte pro Tag</h3><p class="sub" id="steps-sub"></p></div>
         <div class="info" hidden>
           <p>Die gestrichelte Linie ist das Ziel von 8.000 Schritten. Bei Erwachsenen unter 60 Jahren flacht der Nutzen für die Lebenserwartung zwischen etwa 8.000 und 10.000 Schritten pro Tag ab.</p>
           <p class="source">Quelle: garmin_daily.csv · steps</p>
         </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>Ziel</span></div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Ø 7 Tage</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>Ziel</span></div>
         <div class="chart-host" id="c-steps"></div>
       </div>
-      <div class="card span2">
-        <div class="card-head"><h3>Sportarten im Zeitraum</h3><p class="sub">Summen und Mittelwerte pro Sportart</p></div>
+      <div class="card span2" data-tab="Sportarten" data-icon="layers">
+        <div class="card-head"><h3>Sportarten im Zeitraum</h3><p class="sub">Summen und Mittel je Sportart</p></div>
         <div class="table-wrap wide"><table id="sports"></table></div>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Letzte" data-icon="list">
         <div class="card-head"><h3>Letzte Aktivitäten</h3><p class="sub" id="recent-sub"></p></div>
         <div class="table-wrap wide"><table id="recent"></table></div>
         <button class="ghost-btn" type="button" id="recent-more" hidden></button>
@@ -636,67 +824,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area" id="ernaehrung" aria-labelledby="h-ernaehrung">
-    <div class="area-head">
-      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-ernaehrung"/></svg></span>
-      <h2 id="h-ernaehrung">Ernährung</h2>
-      <p class="area-sum" id="sum-ernaehrung"></p>
-    </div>
-    <div class="area-body" id="b-ernaehrung">
-      <div class="card span2">
-        <div class="card-head"><h3>Kalorien pro Tag</h3><p class="sub" id="kcal-sub"></p></div>
-        <div class="info" hidden>
-          <p>Punkte sind die in YAZIO geloggten Tage, die Linie ist das 7-Tage-Mittel aus vollständig geloggten Tagen. Tage unter 1.200 kcal gelten als unvollständig, etwa weil eine Mahlzeit fehlt; sie erscheinen grau und zählen in keinem Mittelwert. Der laufende Tag zählt erst ab morgen. Die gestrichelte Linie ist der Gesamtverbrauch laut Garmin; die Uhr schätzt ihn aus Puls und Bewegung, Abweichungen von 10 bis 20 % sind üblich.</p>
-          <p class="source">Quelle: nutrition_daily.csv · calories_kcal (YAZIO) · Verbrauch: garmin_daily.csv · calories_total · Grenze: <code>MIN_COMPLETE_KCAL</code> oben im Skript</p>
-        </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Aufnahme, 7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dot" style="background:var(--other);opacity:1"></i>unvollständig geloggt</span><span><i class="key-dash"></i>Verbrauch laut Garmin, 7-Tage-Mittel</span></div>
-        <div class="chart-host" id="c-kcal"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Makronährstoffe pro Woche</h3><p class="sub" id="macro-sub"></p></div>
-        <div class="info" hidden>
-          <p>Mittlere Energie pro vollständig geloggtem Tag, aufgeteilt nach Herkunft: Eiweiß und Kohlenhydrate mit 4 kcal pro Gramm, Fett mit 9 kcal pro Gramm. Die Summe liegt meist wenige Prozent neben den Kalorien von YAZIO, weil Ballaststoffe, Alkohol und Rundung dort anders eingehen. Der Tooltip zeigt die Gramm pro Tag.</p>
-          <p class="source">Quelle: nutrition_daily.csv · protein_g, carbs_g, fat_g</p>
-        </div>
-        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>Eiweiß</span><span><i class="key-rect" style="background:var(--s2)"></i>Kohlenhydrate</span><span><i class="key-rect" style="background:var(--s3)"></i>Fett</span></div>
-        <div class="chart-host" id="c-macros"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Eiweiß pro Kilogramm Körpergewicht</h3><p class="sub" id="protein-sub"></p></div>
-        <div class="info" hidden>
-          <p>Eiweiß des Tages geteilt durch das 7-Tage-Mittel des Körpergewichts. In der Meta-Analyse von Morton und Kollegen (2018, 49 Studien) steigt der Zuwachs an fettfreier Masse durch Krafttraining bis etwa 1,6 g pro kg und Tag; darüber flacht er ab, die obere Grenze des Vertrauensbereichs lag bei 2,2 g pro kg. In einem Kaloriendefizit empfehlen Übersichtsarbeiten eher den oberen Bereich.</p>
-          <p class="source">Quelle: nutrition_daily.csv · protein_g · Körpergewicht aus garmin_daily.csv</p>
-        </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>1,6 und 2,2 g/kg</span></div>
-        <div class="chart-host" id="c-protein"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Energiebilanz und Gewicht</h3><p class="sub" id="balance-sub"></p></div>
-        <div class="info" hidden>
-          <p>Aufnahme laut YAZIO minus Verbrauch laut Garmin, nur an vollständig geloggten Tagen. Die Umrechnung in Kilogramm nimmt 7.700 kcal pro kg Körpergewicht an. Dass erwartete und gemessene Änderung nicht genau übereinstimmen, ist normal: Die Uhr schätzt den Verbrauch, beim Loggen fehlen oft Kleinigkeiten, und Wasser verschiebt das Gewicht um mehr als ein Kilogramm. Aussagekräftig ist, ob beide in dieselbe Richtung zeigen und wie groß der Abstand über Wochen bleibt.</p>
-          <p class="source">Quelle: nutrition_daily.csv · calories_kcal · garmin_daily.csv · calories_total, weight_kg</p>
-        </div>
-        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>ausgeglichen</span></div>
-        <div class="chart-host" id="c-balance"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Kalorien und HRV der Folgenacht</h3><p class="sub" id="kcal-hrv-sub"></p></div>
-        <div class="info" hidden>
-          <p>Jeder Punkt ist ein vollständig geloggter Tag: waagrecht die Kalorien des Tages, senkrecht die HRV der folgenden Nacht im Vergleich zum 7-Tage-Mittel bis zu diesem Tag. Die statistische Prüfung aller Nährstoffe gegen Erholung und Schlaf steht unter Zusammenhänge.</p>
-        </div>
-        <div class="chart-host" id="c-kcal-hrv"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="area" id="zusammenhaenge" aria-labelledby="h-zusammenhaenge">
+  <section class="area tint-gray" id="zusammenhaenge" aria-labelledby="h-zusammenhaenge">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-zusammenhaenge"/></svg></span>
       <h2 id="h-zusammenhaenge">Zusammenhänge</h2>
       <p class="area-sum" id="sum-zusammenhaenge"></p>
     </div>
     <div class="area-body" id="b-zusammenhaenge">
-      <div class="card span2">
+      <div class="card span2" data-tab="Ergebnisse" data-icon="list">
         <div class="card-head"><h3>Automatisch gefundene Zusammenhänge</h3><p class="sub" id="insights-sub"></p></div>
         <div class="info" hidden>
           <p>Jede Kennzahl wird mit ihrem eigenen 28-Tage-Mittel verglichen; getestet wird, ob die Abweichungen zusammen schwanken, mit Zeitversatz (Training am Montag gegen die Nacht auf Dienstag). <b>Belastbar</b> heißt: hält der Korrektur für viele gleichzeitige Tests stand. <b>Tendenz</b> heißt: nur ohne diese Korrektur auffällig. Ein fester Wochenplan oder eine Krankheitswoche kann trotzdem Scheinzusammenhänge erzeugen.</p>
@@ -706,23 +841,24 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           <span class="caution" id="insights-window"></span>
           <div class="seg small" role="group" aria-label="Welche Ergebnisse" id="insights-filter"></div>
         </div>
-        <div class="table-wrap wide"><table id="insights"></table></div>
+        <ul class="rows" id="insights"></ul>
+        <button class="ghost-btn" type="button" id="insights-more" hidden></button>
       </div>
-      <div class="card span2">
+      <div class="card span2" data-tab="Last" data-icon="bolt">
         <div class="card-head"><h3>Trainingslast und HRV der Folgenacht</h3><p class="sub" id="corr3-sub"></p></div>
         <div class="info" hidden>
           <p>Jeder Punkt ist ein Tag. Waagrecht die Summe der Garmin-Trainingslast aller Aktivitäten, Ruhetage mit 0. Senkrecht die HRV der folgenden Nacht im Vergleich zum 7-Tage-Mittel bis zu diesem Tag. r ist der Korrelationskoeffizient; er zeigt einen Zusammenhang, keine Ursache.</p>
         </div>
         <div class="chart-host" id="c-corr3"></div>
       </div>
-      <div class="card">
+      <div class="card" data-tab="Tonnage" data-icon="kraft">
         <div class="card-head"><h3>Tonnage und HRV der Folgenacht</h3><p class="sub" id="corr1-sub"></p></div>
         <div class="info" hidden>
           <p>Jeder Punkt ist ein Krafttrainingstag: waagrecht die Tonnage aller Arbeitssätze, senkrecht die HRV der folgenden Nacht im Vergleich zum 7-Tage-Mittel bis zum Trainingstag.</p>
         </div>
         <div class="chart-host" id="c-corr1"></div>
       </div>
-      <div class="card">
+      <div class="card" data-tab="Form" data-icon="schlaf">
         <div class="card-head"><h3>Schlaf der Vornacht und Tagesform</h3><p class="sub" id="corr2-sub"></p></div>
         <div class="info" hidden>
           <p>Jeder Punkt ist eine Krafteinheit: waagrecht der Sleep Score der Nacht davor, senkrecht das e1RM der Einheit im Vergleich zum besten Wert der 28 Tage davor, gemittelt über die Hauptübungen.</p>
@@ -732,34 +868,34 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area" id="daten" aria-labelledby="h-daten">
+  <section class="area tint-gray" id="daten" aria-labelledby="h-daten">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-daten"/></svg></span>
       <h2 id="h-daten">Daten</h2>
       <p class="area-sum" id="sum-daten"></p>
     </div>
     <div class="area-body" id="b-daten">
-      <div class="card span2">
-        <div class="card-head"><h3>Datenquellen</h3><p class="sub">Was die Seite geladen hat und wie aktuell es ist</p></div>
+      <div class="card span2" data-tab="Quellen" data-icon="daten">
+        <div class="card-head"><h3>Datenquellen</h3><p class="sub">Was geladen ist und wie aktuell</p></div>
         <div class="card-tools" id="connection"></div>
-        <div class="table-wrap wide"><table id="sources"></table></div>
+        <ul class="rows" id="sources"></ul>
       </div>
-      <div class="card span2">
-        <div class="card-head"><h3>Wochenübersicht</h3><p class="sub">Neueste Woche oben</p></div>
+      <div class="card span2" data-tab="Wochen" data-icon="table">
+        <div class="card-head"><h3>Wochenübersicht</h3><p class="sub">Neueste oben</p></div>
         <div class="info" hidden>
           <p>Die Erholung einer Woche gilt als reduziert, wenn die mittlere HRV unter dem Normalbereich liegt oder der Ruhepuls mehr als 2,5 Schläge über dem 60-Tage-Mittel.</p>
         </div>
         <div class="table-wrap wide"><table id="weeks"></table></div>
       </div>
-      <div class="card span2">
-        <div class="card-head"><h3>Tagesdaten</h3><p class="sub">Alle Werte pro Tag, neuester Tag oben</p></div>
+      <div class="card span2" data-tab="Tage" data-icon="calendar">
+        <div class="card-head"><h3>Tagesdaten</h3><p class="sub">Alle Werte, neuester Tag oben</p></div>
         <details class="daily" id="daily-details">
           <summary id="daily-summary">Tabelle anzeigen</summary>
           <div class="table-wrap wide scroll"><table id="daily"></table></div>
         </details>
       </div>
-      <div class="card span2" id="glossar">
-        <div class="card-head"><h3>So wird gerechnet</h3><p class="sub">Begriffe und Berechnungen auf dieser Seite</p></div>
+      <div class="card span2" id="glossar" data-tab="Begriffe" data-icon="info">
+        <div class="card-head"><h3>So wird gerechnet</h3><p class="sub">Begriffe und Berechnungen</p></div>
         <dl class="glossary">
           <div><dt>7-Tage-Mittel</dt><dd>Mittelwert aller vorhandenen Werte der letzten 7 Kalendertage einschließlich des Tages selbst. Tage ohne Messung zählen nicht mit.</dd></div>
           <div><dt>Zeitversatz</dt><dd>Garmin-Werte eines Datums gehören zur Nacht davor. Training am Montag wirkt also auf die Werte vom Dienstag.</dd></div>
@@ -803,7 +939,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h3>Tastenkürzel</h3>
       <table>
         <tbody>
-          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Erholung, Schlaf, Kraft, Aktivitäten, Ernährung, Zusammenhänge, Daten</td></tr>
+          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Ernährung, Erholung, Schlaf, Kraft, Aktivitäten, Zusammenhänge, Daten</td></tr>
           <tr><td><kbd>0</kbd></td><td>Zurück zum Überblick</td></tr>
           <tr><td><kbd>Z</kbd></td><td>Nächster Zeitraum; mit <kbd>Umschalt</kbd> der vorherige</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Im ausgewählten Diagramm einen Tag weiter; mit <kbd>Umschalt</kbd> eine Woche</td></tr>
@@ -826,7 +962,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
     <div>
       <h3>Bereiche</h3>
-      <p class="sub">Deine eigenen Daten zeigt die Seite, wenn sie im Repo über einen lokalen Server läuft oder mit deinem privaten Daten-Repository verbunden ist (Daten → Datenquellen). Jeder Bereich lässt sich über „Einklappen“ schließen; die Kernaussage bleibt sichtbar. Diese Einstellung und der Zeitraum werden in diesem Browser gespeichert. Das <b>?</b> an einer Karte erklärt, was sie zeigt und woher die Daten kommen. Berechnungen und Begriffe stehen unter <a href="#glossar" id="help-glossary">Daten → So wird gerechnet</a>.</p>
+      <p class="sub">Deine eigenen Daten zeigt die Seite, wenn sie im Repo über einen lokalen Server läuft oder mit deinem privaten Daten-Repository verbunden ist (Daten → Datenquellen). Jeder Bereich lässt sich ein- und ausklappen; die Kennzahlen im Kopf bleiben sichtbar. Am Handy starten die Bereiche eingeklappt und zeigen ihre Karten einzeln über Tabs. Diese Einstellung und der Zeitraum werden in diesem Browser gespeichert. Das <b>ⓘ</b> an einer Karte erklärt, was sie zeigt und woher die Daten kommen. Berechnungen und Begriffe stehen unter <a href="#glossar" id="help-glossary">Daten → So wird gerechnet</a>.</p>
     </div>
   </div>
 </dialog>
@@ -947,10 +1083,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   ];
   const DEFAULT_RANGE = 90;
   // Areas in page order; the position is also the keyboard shortcut (1 = Körper)
-  const AREAS = ["koerper", "erholung", "schlaf", "kraft", "aktivitaeten", "ernaehrung", "zusammenhaenge", "daten"];
+  const AREAS = ["koerper", "ernaehrung", "erholung", "schlaf", "kraft", "aktivitaeten", "zusammenhaenge", "daten"];
+  // Color family of each area (CSS classes tint-*); status colors are never used for areas
+  const AREA_TINT = {
+    koerper: "orange", ernaehrung: "orange", erholung: "violet", schlaf: "violet",
+    kraft: "blue", aktivitaeten: "blue", zusammenhaenge: "gray", daten: "gray",
+  };
+  const PHONE = "(max-width: 759px)"; // same breakpoint as the CSS: icon bar, tabs, collapsed areas
   const STEP_GOAL = 8000;       // same target as docs/scores.md
   const STALE_AFTER_DAYS = 2;   // warn when the newest Garmin day is this many days old
   const RECENT_ROWS = 10;       // rows of the "latest" tables before "show all"
+  const INSIGHT_ROWS = 8;       // findings listed before "show all"
   const TIMEZONE = "Europe/Vienna"; // same zone as HEALTHSYNC_TZ in the sync
   const MAX_LINK_GAP_MIN = 180; // Hevy workout and watch activity must start within 3 hours
   const DAY = 86400000;
@@ -1054,6 +1197,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   // Icon from the sprite at the top of the page
+  // Icon plus short value; level only when a threshold is crossed
+  function chip(iconName, text, level = "neutral") {
+    return html("span", { class: `chip ${level}` }, [iconName ? icon(iconName) : null, text]);
+  }
+  const direction = (v, eps) => (v == null ? "flat" : v > eps ? "up" : v < -eps ? "down" : "flat");
   function icon(name) {
     const node = svg("svg", { class: "ic", "aria-hidden": "true" });
     svg("use", { href: `#i-${name}` }, node);
@@ -1580,6 +1728,12 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     rollingMean(days, "ready", "ready7", 7, 3);
     rollingMean(days, "bb", "bb7", 7, 3);
     rollingMean(days, "steps", "steps7", 7, 3);
+    for (let i = 0; i < days.length; i++) {
+      let sets = 0, active = 0;
+      for (let j = Math.max(0, i - 6); j <= i; j++) { sets += days[j].hardSets; active += days[j].activeMin / 60; }
+      days[i].sets7Sum = sets;
+      days[i].active7Sum = active;
+    }
     for (const d of days) d.balance = d.kcal != null && d.kcalBurned != null ? d.kcal - d.kcalBurned : null;
     rollingMean(days, "kcal", "kcal7", 7, 3);
     rollingMean(days, "proteinG", "proteinG7", 7, 3);
@@ -2096,7 +2250,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   // Below about 20 points a correlation swings strongly from one data point to the next
-  const fewPoints = (fit) => (fit.n < 20 ? " (wenige Punkte, r ist noch unsicher)" : "");
+  const fewPoints = (fit) => (fit.n < 20 ? " (wenige Punkte)" : "");
 
   function scatterChart(host, o) {
     const pts = o.points;
@@ -2185,7 +2339,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   const state = {
     range: DEFAULT_RANGE, model: null, source: "demo", insights: null, insightsBroken: false, sourceInfo: [],
-    insightFilter: "robust", showAll: { sessions: false, recent: false }, x0: null, x1: null, days: [],
+    insightFilter: "robust", showAll: { sessions: false, recent: false, insights: false }, x0: null, x1: null, days: [],
   };
   const charts = new Map();
   const resizer = new ResizeObserver((entries) => {
@@ -2212,8 +2366,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const clockOf = (ms) => new Date(ms).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
   const dayOf = (ms) => new Date(ms).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
   const AREA_LABELS = {
-    koerper: "Körper", erholung: "Erholung", schlaf: "Schlaf", kraft: "Kraft",
-    aktivitaeten: "Aktivitäten", ernaehrung: "Ernährung", zusammenhaenge: "Zusammenhänge", daten: "Daten",
+    koerper: "Körper", ernaehrung: "Ernährung", erholung: "Erholung", schlaf: "Schlaf", kraft: "Kraft",
+    aktivitaeten: "Aktivitäten", zusammenhaenge: "Zusammenhänge", daten: "Daten",
   };
 
   // ---- time range
@@ -2235,6 +2389,13 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
   function renderRangeButtons() {
     const span = dataSpanDays();
+    const select = $("range-select");
+    select.replaceChildren(...RANGES.map((r) => {
+      const o = html("option", { value: String(r.days), text: r.label });
+      o.disabled = !rangeAvailable(r.days);
+      o.selected = state.range === r.days;
+      return o;
+    }));
     for (const seg of document.querySelectorAll("[data-range]")) {
       seg.replaceChildren(...RANGES.map((r) => {
         const off = !rangeAvailable(r.days);
@@ -2275,14 +2436,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const series = (key) => days.map((d) => ({ t: d.t, v: d[key] }));
 
     $("eyebrow").textContent = M.hasNutrition ? "Garmin Connect · Hevy · YAZIO" : "Garmin Connect · Hevy";
-    renderHeader(M, lastWith, x0, x1);
+    renderHeader(M, lastWith);
     renderTiles(M, lastWith, at);
 
     // Körper
     const wLast = lastWith("weight7");
     const wFirst = days.find((d) => d.weight7 != null);
     $("weight-sub").textContent = wLast && wFirst
-      ? `${fmt(wLast.weight7, 1)} kg im 7-Tage-Mittel, ${fmtSigned(wLast.weight7 - wFirst.weight7, 1)} kg im Zeitraum`
+      ? `${fmt(wLast.weight7, 1)} kg · ${fmtSigned(wLast.weight7 - wFirst.weight7, 1)} kg in ${fmt(days.length)} Tagen`
       : "Keine Messungen im Zeitraum";
     mount("c-weight", (host) => timeChart(host, {
       x0, x1, label: "Körpergewicht in Kilogramm",
@@ -2294,6 +2455,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }));
 
     const fatBase = days.find((d) => d.fat7 != null)?.fat7, muscleBase = days.find((d) => d.muscle7 != null)?.muscle7;
+    const fatLast = lastWith("fat7"), muscleLast = lastWith("muscle7"), compFrom = days.find((d) => d.fat7 != null);
+    $("comp-sub").textContent = compFrom && fatLast && muscleLast
+      ? `Fett ${fmtSigned(fatLast.fat7 - fatBase, 1)} kg · Muskel ${fmtSigned(muscleLast.muscle7 - muscleBase, 1)} kg seit ${ddmm(compFrom.t)}`
+      : "Keine Körperzusammensetzung im Zeitraum";
     mount("c-comp", (host) => timeChart(host, {
       x0, x1, label: "Veränderung von Fett- und Muskelmasse in Kilogramm", zero: true,
       empty: "Keine Körperzusammensetzung im Zeitraum (Spalten fat_mass_kg und muscle_mass_kg leer).",
@@ -2306,7 +2471,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Erholung
     const hLast = lastWith("hrv7");
     $("hrv-sub").textContent = hLast
-      ? `${fmt(hLast.hrv7)} ms im 7-Tage-Mittel${hLast.hrvLow != null ? `, Normalbereich ${fmt(hLast.hrvLow)}–${fmt(hLast.hrvHigh)} ms` : ""}`
+      ? `${fmt(hLast.hrv7)} ms${hLast.hrvLow != null ? ` · Bereich ${fmt(hLast.hrvLow)}–${fmt(hLast.hrvHigh)}` : ""}`
+        + ` · ${days.filter((d) => d.hrv7 != null && d.hrvLow != null && d.hrv7 < d.hrvLow).length} von ${days.filter((d) => d.hrv7 != null && d.hrvLow != null).length} Tagen darunter`
       : "Keine HRV-Werte im Zeitraum";
     mount("c-hrv", (host) => timeChart(host, {
       x0, x1, label: "HRV über Nacht in Millisekunden", bandLabel: "Normalbereich (ms)",
@@ -2318,7 +2484,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }));
     const rLast = lastWith("rhr7");
     $("rhr-sub").textContent = rLast
-      ? `${fmt(rLast.rhr7, 1)} bpm im 7-Tage-Mittel${rLast.rhr60 != null ? `, ${fmtSigned(rLast.rhr7 - rLast.rhr60, 1)} bpm gegenüber dem 60-Tage-Mittel` : ""}`
+      ? `${fmt(rLast.rhr7, 1)} bpm${rLast.rhr60 != null ? ` · ${fmtSigned(rLast.rhr7 - rLast.rhr60, 1)} ggü. 60 Tagen` : ""}`
       : "Keine Ruhepuls-Werte im Zeitraum";
     mount("c-rhr", (host) => timeChart(host, {
       x0, x1, label: "Ruhepuls in Schlägen pro Minute",
@@ -2328,6 +2494,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         { label: "7-Tage-Mittel", color: "var(--s1)", data: series("rhr7"), fmt: (v) => `${fmt(v, 1)} bpm`, endLabel: true },
       ],
     }));
+    const sc = [["Sleep", "sleep7"], ["Readiness", "ready7"], ["Body Battery", "bb7"]].map(([l, k]) => [l, lastWith(k)?.[k]]).filter((x) => x[1] != null);
+    $("scores-sub").textContent = sc.length ? sc.map(([l, v]) => `${l} ${fmt(v)}`).join(" · ") : "Keine Scores im Zeitraum";
     mount("c-scores", (host) => timeChart(host, {
       x0, x1, label: "Sleep Score, Training Readiness und Body Battery, 0 bis 100", floor: 0, ceil: 100, height: 230,
       series: [
@@ -2344,7 +2512,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const stepDays = days.filter((d) => d.steps != null);
     const stepsLast = lastWith("steps7");
     $("steps-sub").textContent = stepDays.length
-      ? `${fmt(stepsLast?.steps7)} im 7-Tage-Mittel; an ${stepDays.filter((d) => d.steps >= STEP_GOAL).length} von ${stepDays.length} Tagen mindestens ${fmt(STEP_GOAL)}`
+      ? `Ø ${fmt(stepsLast?.steps7)} · Ziel an ${stepDays.filter((d) => d.steps >= STEP_GOAL).length} von ${stepDays.length} Tagen`
       : "Keine Schritte im Zeitraum";
     mount("c-steps", (host) => timeChart(host, {
       x0, x1, label: "Schritte pro Tag", floor: 0, refs: [{ v: STEP_GOAL, label: `Ziel ${fmt(STEP_GOAL)}` }],
@@ -2367,34 +2535,24 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderConnection();
     renderSummaries(M, days, x0, x1, lastWith);
 
-    const sourceText = {
-      demo: "Beispieldaten, im Browser erzeugt",
-      csv: "CSV-Dateien im Ordner data/",
-      embedded: "eingebettete CSV-Daten",
-      github: `GitHub-Repository ${state.dataRepo}`,
-    }[state.source];
-    const helpBtn = html("button", { type: "button", class: "link-btn", text: "Hilfe und Tastenkürzel" });
+    const sourceText = { demo: "Beispieldaten", csv: "Ordner data/", embedded: "eingebettete Daten", github: state.dataRepo }[state.source];
+    const helpBtn = html("button", { type: "button", class: "link-btn", text: "Hilfe" });
     helpBtn.addEventListener("click", openHelp);
-    $("footer").replaceChildren(
-      html("span", { text: `Datenquelle: ${sourceText}. Zeitraum ${longDate(x0)} bis ${longDate(x1)}.` }),
-      helpBtn,
-    );
+    $("footer").replaceChildren(html("span", { text: `${sourceText} · ${ddmm(x0)} bis ${dmy(x1)}` }), helpBtn);
+    for (const area of AREAS) syncTabs(area);
   }
 
-  function renderHeader(M, lastWith, x0, x1) {
+  function renderHeader(M, lastWith) {
     const h = lastWith("hrv7"), r = lastWith("rhr7");
     const st = recoveryStatus(h?.hrv7, h?.hrvLow, r?.rhr7, r?.rhr60);
     const fr = freshness(M);
+    $("title").textContent = fmtDate(todayT(), { weekday: "short", day: "2-digit", month: "2-digit" });
     $("status-line").replaceChildren(...[
-      st ? pill(st.level, st.long) : null,
-      html("span", { text: `Zeitraum ${ddmm(x0)} bis ${dmy(x1)}, ${fmt(Math.round((x1 - x0) / DAY) + 1)} Tage` }),
-      fr.stale
-        ? pill("warn", `Garmin-Daten vom ${ddmm(fr.t)}, ${fr.age} Tage alt`)
-        : html("span", { text: `Stand ${longDate(fr.t ?? M.t1)}` }),
-      state.source === "demo" ? pill("warn", "Beispieldaten")
-        : state.offlineSince ? pill("warn", `Offline, Stand vom ${dayOf(state.offlineSince).slice(0, 6)} ${clockOf(state.offlineSince)}`)
-          : pill("good", state.source === "github" ? "Deine Daten von GitHub" : "Deine Daten"),
-      state.loadedAt && !state.offlineSince ? html("span", { text: `geladen ${clockOf(state.loadedAt)}` }) : null,
+      st ? chip(st.level === "good" ? "check" : "alert", `Erholung ${st.short.toLowerCase()}`, st.level) : null,
+      state.source === "demo" ? chip("alert", "Beispieldaten", "warn")
+        : state.offlineSince ? chip("cloud", `Offline · Stand ${dayOf(state.offlineSince).slice(0, 6)} ${clockOf(state.offlineSince)}`, "warn")
+          : chip(state.source === "github" ? "cloud" : "daten", `${state.source === "github" ? "GitHub" : "Lokal"} · geladen ${clockOf(state.loadedAt)}`),
+      fr.stale ? chip("alert", `Garmin-Daten ${fr.age} Tage alt`, "warn") : null,
     ].filter(Boolean));
 
     const parts = [];
@@ -2410,14 +2568,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       parts.push(html("p", {}, state.githubError
         ? [html("strong", { text: "Beispieldaten. " }), `Die Verbindung zu deinem Daten-Repository hat nicht geklappt: ${state.githubError}`]
         : [html("strong", { text: "Beispieldaten. " }),
-          "Alle Werte auf dieser Seite sind erfunden. Deine Daten erscheinen, wenn du die Seite mit deinem privaten Daten-Repository verbindest. Lokal reicht ",
-          html("code", { text: "python -m http.server" }), " im Repo, dann ", html("code", { text: "/dashboard/" }), "."]));
+          "Alle Werte sind erfunden. Verbinde die Seite mit deinem privaten Daten-Repository, lokal reicht ",
+          html("code", { text: "python -m http.server" }), " im Repo."]));
       parts.push(html("div", { class: "notice-actions" }, [connect]));
     }
     if (fr.stale) {
       parts.push(html("p", {}, [
-        html("strong", { text: `Die neuesten Garmin-Daten sind vom ${longDate(fr.t)}. ` },),
-        "Der tägliche Abruf läuft vermutlich nicht. Prüfe auf GitHub unter Actions den Workflow „Sync Garmin and Hevy“. Steht dort ",
+        html("strong", { text: `Die neuesten Garmin-Daten sind vom ${longDate(fr.t)}. ` }),
+        "Prüfe auf GitHub unter Actions den Workflow „Sync Garmin and Hevy“. Steht dort ",
         html("code", { text: "No usable Garmin tokens" }), ", melde dich lokal mit ", html("code", { text: "python -m healthsync login" }),
         " neu an und ersetze das Secret ", html("code", { text: "GARMIN_TOKENS_JSON" }), ".",
       ]));
@@ -2426,7 +2584,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     if (state.source !== "demo" && missing.length) {
       parts.push(html("p", {}, [
         html("strong", { text: `${missing.map((s) => s.file).join(", ")} ${missing.length > 1 ? "fehlen" : "fehlt"}. ` }),
-        "Die zugehörigen Diagramme bleiben leer. Unter Daten → Datenquellen steht, wie die Datei entsteht.",
+        "Die zugehörigen Diagramme bleiben leer. Unter Daten → Quellen steht, wie die Datei entsteht.",
       ]));
     }
     $("notice").replaceChildren(...parts);
@@ -2436,157 +2594,175 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   function renderTiles(M, lastWith, at) {
     const spark = (key) => M.days.slice(-28).map((d) => ({ t: d.t, v: d[key] }));
     const weekAgo = (d, key) => (d ? at(d.t - 7 * DAY)?.[key] ?? null : null);
-    const vsWeekAgo = (d, key, digits, unit = "") => {
-      const prev = weekAgo(d, key);
-      return d && prev != null ? `${fmtSigned(d[key] - prev, digits)}${unit} ggü. Vorwoche` : "";
-    };
+    const today = todayT();
+    const asOf = (d) => (d && d.t < today - 2 * DAY ? { icon: "calendar", text: `Stand ${ddmm(d.t)}` } : null);
 
     const w = lastWith("weight7"), h = lastWith("hrv7"), r = lastWith("rhr7"), rd = lastWith("ready");
     const sl = lastWith("sleepH7"), ss = lastWith("sleep7"), bed = lastWith("bed7"), st7 = lastWith("steps7");
-    const st = recoveryStatus(h?.hrv7, h?.hrvLow, r?.rhr7, r?.rhr60);
+    const kc = lastWith("kcal7"), pk = lastWith("proteinKg7");
     const last7 = M.days.slice(-7), prev7 = M.days.slice(-14, -7);
-    const setsLast7 = last7.reduce((a, d) => a + d.hardSets, 0);
-    const setsPrev7 = prev7.reduce((a, d) => a + d.hardSets, 0);
+    const setsLast7 = last7.reduce((a, d) => a + d.hardSets, 0), setsPrev7 = prev7.reduce((a, d) => a + d.hardSets, 0);
     const sessions7 = new Set(last7.flatMap((d) => [...d.sessions])).size;
-    const activeH7 = last7.reduce((a, d) => a + d.activeMin, 0) / 60;
-    const activeHPrev7 = prev7.reduce((a, d) => a + d.activeMin, 0) / 60;
+    const activeH7 = last7.reduce((a, d) => a + d.activeMin, 0) / 60, activeHPrev7 = prev7.reduce((a, d) => a + d.activeMin, 0) / 60;
     const activities7 = last7.reduce((a, d) => a + d.activities.length, 0);
     const goalDays7 = last7.filter((d) => d.steps != null && d.steps >= STEP_GOAL).length;
-    const today = todayT();
     const foodDays7 = M.days.filter((d) => d.t < today && d.t >= today - 7 * DAY && d.foodComplete).length;
-    const kc = lastWith("kcal7"), pg = lastWith("proteinG7"), pk = lastWith("proteinKg7");
-    const asOf = (d) => (d && d.t < today - 2 * DAY ? `Stand ${ddmm(d.t)}` : null);
-    const clockValue = (hours) => (hours == null ? "–" : fmtDuration(hours * 60).replace(" h", ""));
+    const weightDelta = w && weekAgo(w, "weight7") != null ? w.weight7 - weekAgo(w, "weight7") : null;
+    const rhrGap = r?.rhr60 != null ? r.rhr7 - r.rhr60 : null;
+    const hrvRatio = h?.hrvLow ? h.hrv7 / h.hrvLow : null;
 
-    const tile = (area, label, value, unit, delta, sparkData) => html("a", { class: "tile", href: `#${area}` }, [
-      html("span", { class: "tile-top" }, [
-        html("span", { class: "label", text: label }),
-        html("span", { class: "area-tag", title: `Zum Bereich ${AREA_LABELS[area]}` }, [icon(area), html("span", { class: "vh", text: `Bereich ${AREA_LABELS[area]}` })]),
-      ]),
+    // delta: { icon, text, level }; level only past a threshold, otherwise the line stays gray
+    const tile = (area, iconName, label, value, unit, delta, sparkData) => html("a", { class: `tile tint-${AREA_TINT[area]}`, href: `#${area}`, title: `Zum Bereich ${AREA_LABELS[area]}` }, [
+      html("span", { class: "label" }, [icon(iconName), label]),
       html("span", { class: "value" }, [value, unit ? html("small", { text: unit }) : null]),
-      html("span", { class: "delta" }, [].concat(delta || []).filter((x) => x != null && x !== "").map((x) => (typeof x === "string" ? html("span", { text: x }) : x))),
+      html("span", { class: `delta ${delta?.level || ""}` }, delta ? [delta.icon ? icon(delta.icon) : null, html("span", { text: delta.text })] : []),
       sparkData ? sparkline(sparkData) : null,
     ]);
 
-    $("tiles").replaceChildren(
-      tile("koerper", "Gewicht, 7-Tage-Mittel", fmt(w?.weight7, 1), "kg", vsWeekAgo(w, "weight7", 1, " kg"), spark("weight7")),
-      tile("erholung", "HRV, 7-Tage-Mittel", fmt(h?.hrv7), "ms",
-        [st ? pill(st.level, st.short) : null, h?.hrvLow != null ? `Bereich ${fmt(h.hrvLow)}–${fmt(h.hrvHigh)}` : null], spark("hrv7")),
-      tile("erholung", "Ruhepuls, 7-Tage-Mittel", fmt(r?.rhr7, 1), "bpm",
-        r?.rhr60 != null ? `${fmtSigned(r.rhr7 - r.rhr60, 1)} ggü. 60-Tage-Mittel` : "", spark("rhr7")),
-      tile("erholung", rd && rd.t === M.t1 ? "Training Readiness heute" : "Training Readiness, letzter Wert", fmt(rd?.ready), "",
-        rd ? `${READINESS_LABELS[rd.readyLevel] || rd.readyLevel || ""}${rd.t === M.t1 ? "" : `, ${ddmm(rd.t)}`}` : "", spark("ready")),
-      tile("schlaf", "Schlaf, 7-Tage-Mittel", clockValue(sl?.sleepH7), "h",
-        [ss ? `Sleep Score ${fmt(ss.sleep7)} ·` : null, bed ? `Einschlafen Ø ${fmtClock(bed.bed7)}` : null], spark("sleepH7")),
-      tile("kraft", "Arbeitssätze, letzte 7 Tage", fmt(setsLast7), "",
-        `${sessions7} ${sessions7 === 1 ? "Einheit" : "Einheiten"} · ${fmtSigned(setsLast7 - setsPrev7)} ggü. Vorwoche`, null),
-      tile("aktivitaeten", "Aktive Zeit, letzte 7 Tage", M.hasActivities ? fmt(activeH7, 1) : "–", "h",
-        M.hasActivities ? `${activities7} Aktivitäten · ${fmtSigned(activeH7 - activeHPrev7, 1)} h ggü. Vorwoche` : "Keine Aktivitäten der Uhr geladen", null),
-      tile("aktivitaeten", "Schritte, 7-Tage-Mittel", fmt(st7?.steps7), "",
-        `Ziel ${fmt(STEP_GOAL)} an ${goalDays7} von 7 Tagen`, spark("steps7")),
-      ...(M.hasNutrition ? [
-        tile("ernaehrung", "Kalorien, 7-Tage-Mittel", fmt(kc?.kcal7), "kcal",
-          asOf(kc) ?? `${foodDays7} von 7 Tagen geloggt${kc?.burned7 != null ? ` · Verbrauch Ø ${fmt(kc.burned7)}` : ""}`, spark("kcal7")),
-        tile("ernaehrung", "Eiweiß, 7-Tage-Mittel", fmt(pg?.proteinG7), "g",
-          asOf(pg) ?? (pk ? `${fmt(pk.proteinKg7, 1)} g/kg · Ziel ab ${fmt(PROTEIN_REFS[0], 1)}` : ""), spark("proteinG7")),
-      ] : []),
+    const tiles = [
+      tile("koerper", "koerper", "Gewicht", fmt(w?.weight7, 1), "kg",
+        asOf(w) ?? (weightDelta != null ? { icon: direction(weightDelta, 0.05), text: `${fmtSigned(weightDelta, 1)} kg` } : null), spark("weight7")),
+    ];
+    if (M.hasNutrition) {
+      tiles.push(
+        tile("ernaehrung", "flame", "Kalorien", fmt(kc?.kcal7), "kcal",
+          asOf(kc) ?? { icon: "calendar", text: `${foodDays7} von 7 geloggt` }, spark("kcal7")),
+        tile("ernaehrung", "egg", "Eiweiß", fmt(pk?.proteinKg7, 1), "g/kg",
+          asOf(pk) ?? (pk ? (pk.proteinKg7 < PROTEIN_REFS[0]
+            ? { icon: "target", text: `Ziel ab ${fmt(PROTEIN_REFS[0], 1)}`, level: "warn" }
+            : { icon: "check", text: "Ziel erreicht", level: "good" }) : null), spark("proteinKg7")),
+      );
+    }
+    tiles.push(
+      tile("erholung", "pulse", "HRV", fmt(h?.hrv7), "ms",
+        h?.hrvLow != null ? (hrvRatio < 1
+          ? { icon: "alert", text: `unter ${fmt(h.hrvLow)}–${fmt(h.hrvHigh)}`, level: hrvRatio < 0.92 ? "crit" : "warn" }
+          : { icon: "check", text: `Bereich ${fmt(h.hrvLow)}–${fmt(h.hrvHigh)}`, level: "good" }) : null, spark("hrv7")),
+      tile("erholung", "heart", "Ruhepuls", fmt(r?.rhr7, 1), "bpm",
+        rhrGap != null ? { icon: direction(rhrGap, 0.3), text: `${fmtSigned(rhrGap, 1)} ggü. 60 Tagen`, level: rhrGap > 5 ? "crit" : rhrGap > 2.5 ? "warn" : "" } : null, spark("rhr7")),
+      tile("erholung", "bolt", rd && rd.t === M.t1 ? "Readiness" : "Readiness, zuletzt", fmt(rd?.ready), "",
+        rd ? { icon: null, text: `${READINESS_LABELS[rd.readyLevel] || rd.readyLevel || ""}${rd.t === M.t1 ? "" : `, ${ddmm(rd.t)}`}`, level: rd.readyLevel === "LOW" || rd.readyLevel === "POOR" ? "warn" : "" } : null, spark("ready")),
+      tile("schlaf", "schlaf", "Schlaf", sl ? fmtDuration(sl.sleepH7 * 60).replace(" h", "") : "–", "h",
+        bed || ss ? { icon: "clock", text: [bed ? fmtClock(bed.bed7) : null, ss ? `Score ${fmt(ss.sleep7)}` : null].filter(Boolean).join(" · ") } : null, spark("sleepH7")),
+      tile("kraft", "kraft", "Sätze, 7 Tage", fmt(setsLast7), "",
+        { icon: direction(setsLast7 - setsPrev7, 0), text: `${fmtSigned(setsLast7 - setsPrev7)} · ${sessions7} ${sessions7 === 1 ? "Einheit" : "Einheiten"}` }, spark("sets7Sum")),
+      tile("aktivitaeten", "aktivitaeten", "Aktiv, 7 Tage", M.hasActivities ? fmt(activeH7, 1) : "–", "h",
+        M.hasActivities ? { icon: direction(activeH7 - activeHPrev7, 0.05), text: `${fmtSigned(activeH7 - activeHPrev7, 1)} h · ${activities7} Akt.` } : { icon: null, text: "keine Daten der Uhr" }, spark("active7Sum")),
+      tile("aktivitaeten", "steps", "Schritte", fmt(st7?.steps7), "",
+        { icon: "target", text: `Ziel an ${goalDays7} von 7` }, spark("steps7")),
     );
+    $("tiles").replaceChildren(...tiles);
     $("tiles").classList.toggle("ten", M.hasNutrition);
   }
 
   // One sentence per area that answers its question; stays visible when the area is collapsed.
   function renderSummaries(M, days, x0, x1, lastWith) {
-    const put = (area, nodes) => $(`sum-${area}`).replaceChildren(...[].concat(nodes).filter((n) => n != null && n !== ""));
+    const put = (area, chips, sentence) => $(`sum-${area}`).replaceChildren(...chips.filter(Boolean), html("span", { class: "vh", text: sentence }));
     const weeks = Math.max(1, days.length / 7);
+    const change = (list, key) => (list.length > 1 ? list[list.length - 1][key] - list[0][key] : null);
 
     // Körper
-    const wIn = days.filter((d) => d.weight7 != null);
-    const fIn = days.filter((d) => d.fat7 != null), mIn = days.filter((d) => d.muscle7 != null);
+    const wIn = days.filter((d) => d.weight7 != null), fIn = days.filter((d) => d.fat7 != null), mIn = days.filter((d) => d.muscle7 != null);
+    const dW = change(wIn, "weight7"), dF = change(fIn, "fat7"), dM = change(mIn, "muscle7");
     put("koerper", wIn.length
-      ? `${fmt(wIn[wIn.length - 1].weight7, 1)} kg im 7-Tage-Mittel, ${fmtSigned(wIn[wIn.length - 1].weight7 - wIn[0].weight7, 1)} kg in ${fmt(days.length)} Tagen.`
-        + (fIn.length > 1 && mIn.length > 1
-          ? ` Fettmasse ${fmtSigned(fIn[fIn.length - 1].fat7 - fIn[0].fat7, 1)} kg, Muskelmasse ${fmtSigned(mIn[mIn.length - 1].muscle7 - mIn[0].muscle7, 1)} kg.`
-          : "")
+      ? [chip("koerper", `${fmt(wIn[wIn.length - 1].weight7, 1)} kg`), chip(direction(dW, 0.05), `${fmtSigned(dW, 1)} kg`),
+        dF != null ? chip("layers", `Fett ${fmtSigned(dF, 1)} kg`) : null, dM != null ? chip("kraft", `Muskel ${fmtSigned(dM, 1)} kg`) : null]
+      : [chip("koerper", "Keine Messung im Zeitraum")],
+    wIn.length
+      ? `${fmt(wIn[wIn.length - 1].weight7, 1)} kg im 7-Tage-Mittel, ${fmtSigned(dW, 1)} kg in ${fmt(days.length)} Tagen.`
+        + (dF != null && dM != null ? ` Fettmasse ${fmtSigned(dF, 1)} kg, Muskelmasse ${fmtSigned(dM, 1)} kg.` : "")
       : "Keine Gewichtsmessungen im Zeitraum.");
+
+    // Ernährung
+    const food = days.filter((d) => d.foodComplete);
+    const kcal = mean(food.map((d) => d.kcal)), perKg = mean(food.map((d) => d.proteinKg)), bal = mean(food.map((d) => d.balance));
+    put("ernaehrung", !M.hasNutrition
+      ? [chip("ernaehrung", "nicht eingerichtet")]
+      : food.length
+        ? [chip("flame", `${fmt(kcal)} kcal`),
+          perKg != null ? chip("egg", `${fmt(perKg, 1)} g/kg`, perKg < PROTEIN_REFS[0] ? "warn" : "good") : null,
+          bal != null ? chip("balance", `${fmtSigned(bal)} kcal/Tag`) : null,
+          chip("calendar", `${food.length}/${days.length} Tage`)]
+        : [chip("ernaehrung", "kein geloggter Tag")],
+    !M.hasNutrition ? "Noch keine Ernährungsdaten. Der Abruf aus YAZIO ist optional; die Einrichtung steht unter Daten → Quellen."
+      : food.length ? `Durchschnittlich ${fmt(kcal)} kcal und ${fmt(perKg, 1)} g Eiweiß pro kg an ${food.length} vollständig geloggten von ${fmt(days.length)} Tagen.`
+        + (bal != null ? ` Bilanz laut Garmin ${fmtSigned(bal)} kcal pro Tag.` : "") : "Im Zeitraum kein vollständig geloggter Tag.");
 
     // Erholung
     const h = lastWith("hrv7"), r = lastWith("rhr7");
     const st = recoveryStatus(h?.hrv7, h?.hrvLow, r?.rhr7, r?.rhr60);
     const banded = days.filter((d) => d.hrv7 != null && d.hrvLow != null);
     const below = banded.filter((d) => d.hrv7 < d.hrvLow).length;
+    const gap = r?.rhr60 != null ? r.rhr7 - r.rhr60 : null;
     put("erholung", h || r
-      ? [st ? pill(st.level, st.long) : null,
-        html("span", { text: [
-          h ? `HRV ${fmt(h.hrv7)} ms${h.hrvLow != null ? ` bei einem Normalbereich von ${fmt(h.hrvLow)}–${fmt(h.hrvHigh)} ms` : ""}` : null,
-          r ? `Ruhepuls ${fmt(r.rhr7, 1)} bpm${r.rhr60 != null ? ` (${fmtSigned(r.rhr7 - r.rhr60, 1)} ggü. 60 Tagen)` : ""}` : null,
-        ].filter(Boolean).join(", ") + "." + (banded.length ? ` Das HRV-Mittel lag an ${below} von ${banded.length} Tagen unter dem Normalbereich.` : "") })]
-      : "Keine HRV- oder Ruhepuls-Werte im Zeitraum.");
+      ? [st ? chip(st.level === "good" ? "check" : "alert", st.short, st.level) : null,
+        h ? chip("pulse", `HRV ${fmt(h.hrv7)} ms`, h.hrvLow != null && h.hrv7 < h.hrvLow ? "warn" : "neutral") : null,
+        r ? chip("heart", `Puls ${fmt(r.rhr7, 1)}${gap != null ? ` (${fmtSigned(gap, 1)})` : ""}`, gap != null && gap > 2.5 ? "warn" : "neutral") : null]
+      : [chip("erholung", "Keine Werte im Zeitraum")],
+    h || r ? [h ? `HRV ${fmt(h.hrv7)} ms` : null, r ? `Ruhepuls ${fmt(r.rhr7, 1)} bpm` : null].filter(Boolean).join(", ")
+      + (banded.length ? `. Das HRV-Mittel lag an ${below} von ${banded.length} Tagen unter dem Normalbereich.` : ".") : "Keine HRV- oder Ruhepuls-Werte im Zeitraum.");
 
     // Schlaf
-    const nights = days.filter((d) => d.bed != null);
-    const slept = days.filter((d) => d.sleepH != null);
+    const nights = days.filter((d) => d.bed != null), slept = days.filter((d) => d.sleepH != null);
     const weekday = nights.filter((d) => !isWeekendNight(d.t)), weekend = nights.filter((d) => isWeekendNight(d.t));
     const jetlag = weekday.length && weekend.length ? mean(weekend.map((d) => d.mid)) - mean(weekday.map((d) => d.mid)) : null;
+    const bedAvg = mean(nights.map((d) => d.bed)), wakeAvg = mean(nights.map((d) => d.wake));
     put("schlaf", slept.length
-      ? `Ø ${fmtDuration(mean(slept.map((d) => d.sleepH)) * 60)} Schlaf pro Nacht`
-        + (nights.length ? `, eingeschlafen Ø ${fmtClock(mean(nights.map((d) => d.bed)))}, aufgewacht Ø ${fmtClock(mean(nights.map((d) => d.wake)))}` : "")
-        + "." + (jetlag != null ? ` Am Wochenende liegt die Schlafmitte ${shiftText(jetlag)}.` : "")
-      : "Keine Schlafdaten im Zeitraum.");
+      ? [chip("schlaf", fmtDuration(mean(slept.map((d) => d.sleepH)) * 60)),
+        nights.length ? chip("clock", `${fmtClock(bedAvg)}–${fmtClock(wakeAvg)}`) : null,
+        jetlag != null ? chip("calendar", `Wochenende ${fmtSignedDuration(jetlag)}`, Math.abs(jetlag) >= 60 ? "warn" : "neutral") : null]
+      : [chip("schlaf", "Keine Schlafdaten")],
+    slept.length ? `Durchschnittlich ${fmtDuration(mean(slept.map((d) => d.sleepH)) * 60)} Schlaf pro Nacht, eingeschlafen ${fmtClock(bedAvg)}, aufgewacht ${fmtClock(wakeAvg)}.`
+      + (jetlag != null ? ` Am Wochenende liegt die Schlafmitte ${shiftText(jetlag)}.` : "") : "Keine Schlafdaten im Zeitraum.");
 
     // Kraft
     const workouts = M.strengthSessions.filter((s) => s.t >= x0 && s.t <= x1 && s.source !== "watch");
     const sets = days.reduce((a, d) => a + d.hardSets, 0);
-    const liftChanges = M.lifts.map((l) => {
-      const inRange = l.sessions.filter((s) => s.t >= x0 && s.t <= x1);
-      return inRange.length > 1 ? `${l.label} ${fmtSigned(inRange[inRange.length - 1].e1rm - inRange[0].e1rm, 1)} kg` : null;
-    }).filter(Boolean);
+    const lift = M.lifts[0];
+    const liftIn = lift ? lift.sessions.filter((s) => s.t >= x0 && s.t <= x1) : [];
+    const dL = liftIn.length > 1 ? liftIn[liftIn.length - 1].e1rm - liftIn[0].e1rm : null;
     put("kraft", workouts.length
-      ? `${workouts.length} Einheiten, Ø ${fmt(workouts.length / weeks, 1)} pro Woche mit Ø ${fmt(sets / weeks)} Arbeitssätzen.`
-        + (liftChanges.length ? ` e1RM seit ${ddmm(x0)}: ${liftChanges.join(", ")}.` : "")
-      : "Keine Hevy-Workouts im Zeitraum.");
+      ? [chip("kraft", `${workouts.length} ${workouts.length === 1 ? "Einheit" : "Einheiten"}`), chip("bars", `Ø ${fmt(sets / weeks)} Sätze/Woche`),
+        dL != null ? chip(direction(dL, 0.05), `${lift.label} ${fmtSigned(dL, 1)} kg`) : null]
+      : [chip("kraft", "Keine Hevy-Workouts im Zeitraum")],
+    workouts.length ? `${workouts.length} Einheiten, ${fmt(workouts.length / weeks, 1)} pro Woche mit ${fmt(sets / weeks)} Arbeitssätzen.`
+      + (dL != null ? ` ${lift.label} ${fmtSigned(dL, 1)} kg e1RM.` : "") : "Keine Hevy-Workouts im Zeitraum.");
 
     // Aktivitäten
     const acts = days.flatMap((d) => d.activities);
     const hours = acts.reduce((a, x) => a + (x.min ?? 0), 0) / 60;
-    const bySport = SPORTS.map((s) => ({ s, h: acts.filter((a) => a.sport === s).reduce((a, x) => a + (x.min ?? 0), 0) / 60 })).filter((x) => x.h > 0).sort((a, b) => b.h - a.h);
     const stepDays = days.filter((d) => d.steps != null);
-    put("aktivitaeten", (acts.length
-      ? `${acts.length} Aktivitäten, Ø ${fmt(hours / weeks, 1)} h pro Woche, am meisten ${bySport.slice(0, 2).map((x) => `${x.s.label} (${fmt(x.h / weeks, 1)} h/Woche)`).join(" und ")}.`
-      : "Keine Aktivitäten der Uhr im Zeitraum.")
-      + (stepDays.length ? ` Schritte Ø ${fmt(mean(stepDays.map((d) => d.steps)))}, Ziel ${fmt(STEP_GOAL)} an ${fmt(100 * stepDays.filter((d) => d.steps >= STEP_GOAL).length / stepDays.length)} % der Tage.` : ""));
-
-    // Ernährung
-    const food = days.filter((d) => d.foodComplete);
-    const withBalance = food.filter((d) => d.balance != null);
-    const perKg = food.filter((d) => d.proteinKg != null);
-    put("ernaehrung", !M.hasNutrition
-      ? "Noch keine Ernährungsdaten. Der Abruf aus YAZIO ist optional; wie er eingerichtet wird, steht unter Daten → Datenquellen."
-      : food.length
-        ? `Ø ${fmt(mean(food.map((d) => d.kcal)))} kcal und ${fmt(mean(food.map((d) => d.proteinG)))} g Eiweiß`
-          + (perKg.length ? ` (${fmt(mean(perKg.map((d) => d.proteinKg)), 1)} g/kg)` : "")
-          + ` an ${food.length} vollständig geloggten von ${fmt(days.length)} Tagen.`
-          + (withBalance.length ? ` Bilanz laut Garmin Ø ${fmtSigned(mean(withBalance.map((d) => d.balance)))} kcal pro Tag.` : "")
-        : "Im Zeitraum kein vollständig geloggter Tag.");
+    const goalPct = stepDays.length ? (100 * stepDays.filter((d) => d.steps >= STEP_GOAL).length) / stepDays.length : null;
+    put("aktivitaeten", [
+      acts.length ? chip("aktivitaeten", `${fmt(hours / weeks, 1)} h/Woche`) : chip("aktivitaeten", "Keine Aktivitäten"),
+      acts.length ? chip("list", `${acts.length} Aktivitäten`) : null,
+      stepDays.length ? chip("steps", `${fmt(mean(stepDays.map((d) => d.steps)))} Schritte`) : null,
+      goalPct != null ? chip("target", `Ziel an ${fmt(goalPct)} %`, goalPct < 50 ? "warn" : "neutral") : null,
+    ], (acts.length ? `${acts.length} Aktivitäten, ${fmt(hours / weeks, 1)} Stunden pro Woche.` : "Keine Aktivitäten der Uhr im Zeitraum.")
+      + (stepDays.length ? ` Schritte durchschnittlich ${fmt(mean(stepDays.map((d) => d.steps)))}, Ziel an ${fmt(goalPct)} % der Tage.` : ""));
 
     // Zusammenhänge
     const ins = state.insights;
     if (ins?.findings) {
       const robust = ins.findings.filter((f) => f.status === "robust");
-      const top = robust[0];
-      const d = top ? describeFinding(top) : null;
-      put("zusammenhaenge", `${robust.length} belastbare Zusammenhänge aus ${fmt(ins.tested)} getesteten Paaren.`
-        + (d ? ` Deutlichster: ${d.driver} ${d.step} → ${d.outcome} (${d.timing}) ${d.effect}.` : ""));
+      const top = robust[0], d = top ? describeFinding(top) : null;
+      put("zusammenhaenge", [chip("check", `${robust.length} belastbar`, robust.length ? "neutral" : "neutral"), chip("zusammenhaenge", `${fmt(ins.tested)} Paare`),
+        ins.period ? chip("calendar", `${ddmm(isoToT(ins.period.start))}–${ddmm(isoToT(ins.period.end))}`) : null],
+      `${robust.length} belastbare Zusammenhänge aus ${fmt(ins.tested)} getesteten Paaren.` + (d ? ` Deutlichster: ${d.driver} ${d.step}, ${d.outcome} ${d.effect}.` : ""));
     } else {
-      put("zusammenhaenge", withCode("Noch keine Auswertung. Sie entsteht mit `python -m healthsync analyze`."));
+      put("zusammenhaenge", [chip("info", "Noch keine Auswertung")], "Noch keine Auswertung. Sie entsteht mit python -m healthsync analyze.");
     }
 
     // Daten
     const info = state.sourceInfo.filter((s) => s.key !== "insights" && (s.found || !s.optional));
     const fr = freshness(M);
+    const bad = info.filter((s) => !s.found || !s.rows).length;
     put("daten", state.source === "demo"
-      ? `Beispieldaten über ${fmt(M.days.length)} Tage, im Browser erzeugt.`
-      : [fr.stale ? pill("warn", "Abruf prüfen") : null,
-        html("span", { text: info.map((s) => `${s.label} ${s.found && s.last != null ? `bis ${ddmm(s.last)}` : "fehlen"}`).join(", ") + `, zusammen ${fmt(M.days.length)} Tage.` })]);
+      ? [chip("alert", "Beispieldaten", "warn"), chip("calendar", `${fmt(M.days.length)} Tage`)]
+      : [bad || fr.stale ? chip("alert", bad ? `${bad} ${bad === 1 ? "Quelle fehlt" : "Quellen fehlen"}` : "Abruf prüfen", "warn") : chip("check", `${info.length} Quellen geladen`, "good"),
+        chip(state.source === "github" ? "cloud" : "daten", state.source === "github" ? `GitHub · ${clockOf(state.loadedAt)}` : "Lokal"),
+        chip("calendar", `${fmt(M.days.length)} Tage`)],
+    info.map((s) => `${s.label} ${s.found && s.last != null ? `bis ${ddmm(s.last)}` : "fehlen"}`).join(", ") + `, zusammen ${fmt(M.days.length)} Tage.`);
   }
 
   // Where the data comes from, with connect and disconnect for the GitHub data repository
@@ -2618,36 +2794,31 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   function renderSources() {
-    const head = ["Quelle", "Datei", "Einträge", "Von", "Bis", "Status", "Hinweis"];
     const age = (t) => (t == null ? null : Math.round((todayT() - t) / DAY));
     const rows = state.sourceInfo.map((s) => {
       let status, hint = "";
-      if (state.source === "demo") { status = pill("neutral", "Beispiel"); hint = "Im Browser erzeugt."; }
-      else if (s.broken) { status = pill("crit", "unlesbar"); hint = s.fix; }
-      else if (!s.found && s.optional) { status = pill("neutral", "nicht eingerichtet"); hint = s.fix; }
-      else if (!s.found) { status = pill("crit", "fehlt"); hint = s.fix; }
-      else if (!s.rows) { status = pill("warn", "leer"); hint = s.fix; }
+      if (state.source === "demo") { status = chip(null, "Beispiel"); hint = "Im Browser erzeugt."; }
+      else if (s.broken) { status = chip("alert", "unlesbar", "crit"); hint = s.fix; }
+      else if (!s.found && s.optional) { status = chip(null, "nicht eingerichtet"); hint = s.fix; }
+      else if (!s.found) { status = chip("alert", "fehlt", "crit"); hint = s.fix; }
+      else if (!s.rows) { status = chip("alert", "leer", "warn"); hint = s.fix; }
       else if (s.key === "garmin" && age(s.last) >= STALE_AFTER_DAYS) {
-        status = pill("warn", `${age(s.last)} Tage alt`);
+        status = chip("alert", `${age(s.last)} Tage alt`, "warn");
         hint = "Den täglichen Abruf auf GitHub unter Actions prüfen.";
       } else {
-        status = pill("good", "geladen");
+        status = chip("check", "geladen", "good");
         if (s.key === "insights" && s.generated) hint = `Erstellt am ${dmy(isoToT(s.generated))}.`;
       }
-      return html("tr", {}, [
-        html("td", { class: "l", text: s.label }),
-        html("td", { class: "l" }, [html("code", { text: s.file })]),
-        html("td", { text: s.found ? fmt(s.rows) : "–" }),
-        html("td", { text: s.first != null ? dmy(s.first) : "–" }),
-        html("td", { text: s.last != null ? dmy(s.last) : "–" }),
-        html("td", { class: "l" }, [status]),
-        html("td", { class: "l multiline" }, withCode(hint)),
+      return html("li", {}, [
+        html("div", { class: "ri-main" }, [
+          html("div", { class: "ri-title", text: s.label }),
+          html("div", { class: "ri-sub" }, [html("code", { text: s.file.split("/").pop(), title: s.file }), s.found ? ` · ${fmt(s.rows)} ${s.key === "insights" ? "Paare" : "Einträge"}` : null]),
+          hint ? html("div", { class: "ri-hint" }, withCode(hint)) : null,
+        ]),
+        html("div", { class: "ri-side" }, [status, s.first != null && s.last != null ? html("span", { text: `${dmy(s.first)} bis` }) : null, s.last != null ? html("span", { text: dmy(s.last) }) : null]),
       ]);
     });
-    $("sources").replaceChildren(
-      html("thead", {}, html("tr", {}, head.map((h, i) => html("th", { scope: "col", class: i < 2 || i > 4 ? "l" : "", text: h })))),
-      html("tbody", {}, rows),
-    );
+    $("sources").replaceChildren(...rows);
   }
 
   // Plain-language parts of one finding from insights.json
@@ -2711,7 +2882,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const complete = list.filter((w) => w.t >= x0 && w.t + 6 * DAY <= x1);
     const current = list[list.length - 1];
     $("volume-sub").textContent = list.some((w) => w.sets)
-      ? `Ø ${fmt(mean(complete.map((w) => w.sets)) ?? 0)} pro vollständiger Woche; laufende Woche bisher ${fmt(current.sets)}`
+      ? `Ø ${fmt(mean(complete.map((w) => w.sets)) ?? 0)} pro Woche · laufende Woche ${fmt(current.sets)}`
       : "Keine Arbeitssätze im Zeitraum";
     const data = list.map((w) => ({
       v: w.sets, tick: `KW ${isoWeek(w.t)}`,
@@ -2757,9 +2928,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Overview line
     const last7 = nights.filter((d) => d.t > x1 - 7 * DAY);
     $("sleep-times-sub").textContent = nights.length
-      ? `Einschlafen im Schnitt ${fmtClock(mean(nights.map((d) => d.bed)))} (Streuung ± ${fmt(stdDev(nights.map((d) => d.bed)))} min), `
-        + `Aufwachen ${fmtClock(mean(nights.map((d) => d.wake)))}. Letzte 7 Nächte: ${fmtClock(mean(last7.map((d) => d.bed)))} bis ${fmtClock(mean(last7.map((d) => d.wake)))}.`
-      : "Keine Schlafenszeiten im Zeitraum (Spalten sleep_start_local und sleep_end_local leer).";
+      ? `Ø ${fmtClock(mean(nights.map((d) => d.bed)))} bis ${fmtClock(mean(nights.map((d) => d.wake)))} · streut ±${fmt(stdDev(nights.map((d) => d.bed)))} min`
+        + (last7.length ? ` · 7 Tage: ${fmtClock(mean(last7.map((d) => d.bed)))}` : "")
+      : "Keine Schlafenszeiten im Zeitraum";
 
     mount("c-sleep-times", (host) => sleepWindowChart(host, {
       x0, x1, label: "Einschlaf- und Aufwachzeit pro Nacht",
@@ -2802,8 +2973,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     );
     const jetlag = weekday.length && weekend.length ? avg(weekend, "mid") - avg(weekday, "mid") : null;
     $("sleep-week-sub").textContent = jetlag == null
-      ? "Werktage: Nächte von Sonntag bis Donnerstag. Wochenende: Freitag- und Samstagnacht."
-      : `Am Wochenende liegt deine Schlafmitte ${shiftText(jetlag)} als an Werktagen.`;
+      ? "Werktage: So–Do-Nacht, Wochenende: Fr- und Sa-Nacht"
+      : `Schlafmitte am Wochenende ${shiftText(jetlag)}`;
 
     // Bedtime against that night's HRV, split by sleep score
     const points = [];
@@ -2828,8 +2999,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         empty: "Keine Nächte mit Einschlafzeit und HRV im Zeitraum.",
       });
       $("sleep-hrv-sub").textContent = fit
-        ? `Nächte mit Sleep Score ab 80: r = ${fmt(fit.r, 2)} bei ${fit.n} Nächten${fewPoints(fit)}. Pro Stunde späteres Einschlafen ist die HRV im Schnitt `
-          + `${fmt(Math.abs(fit.slope * 60), 1)} ms ${fit.slope < 0 ? "niedriger" : "höher"}.`
+        ? `r = ${fmtSigned(fit.r, 2)} bei ${fit.n} Nächten${fewPoints(fit)} · ${fmtSigned(fit.slope * 60, 1)} ms je Stunde später`
         : "";
     });
   }
@@ -2843,9 +3013,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // session on the same day does not get attributed to the gym.
     const clean = (s) => s.otherActivities === 0;
     $("sessions-sub").textContent = hevy.length
-      ? `${linked.length} von ${hevy.length} Hevy-Workouts im Zeitraum sind mit der Strength-Aufzeichnung der Uhr verknüpft`
-        + `${watchOnly.length ? `, dazu ${watchOnly.length} Aufzeichnungen der Uhr ohne Hevy-Workout` : ""}.`
-      : "Keine Krafteinheiten im Zeitraum.";
+      ? `${linked.length} von ${hevy.length} Hevy-Workouts mit Uhr verknüpft${watchOnly.length ? ` · ${watchOnly.length} nur Uhr` : ""}`
+      : "Keine Krafteinheiten im Zeitraum";
 
     const avg = (list, get) => mean(list.map(get));
     const effectCell = (list, key, unit, digits) => {
@@ -2899,7 +3068,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       html("thead", {}, html("tr", {}, recentHead.map((h, i) => html("th", { scope: "col", class: i < 2 ? "l" : "", text: h })))),
       html("tbody", {}, recent.length ? recent : [html("tr", {}, html("td", { class: "l", colspan: String(recentHead.length), text: "Keine Krafteinheiten im Zeitraum." }))]),
     );
-    $("sessions-recent-sub").textContent = sessions.length ? `${shown.length} von ${sessions.length} Einheiten im Zeitraum, neueste oben` : "";
+    $("sessions-recent-sub").textContent = sessions.length ? `${shown.length} von ${sessions.length}, neueste oben` : "";
     toggleMore("sessions-more", "sessions", sessions.length);
   }
 
@@ -2919,7 +3088,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const totalH = inRange.reduce((a, x) => a + (x.min ?? 0), 0) / 60;
     const weeksCount = Math.max(1, days.length / 7);
     $("act-sub").textContent = inRange.length
-      ? `${inRange.length} Aktivitäten, ${fmt(totalH, 1)} h insgesamt, im Schnitt ${fmt(totalH / weeksCount, 1)} h pro Woche`
+      ? `Ø ${fmt(totalH / weeksCount, 1)} h pro Woche · ${inRange.length} Aktivitäten, ${fmt(totalH, 1)} h`
       : "Keine Aktivitäten im Zeitraum";
 
     // Weekly hours per sport
@@ -2994,7 +3163,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       html("thead", {}, html("tr", {}, recentHead.map((h, i) => html("th", { scope: "col", class: i < 3 ? "l" : "", text: h })))),
       html("tbody", {}, recent.length ? recent : [html("tr", {}, html("td", { class: "l", colspan: String(recentHead.length), text: "Keine Aktivitäten im Zeitraum." }))]),
     );
-    $("recent-sub").textContent = inRange.length ? `${shown.length} von ${inRange.length} Aktivitäten im Zeitraum, neueste oben` : "";
+    $("recent-sub").textContent = inRange.length ? `${shown.length} von ${inRange.length}, neueste oben` : "";
     toggleMore("recent-more", "recent", inRange.length);
   }
 
@@ -3019,9 +3188,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Calories against Garmin's estimate of the energy burned
     const burnedOnFoodDays = mean(food.map((d) => d.kcalBurned));
     $("kcal-sub").textContent = food.length
-      ? `Ø ${kcalText(mean(food.map((d) => d.kcal)))} an ${food.length} vollständig geloggten Tagen`
-        + (incomplete.length ? `, ${incomplete.length} unvollständig` : "")
-        + (burnedOnFoodDays != null ? `; Verbrauch laut Garmin an diesen Tagen Ø ${kcalText(burnedOnFoodDays)}` : "")
+      ? `Ø ${kcalText(mean(food.map((d) => d.kcal)))}`
+        + (burnedOnFoodDays != null ? ` · Verbrauch Ø ${fmt(burnedOnFoodDays)}` : "")
+        + (incomplete.length ? ` · ${incomplete.length} unvollständig` : "")
       : M.hasNutrition ? none : "Kalorien, Makronährstoffe und Energiebilanz erscheinen hier, sobald nutrition_daily.csv im Daten-Repository liegt.";
     mount("c-kcal", (host) => (food.length || incomplete.length ? timeChart(host, {
       x0, x1, label: "Kalorien pro Tag laut YAZIO und Verbrauch laut Garmin",
@@ -3062,8 +3231,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const avg = Object.fromEntries(MACROS.map((m) => [m.key, mean(food.map((d) => d[m.field]))]));
     const avgKcal = MACROS.reduce((a, m) => a + (avg[m.key] ?? 0) * m.kcalPerG, 0);
     $("macro-sub").textContent = food.length
-      ? `kcal pro Tag nach Herkunft. Ø ${MACROS.map((m) => `${fmt(avg[m.key])} g ${m.label}`).join(", ")}; `
-        + `Anteile ${MACROS.map((m) => fmt((100 * avg[m.key] * m.kcalPerG) / avgKcal)).join(" / ")} %`
+      ? `kcal pro Tag · Ø ${fmt(avg.protein)} g Eiweiß, ${fmt(avg.carbs)} g KH, ${fmt(avg.fat)} g Fett`
       : none;
     mount("c-macros", (host) => stackedBarChart(host, {
       data, cats: MACROS, fmt: kcalText, labelFmt: (v) => fmt(v), empty: none,
@@ -3075,8 +3243,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const lastKg = inRangeKg[inRangeKg.length - 1];
     const kgDays = days.filter((d) => d.proteinKg != null);
     $("protein-sub").textContent = lastKg
-      ? `${fmt(lastKg.proteinKg7, 1)} g/kg im 7-Tage-Mittel (${fmt(lastKg.proteinG7)} g bei ${fmt(lastKg.bodyweight, 1)} kg); `
-        + `an ${kgDays.filter((d) => d.proteinKg >= PROTEIN_REFS[0]).length} von ${kgDays.length} Tagen mindestens ${fmt(PROTEIN_REFS[0], 1)} g/kg`
+      ? `${fmt(lastKg.proteinKg7, 1)} g/kg (${fmt(lastKg.proteinG7)} g) · an ${kgDays.filter((d) => d.proteinKg >= PROTEIN_REFS[0]).length} von ${kgDays.length} Tagen ab ${fmt(PROTEIN_REFS[0], 1)}`
       : food.length ? "Ohne Gewichtsmessung lässt sich Eiweiß pro Kilogramm nicht berechnen." : none;
     mount("c-protein", (host) => (kgDays.length ? timeChart(host, {
       x0, x1, label: "Eiweiß in Gramm pro Kilogramm Körpergewicht",
@@ -3096,11 +3263,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       const a = span[0], b = span[span.length - 1];
       if (a && b && b.t - a.t >= 14 * DAY) {
         const perWeek = ((b.weight7 - a.weight7) / (b.t - a.t)) * 7 * DAY;
-        weightText = ` Die Waage zeigt ${fmtSigned(perWeek, 2)} kg pro Woche (${ddmm(a.t)} bis ${ddmm(b.t)}, 7-Tage-Mittel).`;
+        weightText = ` · Waage ${fmtSigned(perWeek, 2)} kg`;
       }
     }
     $("balance-sub").textContent = balanceDays.length
-      ? `Ø ${fmtSigned(meanBalance)} kcal pro Tag an ${balanceDays.length} Tagen; das entspräche ${fmtSigned((meanBalance * 7) / KCAL_PER_KG, 2)} kg pro Woche.${weightText}`
+      ? `Ø ${fmtSigned(meanBalance)} kcal/Tag ≙ ${fmtSigned((meanBalance * 7) / KCAL_PER_KG, 2)} kg/Woche${weightText}`
       : food.length ? "Für die Bilanz fehlt der Verbrauch laut Garmin (Spalte calories_total)." : none;
     mount("c-balance", (host) => (balanceDays.length ? timeChart(host, {
       x0, x1, label: "Energiebilanz pro Tag in Kilokalorien", zero: true, refs: [{ v: 0, label: "ausgeglichen" }],
@@ -3130,7 +3297,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         empty: food.length ? "Zu wenige geloggte Tage mit HRV-Wert der Folgenacht im Zeitraum." : none,
       });
       $("kcal-hrv-sub").textContent = fit
-        ? `r = ${fmt(fit.r, 2)} bei ${fit.n} Tagen${fewPoints(fit)}. Pro 500 kcal mehr ändert sich die HRV der Folgenacht im Schnitt um ${fmtSigned(fit.slope * 500, 1)} ms.`
+        ? `r = ${fmtSigned(fit.r, 2)} bei ${fit.n} Tagen${fewPoints(fit)} · ${fmtSigned(fit.slope * 500, 1)} ms je 500 kcal`
         : "";
     });
   }
@@ -3150,12 +3317,12 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const robust = insights.findings.filter((f) => f.status === "robust");
     const tendencies = insights.findings.filter((f) => f.status === "tendency");
     const days = insights.period_days ?? insights.period?.days;
-    sub.textContent = `${fmt(insights.tested)} Paare getestet, ${robust.length} belastbar, ${tendencies.length} als Tendenz.`;
+    sub.textContent = `${fmt(insights.tested)} Paare · ${robust.length} belastbar · ${tendencies.length} Tendenz`;
     windowNote.replaceChildren(
       pill("neutral", "Eigener Zeitraum"),
       insights.period
-        ? `Analysefenster ${dmy(isoToT(insights.period.start))} bis ${dmy(isoToT(insights.period.end))}, unabhängig vom Zeitraum oben`
-        : `Analysefenster ${days} Tage, unabhängig vom Zeitraum oben`,
+        ? `${ddmm(isoToT(insights.period.start))} bis ${dmy(isoToT(insights.period.end))}`
+        : `${days} Tage`,
     );
 
     const options = [["robust", `Belastbar (${robust.length})`], ["all", `Mit Tendenzen (${robust.length + tendencies.length})`]];
@@ -3169,23 +3336,29 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       return b;
     }));
 
-    const head = ["Status", "Wenn", "dann", "Effekt", "Stärke ρ", "Tage"];
+    // One row per finding: "if" and "then" on the left, effect, ρ and days on the right, |ρ| as a bar
     const row = (f) => {
       const d = describeFinding(f);
-      return html("tr", {}, [
-        html("td", { class: "l" }, [html("span", { class: `badge${f.status === "robust" ? " strong" : ""}`, text: f.status === "robust" ? "belastbar" : "Tendenz" })]),
-        html("td", { class: "l multiline", text: `${d.driver} ${d.step}` }),
-        html("td", { class: "l multiline", text: `${d.outcome}, ${d.timing}` }),
-        html("td", { text: d.effect }),
-        html("td", { text: fmtSigned(f.rho, 2) }),
-        html("td", { text: fmt(f.n) }),
+      return html("li", {}, [
+        html("div", { class: "ri-main" }, [
+          html("div", { class: "ri-title", text: `${d.driver} ${d.step}` }),
+          html("div", { class: "ri-sub", text: `→ ${d.outcome}, ${d.timing}` }),
+          html("div", { class: "ri-bar", title: `Stärke ρ ${fmtSigned(f.rho, 2)}` }, [html("i", { style: `width: ${Math.round(Math.min(1, Math.abs(f.rho)) * 100)}%` })]),
+        ]),
+        html("div", { class: "ri-side" }, [
+          html("b", { text: d.effect }),
+          html("span", { text: `ρ ${fmtSigned(f.rho, 2)} · ${fmt(f.n)} Tage` }),
+          f.status === "robust" ? null : html("span", { class: "badge", text: "Tendenz" }),
+        ]),
       ]);
     };
-    const list = state.insightFilter === "all" ? [...robust, ...tendencies] : robust;
-    table.replaceChildren(
-      html("thead", {}, html("tr", {}, head.map((h, i) => html("th", { scope: "col", class: i < 3 ? "l" : "", text: h })))),
-      html("tbody", {}, list.length ? list.map(row) : [html("tr", {}, html("td", { class: "l", colspan: String(head.length), text: state.insightFilter === "robust" && tendencies.length ? "Noch kein belastbarer Zusammenhang. „Mit Tendenzen“ zeigt die auffälligen Paare." : "Noch kein Zusammenhang auffällig. Mit mehr Tagen werden die Tests empfindlicher." }))]),
-    );
+    const all = state.insightFilter === "all" ? [...robust, ...tendencies] : robust;
+    const list = state.showAll.insights ? all : all.slice(0, INSIGHT_ROWS);
+    const more = $("insights-more");
+    more.hidden = all.length <= INSIGHT_ROWS;
+    more.textContent = state.showAll.insights ? `Nur die ${INSIGHT_ROWS} stärksten` : `Alle ${all.length} anzeigen`;
+    more.setAttribute("aria-expanded", String(state.showAll.insights));
+    table.replaceChildren(...(list.length ? list.map(row) : [html("li", {}, html("div", { class: "ri-sub", text: state.insightFilter === "robust" && tendencies.length ? "Noch kein belastbarer Zusammenhang. „Mit Tendenzen“ zeigt die auffälligen Paare." : "Noch kein Zusammenhang auffällig. Mit mehr Tagen werden die Tests empfindlicher." }))]));
   }
 
   function renderCorrelations(M, x0, x1) {
@@ -3213,7 +3386,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         empty: "Keine Aktivitäten im Zeitraum (garmin_activities.csv fehlt oder ist leer).",
       });
       $("corr3-sub").textContent = fit
-        ? `r = ${fmt(fit.r, 2)} bei ${fit.n} Tagen${fewPoints(fit)}. Pro 100 Punkte Trainingslast ändert sich die HRV der Folgenacht im Schnitt um ${fmtSigned(fit.slope * 100, 1)} ms.`
+        ? `r = ${fmtSigned(fit.r, 2)} bei ${fit.n} Tagen${fewPoints(fit)} · ${fmtSigned(fit.slope * 100, 1)} ms je 100 Punkte`
         : "";
     });
 
@@ -3237,7 +3410,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         points: p1, color: "var(--s1)", zero: true, xFloor: 0, label: "Tonnage gegen HRV-Abweichung der Folgenacht",
         xTitle: "Tonnage am Trainingstag (t)", xTick: (v) => fmt(v, 1), yTick: (v) => `${fmtSigned(v, 0)}`,
       });
-      $("corr1-sub").textContent = fit ? `r = ${fmt(fit.r, 2)} bei ${fit.n} Trainingstagen${fewPoints(fit)}. Abweichung der HRV in ms.` : "";
+      $("corr1-sub").textContent = fit ? `r = ${fmtSigned(fit.r, 2)} bei ${fit.n} Trainingstagen${fewPoints(fit)}` : "";
     });
 
     // 2. Sleep score of the night before vs session e1RM relative to the prior 28-day best.
@@ -3265,7 +3438,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         points: p2, color: "var(--s1)", zero: true, label: "Schlafscore gegen Tagesform im Training",
         xTitle: "Schlafscore der Vornacht", xTick: (v) => fmt(v), yTick: (v) => `${fmtSigned(v, 0)} %`,
       });
-      $("corr2-sub").textContent = fit ? `r = ${fmt(fit.r, 2)} bei ${fit.n} Einheiten${fewPoints(fit)}. Abweichung des e1RM in %.` : "";
+      $("corr2-sub").textContent = fit ? `r = ${fmtSigned(fit.r, 2)} bei ${fit.n} Einheiten${fewPoints(fit)}` : "";
     });
   }
 
@@ -3439,8 +3612,64 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const collapsed = new Set();
+  const onPhone = () => window.matchMedia(PHONE).matches;
+  // Phones and wide screens remember collapsed areas separately; on a phone everything starts collapsed.
+  const collapsedKey = () => (onPhone() ? "healthsync.collapsed.phone" : "healthsync.collapsed");
   function saveCollapsed() {
-    try { localStorage.setItem("healthsync.collapsed", JSON.stringify([...collapsed])); } catch { /* storage unavailable */ }
+    try { localStorage.setItem(collapsedKey(), JSON.stringify([...collapsed])); } catch { /* storage unavailable */ }
+  }
+
+  // ---- tabs inside an area (phones only; wide screens show all cards)
+
+  const TAB_KEY = "healthsync.tabs";
+  let tabChoice = {};
+  try { tabChoice = JSON.parse(localStorage.getItem(TAB_KEY) || "{}") || {}; } catch { tabChoice = {}; }
+  function selectTab(area, index, focus = false) {
+    const body = $(`b-${area}`), bar = body?.querySelector(":scope > .tabs");
+    if (!bar) return;
+    const cards = [...body.querySelectorAll(":scope > .card")], buttons = [...bar.children];
+    cards.forEach((c, i) => c.classList.toggle("on", i === index));
+    buttons.forEach((b, i) => { b.setAttribute("aria-selected", String(i === index)); b.tabIndex = i === index ? 0 : -1; });
+    if (focus) buttons[index].focus();
+    tabChoice[area] = cards[index]?.dataset.tab;
+    try { localStorage.setItem(TAB_KEY, JSON.stringify(tabChoice)); } catch { /* storage unavailable */ }
+    hideTip();
+  }
+  // Hidden cards (no YAZIO data, for example) lose their tab; the remembered tab wins if it is still there.
+  function syncTabs(area) {
+    const body = $(`b-${area}`), bar = body?.querySelector(":scope > .tabs");
+    if (!bar) return;
+    const cards = [...body.querySelectorAll(":scope > .card")];
+    [...bar.children].forEach((b, i) => { b.hidden = cards[i].hidden; });
+    const visible = cards.map((c, i) => (c.hidden ? -1 : i)).filter((i) => i >= 0);
+    const current = cards.findIndex((c) => c.classList.contains("on"));
+    const wanted = cards.findIndex((c) => !c.hidden && c.dataset.tab === tabChoice[area]);
+    const index = wanted >= 0 ? wanted : visible.includes(current) ? current : visible[0] ?? 0;
+    const buttons = [...bar.children];
+    cards.forEach((c, i) => c.classList.toggle("on", i === index));
+    buttons.forEach((b, i) => { b.setAttribute("aria-selected", String(i === index)); b.tabIndex = i === index ? 0 : -1; });
+  }
+  function buildTabs(area) {
+    const body = $(`b-${area}`);
+    const cards = [...body.querySelectorAll(":scope > .card")];
+    if (cards.length < 2) return;
+    body.classList.add("tabbed");
+    const bar = html("div", { class: "tabs", role: "tablist", "aria-label": `${AREA_LABELS[area]}: Ansicht` });
+    cards.forEach((card, i) => {
+      card.id = card.id || `card-${area}-${i}`;
+      const b = html("button", { type: "button", role: "tab", "aria-controls": card.id, "aria-selected": "false" }, [icon(card.dataset.icon), html("span", { text: card.dataset.tab })]);
+      b.addEventListener("click", () => selectTab(area, i));
+      b.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        const visible = cards.map((c, k) => (c.hidden ? -1 : k)).filter((k) => k >= 0);
+        const pos = visible.indexOf(i) + (e.key === "ArrowRight" ? 1 : -1);
+        selectTab(area, visible[(pos + visible.length) % visible.length], true);
+      });
+      bar.append(b);
+    });
+    body.prepend(bar);
+    syncTabs(area);
   }
   function setCollapsed(area, value) {
     const section = $(area), body = $(`b-${area}`), btn = section?.querySelector(".area-toggle");
@@ -3448,6 +3677,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     body.hidden = value;
     btn.setAttribute("aria-expanded", String(!value));
     btn.querySelector(".t").textContent = value ? "Aufklappen" : "Einklappen";
+    section.classList.toggle("closed", value);
     btn.setAttribute("aria-label", `${AREA_LABELS[area]} ${value ? "aufklappen" : "einklappen"}`);
     if (value) collapsed.add(area); else collapsed.delete(area);
     saveCollapsed();
@@ -3483,12 +3713,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       const btn = html("button", { type: "button", class: "area-toggle", "aria-expanded": "true", "aria-controls": `b-${area}` }, [
         html("span", { class: "t", text: "Einklappen" }), icon("chevron"),
       ]);
-      btn.addEventListener("click", () => setCollapsed(area, btn.getAttribute("aria-expanded") === "true"));
+      btn.addEventListener("click", (e) => { e.stopPropagation(); setCollapsed(area, btn.getAttribute("aria-expanded") === "true"); });
       head.querySelector("h2").after(btn);
+      // The whole head is a large touch target; the button keeps keyboard and screen reader access
+      head.addEventListener("click", () => setCollapsed(area, btn.getAttribute("aria-expanded") === "true"));
+      buildTabs(area);
     }
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem("healthsync.collapsed") || "[]"); } catch { saved = []; }
-    for (const area of saved) if (AREAS.includes(area)) setCollapsed(area, true);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(collapsedKey()) || "null"); } catch { saved = null; }
+    for (const area of saved ?? (onPhone() ? AREAS : [])) if (AREAS.includes(area)) setCollapsed(area, true);
 
     // "?" on every card with an explanation
     document.querySelectorAll(".card").forEach((card, i) => {
@@ -3496,7 +3729,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       if (!info || !head) return;
       info.id = info.id || `info-${i}`;
       const title = head.querySelector("h3")?.textContent || "diese Karte";
-      const btn = html("button", { type: "button", class: "info-btn", "aria-expanded": "false", "aria-controls": info.id, "aria-label": `Erklärung zu ${title}`, title: "Was zeigt das?", text: "?" });
+      const btn = html("button", { type: "button", class: "info-btn", "aria-expanded": "false", "aria-controls": info.id, "aria-label": `Erklärung zu ${title}`, title: "Was zeigt das?" }, [icon("info")]);
       btn.addEventListener("click", () => {
         const open = btn.getAttribute("aria-expanded") !== "true";
         btn.setAttribute("aria-expanded", String(open));
@@ -3539,6 +3772,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       }
       // At the very bottom the last area counts as current, even if it is short
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = AREAS[AREAS.length - 1];
+      if (!current) current = "top";
       for (const [area, a] of links) {
         const on = area === current;
         if (on !== (a.getAttribute("aria-current") === "true")) {
@@ -3557,7 +3791,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     spy();
 
     // Help dialog
-    $("help-open").addEventListener("click", openHelp);
+    for (const b of document.querySelectorAll('[data-action="help"]')) b.addEventListener("click", openHelp);
+    $("range-select").addEventListener("change", (e) => setRange(Number(e.target.value)));
     $("help-close").addEventListener("click", closeHelp);
     $("help").addEventListener("click", (e) => { if (e.target === $("help")) closeHelp(); });
 
@@ -3627,7 +3862,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       ? `Das Repository ${state.dataRepo} enthält noch keine Daten. Starte dort den Workflow „Sync Garmin and Hevy“ oder lade deine lokalen CSV-Dateien hoch.`
       : "Die CSV-Dateien enthalten noch keine Daten. Zuerst `python -m healthsync sync` ausführen; die Seite zeigt dann alles automatisch.")));
     $("status-line").replaceChildren(pill("crit", "Keine Daten"));
-    for (const area of AREAS) $(`sum-${area}`).textContent = area === "daten" ? "Welche Datei fehlt oder leer ist, steht in der Tabelle unten." : "Noch keine Daten.";
+    for (const area of AREAS) $(`sum-${area}`).replaceChildren(chip(area === "daten" ? "alert" : null, area === "daten" ? "Welche Datei fehlt, steht unten" : "Noch keine Daten", area === "daten" ? "warn" : "neutral"));
     for (const host of document.querySelectorAll(".chart-host")) emptyNote(host, "Noch keine Daten.");
     renderSources();
     renderConnection();
@@ -3639,8 +3874,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   function loadAndRender() {
     if (!loading) {
       loading = (async () => {
-        $("refresh").classList.add("busy");
-        $("refresh").disabled = true;
+        for (const b of document.querySelectorAll('[data-action="refresh"]')) { b.classList.add("busy"); b.disabled = true; }
         try {
           const data = await loadData();
           Object.assign(state, {
@@ -3661,8 +3895,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           renderRangeButtons();
           render();
         } finally {
-          $("refresh").classList.remove("busy");
-          $("refresh").disabled = false;
+          for (const b of document.querySelectorAll('[data-action="refresh"]')) { b.classList.remove("busy"); b.disabled = false; }
           loading = null;
         }
       })();
@@ -3674,7 +3907,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   // (GitHub Pages or a local server), never inside an embedded preview.
   const REFRESH_AFTER_MS = 15 * 60 * 1000;
   function setupApp() {
-    $("refresh").addEventListener("click", () => loadAndRender());
+    for (const b of document.querySelectorAll('[data-action="refresh"]')) b.addEventListener("click", () => loadAndRender());
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible" && Date.now() - (state.loadedAt || 0) > REFRESH_AFTER_MS) loadAndRender();
     });
@@ -3692,16 +3925,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       installPrompt = e;
-      $("install").hidden = standalone();
+      showInstall(!standalone());
     });
-    $("install").addEventListener("click", async () => {
+    const showInstall = (on) => { for (const b of document.querySelectorAll('[data-action="install"]')) b.hidden = !on; };
+    for (const b of document.querySelectorAll('[data-action="install"]')) b.addEventListener("click", async () => {
       if (!installPrompt) return openHelp();
       installPrompt.prompt();
       try { await installPrompt.userChoice; } catch { /* dismissed */ }
       installPrompt = null;
-      $("install").hidden = true;
+      showInstall(false);
     });
-    window.addEventListener("appinstalled", () => { $("install").hidden = true; });
+    window.addEventListener("appinstalled", () => showInstall(false));
   }
 
   async function start() {
@@ -3716,10 +3950,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     setupLiftPicker();
     setupApp();
     renderRangeButtons();
-    for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"]]) {
+    for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"], ["insights", "insights-more"]]) {
       $(id).addEventListener("click", () => {
         state.showAll[key] = !state.showAll[key];
         if (key === "sessions") renderStrengthSessions(state.model, state.x0, state.x1);
+        else if (key === "insights") renderInsights();
         else renderRecentActivities(state.days.flatMap((d) => d.activities));
       });
     }

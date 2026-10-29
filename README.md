@@ -186,26 +186,36 @@ more days old.
 
 ### Areas
 
-A bar at the top links to every area and holds the time range. Each area opens with one sentence
-that sums it up, and can be collapsed; the sentence stays visible. The **?** on a card explains what
-it shows and which columns it reads.
+A bar at the top links to every area. Each area opens with three or four key figures as chips,
+with an icon each, and can be collapsed; the chips stay visible. Areas come in four color families:
+Körper and Ernährung orange, Erholung and Schlaf violet, Kraft and Aktivitäten blue, Zusammenhänge
+and Daten gray. Green, yellow and red are reserved for status and appear only past a threshold, for
+example resting heart rate more than 2.5 bpm above its 60-day mean or protein under 1.6 g/kg. The
+**ⓘ** on a card explains what it shows and which columns it reads.
+
+| Width | Layout |
+|---|---|
+| Phone, under 760 px | Icon bar with all nine targets, date with range, refresh and help in the header. Areas start collapsed; an open area shows one card at a time, chosen with icon tabs |
+| Tablet, 760 to 1279 px | Icon bar with range control; every card of an area is visible, two columns from 900 px |
+| Desktop, 1280 px and wider | The same with the area names in the bar |
 
 | Area | Content |
 |---|---|
-| Overview | Eight tiles for the last 7 days: weight, HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps; two more with YAZIO data: calories and protein. Each tile links to its area |
+| Overview | Tiles for the last 7 days: weight, calories and protein (with YAZIO data), HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps. Each tile links to its area |
 | Körper | Weight with 7-day mean, change in fat and muscle mass |
+| Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means |
 | Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery |
 | Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV |
 | Kraft | Estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night |
 | Aktivitäten | Weekly active time per sport, steps against the 8,000 target, totals per sport, recent activities |
-| Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means |
-| Zusammenhänge | The results of `healthsync analyze`, filterable to robust findings, plus scatter plots for training load, tonnage and sleep against recovery and performance |
+| Zusammenhänge | The results of `healthsync analyze` as a list with effect, ρ and days, the strongest eight first, plus scatter plots for training load, tonnage and sleep against recovery and performance |
 | Daten | Data source and connection, status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
 
 The page warns when the newest Garmin day is two or more days old, which usually means the daily
-workflow has stopped. Keyboard shortcuts: `1` to `8` jump to the areas, `0` back to the overview,
-`Z` switches the time range, `?` opens the help. Range, collapsed areas, main lifts and the
-findings filter are remembered in the browser.
+workflow has stopped. Keyboard shortcuts: `1` to `8` jump to the areas in the order above, `0`
+back to the overview, `Z` switches the time range, `?` opens the help. Range, collapsed areas
+(separately for phones), the chosen tab per area, main lifts and the findings filter are
+remembered in the browser.
 
 Settings at the top of the dashboard script:
 
