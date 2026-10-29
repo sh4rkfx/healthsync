@@ -189,7 +189,7 @@ more days old.
 
 A bar at the top links to every area. Each area opens with three or four key figures as chips,
 with an icon each, and can be collapsed; the chips stay visible. Areas come in four color families:
-Körper and Ernährung orange, Erholung and Schlaf violet, Kraft and Aktivitäten blue, Zusammenhänge
+Körper and Ernährung orange, Erholung and Schlaf violet, Sport and Aktivitäten blue, Zusammenhänge
 and Daten gray. Green, yellow and red are reserved for status and appear only past a threshold, for
 example resting heart rate more than 2.5 bpm above its 60-day mean or protein under 1.6 g/kg. The
 **ⓘ** on every card explains what it shows and which columns it reads. The ⓘ next to an area title explains its summary chips and their color thresholds, and the ⓘ below the overview explains each tile.
@@ -207,7 +207,7 @@ example resting heart rate more than 2.5 bpm above its 60-day mean or protein un
 | Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means |
 | Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery |
 | Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV |
-| Kraft | Estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night |
+| Sport | A switch between **Kraft** and **Bouldern**. Kraft: estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night, grip strength per hand. Bouldern: hardest top and hardest attempt per session with the number of tops, a grade pyramid with the share of tops, and the latest sessions with tops of all logged boulders, time on the wall and in the gym, heart rate and the watch's self evaluation. Boulders appear only when each one is logged with LAP on the watch |
 | Aktivitäten | Weekly active time per sport, steps against the 8,000 target, totals per sport, recent activities |
 | Zusammenhänge | The results of `healthsync analyze` as a list with effect, ρ and days, the strongest eight first, plus scatter plots for training load, tonnage and sleep against recovery and performance |
 | Daten | Data source and connection, status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
@@ -215,16 +215,18 @@ example resting heart rate more than 2.5 bpm above its 60-day mean or protein un
 The page warns when the newest Garmin day is two or more days old, which usually means the daily
 workflow has stopped. Keyboard shortcuts: `1` to `8` jump to the areas in the order above, `0`
 back to the overview, `Z` switches the time range, `?` opens the help. Range, collapsed areas
-(separately for phones), the chosen tab per area, main lifts and the findings filter are
-remembered in the browser.
+(separately for phones), the chosen tab per area, the sport shown in Sport, main lifts and the findings
+filter are remembered in the browser. Old links to `#kraft` open Sport with Kraft selected.
 
 Settings at the top of the dashboard script:
 
 | Setting | Purpose |
 |---|---|
-| `MAIN_LIFTS` | Default lifts shown as e1RM charts, by their exact Hevy names. Without matches, the four most frequent exercises are used. The easier way is **Kraft → Übungen wählen** on the dashboard: it lists every exercise in your Hevy data, applies the choice at once, remembers it in the browser and copies it in this format if you want it as the default everywhere |
+| `MAIN_LIFTS` | Default lifts shown as e1RM charts, by their exact Hevy names. Without matches, the four most frequent exercises are used. The easier way is **Sport → Kraft → Übungen wählen** on the dashboard: it lists every exercise in your Hevy data, applies the choice at once, remembers it in the browser and copies it in this format if you want it as the default everywhere |
 | `SPORTS` | Groups Garmin activity types into sports. The first matching pattern wins; the order sets colors and stacking |
 | `MAX_LINK_GAP_MIN` | Maximum gap between the start of a Hevy workout and a strength activity on the watch to count them as one session (default 180) |
+| `GRIP_EXERCISES` | Hevy exercise names that hold grip-strength measurements (default „Handkraft rechts“ and „Handkraft links“). They are shown as grip strength and left out of hard sets, tonnage and e1RM; keep the names equal to `GRIP_EXERCISES` in `healthsync/config.py` |
+| `MAX_BOULDER_S` | A bouldering split longer than this is a whole session recorded without LAP, not a boulder (default 900 s) |
 | `MIN_COMPLETE_KCAL` | YAZIO days below this count as not fully logged and stay out of all means (default 1,200; keep it equal to the constant in `healthsync/analyze.py`) |
 | `DATA_REPO` | Data repository suggested in the connect dialog |
 

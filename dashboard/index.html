@@ -372,6 +372,53 @@ ul.rows li:first-child { border-top: 0; }
 .key-dot.solid { opacity: 1; width: 8px; height: 8px; }
 .key-band { width: 14px; height: 9px; border-radius: 2px; display: inline-block; background: var(--band); }
 .key-rect { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
+.key-ring { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; border: 2px solid var(--s2); box-sizing: border-box; }
+/* Sport: one area, one switch between the sports; the other sport's cards are hidden */
+.disc { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 3px; background: var(--grid); border-radius: 11px; max-width: 420px; }
+.disc button { min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); font: inherit; font-size: 13px; cursor: pointer; }
+.disc button svg.ic { width: 17px; height: 17px; }
+.disc button[aria-pressed="true"] { background: var(--surface); color: var(--t-fg, var(--ink)); font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
+.card.other-group { display: none !important; }
+@media (max-width: 759px) { .disc { max-width: none; } .disc button { min-height: 44px; } }
+.stat3 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.stat3 li { padding: 8px 10px; border-radius: 9px; background: var(--area); display: grid; gap: 1px; min-width: 0; }
+.stat3 .l { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-2); }
+.stat3 .v { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.stat3 .s { font-size: 11.5px; color: var(--ink-2); }
+.pyramid { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.pyramid li { display: grid; grid-template-columns: 42px minmax(0, 1fr) 62px 44px; gap: 8px; align-items: center; font-size: 12px; }
+.pyramid .g { font-family: var(--font-mono); color: var(--ink-2); }
+.pyramid .bars { display: flex; height: 13px; min-width: 0; }
+.pyramid .bars i { display: block; height: 100%; background: var(--s1); }
+.pyramid .bars i.t { border-radius: 2px 0 0 2px; }
+.pyramid .bars i.a { opacity: 0.35; border-radius: 0 2px 2px 0; }
+.pyramid .n, .pyramid .q { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.pyramid .q { color: var(--ink); }
+.pyramid li.head { font-size: 11px; color: var(--muted); }
+.pyramid li.empty-row { display: block; }
+.pyramid li.head span { color: var(--muted); }
+.bsessions { list-style: none; margin: 0; padding: 0; }
+.bsessions li { display: grid; gap: 6px; padding: 10px 0; border-top: 1px solid var(--grid); }
+.bsessions li:first-child { border-top: 0; padding-top: 2px; }
+.bs-top { display: flex; align-items: center; gap: 8px; }
+.bs-date { flex: 1; font-weight: 600; }
+.bs-gl { font-size: 11.5px; color: var(--ink-2); }
+.grade { min-width: 36px; padding: 2px 8px; border-radius: 999px; text-align: center; font-family: var(--font-mono); font-size: 12px; font-weight: 600; background: var(--t-bg, var(--chip)); color: var(--t-fg, var(--ink)); }
+.bs-ratio { display: grid; grid-template-columns: auto minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.bs-ratio .bar { height: 6px; border-radius: 3px; background: var(--grid); overflow: hidden; }
+.bs-ratio .bar i { display: block; height: 100%; background: var(--s1); }
+.bs-ratio .pct { text-align: right; }
+.bs-facts { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 12px; }
+.bs-facts div { min-width: 0; }
+.bs-facts dt { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.bs-facts dt svg.ic { width: 12px; height: 12px; }
+.bs-facts dd { margin: 0; font-size: 12.5px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 900px) {
+  .bsessions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  .bsessions li:nth-child(2) { border-top: 0; padding-top: 2px; }
+  .bsessions .bs-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 599px) { .bs-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stat3 li { padding: 7px 8px; } .stat3 .v { font-size: 17px; } }
 .sport { display: inline-flex; align-items: center; gap: 7px; }
 .chart-host { min-height: 120px; }
 .empty { display: grid; gap: 4px; place-items: center; min-height: 140px; color: var(--muted); font-size: 13px; text-align: center; padding: 12px; border: 1px dashed var(--axis); border-radius: 8px; }
@@ -515,6 +562,12 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-koerper" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3.5"/><path d="M6.5 9a3.5 3.5 0 0 1 7 0"/><path d="M10 9l1.7-2.2"/></g></symbol>
     <symbol id="i-erholung" viewBox="0 0 20 20"><path d="M2.5 10.5h3.2l1.8-4.5 3 9 2-4.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-schlaf" viewBox="0 0 20 20"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sport" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="5"/><path d="M8.5 3l2.6 7.2M15.5 3l-2.6 7.2M12 13.2v3.6"/></g></symbol>
+    <symbol id="i-hold" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5C4.5 10 8.5 6 13.5 6c3.5 0 6 2.2 6 5 0 4.5-4.5 8-10 8-3.2 0-5-1.4-5-3.5z"/><circle cx="13" cy="12" r="1.6"/></g></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 12V6.5a1.5 1.5 0 0 1 3 0V11V5a1.5 1.5 0 0 1 3 0v6V6.5a1.5 1.5 0 0 1 3 0V14c0 4-2.6 7-6.2 7-2.4 0-4-1.1-5.2-3l-2.2-3.6a1.5 1.5 0 0 1 2.5-1.7L8 14z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pyramid" viewBox="0 0 24 24"><path d="M12 4l8.5 15h-17zM7.6 13.5h8.8M9.9 9h4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wall" viewBox="0 0 24 24"><path d="M5 21V3M5 5h12l-3 4 3 4H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-slider" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/></g></symbol>
     <symbol id="i-kraft" viewBox="0 0 20 20"><path d="M3 8v4M5.75 5.5v9M14.25 5.5v9M17 8v4M5.75 10h8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-aktivitaeten" viewBox="0 0 20 20"><path d="M2.5 16l5-8.5 3.4 5.2 2.1-3.2 4.5 6.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-ernaehrung" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v4.5a2.25 2.25 0 0 0 4.5 0V3M7.25 3v14"/><path d="M15 17V3c-1.8 1-2.7 3.1-2.7 5.6 0 1.6.9 2.6 2.7 2.6"/></g></symbol>
@@ -558,7 +611,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <a href="#ernaehrung" class="tint-orange" data-tint title="Ernährung (Taste 2)"><svg class="ic" aria-hidden="true"><use href="#i-ernaehrung"/></svg><span class="lbl">Ernährung</span></a>
       <a href="#erholung" class="tint-violet" data-tint title="Erholung (Taste 3)"><svg class="ic" aria-hidden="true"><use href="#i-erholung"/></svg><span class="lbl">Erholung</span></a>
       <a href="#schlaf" class="tint-violet" data-tint title="Schlaf (Taste 4)"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg><span class="lbl">Schlaf</span></a>
-      <a href="#kraft" class="tint-blue" data-tint title="Kraft (Taste 5)"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg><span class="lbl">Kraft</span></a>
+      <a href="#sport" class="tint-blue" data-tint title="Sport (Taste 5)"><svg class="ic" aria-hidden="true"><use href="#i-sport"/></svg><span class="lbl">Sport</span></a>
       <a href="#aktivitaeten" class="tint-blue" data-tint title="Aktivitäten (Taste 6)"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg><span class="lbl">Aktivitäten</span></a>
       <a href="#zusammenhaenge" class="tint-gray" data-tint title="Zusammenhänge (Taste 7)"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg><span class="lbl">Zusammenhänge</span></a>
       <a href="#daten" class="tint-gray" data-tint title="Daten (Taste 8)"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg><span class="lbl">Daten</span></a>
@@ -811,24 +864,30 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
-  <section class="area tint-blue" id="kraft" aria-labelledby="h-kraft">
+  <section class="area tint-blue" id="sport" aria-labelledby="h-sport">
     <div class="area-head">
-      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-kraft"/></svg></span>
-      <h2 id="h-kraft">Kraft</h2>
-      <p class="area-sum" id="sum-kraft"></p>
+      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-sport"/></svg></span>
+      <h2 id="h-sport">Sport</h2>
+      <p class="area-sum" id="sum-sport"></p>
     </div>
-    <div class="info area-info" id="info-kraft" hidden>
+    <div class="info area-info" id="info-sport" hidden>
       <table class="info-table">
         <thead><tr><th scope="col">Chip</th><th scope="col">Bedeutung</th></tr></thead>
         <tbody>
-          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Einheiten</span></td><td>Hevy-Workouts im Zeitraum; Einheiten, die nur die Uhr kennt, zählen nicht.</td></tr>
-          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-bars"/></svg>Sätze/Woche</span></td><td>Arbeitssätze ohne Aufwärmsätze, im Mittel pro Woche.</td></tr>
-          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg>Übung ± kg</span></td><td>e1RM der ersten Hauptübung: letzte minus erste Einheit im Zeitraum.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Kraft</span></td><td>Hevy-Workouts im Zeitraum; Einheiten, die nur die Uhr kennt, zählen nicht.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-bars"/></svg>Sätze/Woche</span></td><td>Arbeitssätze ohne Aufwärmsätze und ohne Handkraft-Messungen, im Mittel pro Woche.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-hold"/></svg>Bouldern</span></td><td>Boulder-Sessions der Uhr im Zeitraum.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg>Top</span></td><td>Schwerster getoppter Boulder im Zeitraum, nur aus Sessions mit einzeln geloggten Bouldern.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-hand"/></svg>Handkraft</span></td><td>Letzte Messung der stärkeren Hand.</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="area-body" id="b-kraft">
-      <div class="card span2" data-tab="e1RM" data-icon="trend">
+    <div class="area-body" id="b-sport">
+      <div class="disc" role="group" aria-label="Sportart">
+        <button type="button" data-group="kraft" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg><span>Kraft</span></button>
+        <button type="button" data-group="bouldern" aria-pressed="true"><svg class="ic" aria-hidden="true"><use href="#i-hold"/></svg><span>Bouldern</span></button>
+      </div>
+      <div class="card span2" data-group="kraft" data-tab="e1RM" data-icon="trend">
         <div class="card-head"><h3>Geschätztes 1RM der Hauptübungen</h3><p class="sub">Bester Satz je Einheit, auf 1 Wiederholung umgerechnet</p></div>
         <div class="info" hidden>
           <p>Epley-Formel: Last × (1 + Wiederholungen / 30), aus Sätzen mit bis zu 10 Wiederholungen, ohne Aufwärmsätze. Bei Klimmzügen und Dips zählt das Körpergewicht mit. Welche Übungen hier stehen, wählst du über „Übungen wählen“. Ohne eigene Auswahl gilt <code>MAIN_LIFTS</code> oben im Skript, und ohne Treffer dort erscheinen die vier häufigsten.</p>
@@ -850,15 +909,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="lifts" id="lifts"></div>
       </div>
-      <div class="card span2" data-tab="Sätze" data-icon="bars">
+      <div class="card span2" data-group="kraft" data-tab="Sätze" data-icon="bars">
         <div class="card-head"><h3>Arbeitssätze pro Woche</h3><p class="sub" id="volume-sub"></p></div>
         <div class="info" hidden>
-          <p>Gezählt werden alle Sätze außer Aufwärmsätzen. Der Tooltip zeigt zusätzlich Tonnage, Einheiten und die Trainingslast, die die Uhr beim Krafttraining gemessen hat.</p>
+          <p>Gezählt werden alle Sätze außer Aufwärmsätzen und Handkraft-Messungen. Der Tooltip zeigt zusätzlich Tonnage, Einheiten und die Trainingslast, die die Uhr beim Krafttraining gemessen hat.</p>
           <p class="source">Quelle: hevy_sets.csv · set_type ≠ warmup</p>
         </div>
         <div class="chart-host" id="c-volume"></div>
       </div>
-      <div class="card span2" data-tab="Workouts" data-icon="list">
+      <div class="card span2" data-group="kraft" data-tab="Workouts" data-icon="list">
         <div class="card-head"><h3>Krafteinheiten nach Workout</h3><p class="sub" id="sessions-sub"></p></div>
         <div class="info" hidden>
           <p>Hevy kennt Sätze und Gewichte, die Uhr Dauer, Puls und Trainingslast. Beide werden über Datum und Startzeit verknüpft, wenn sie höchstens drei Stunden auseinanderliegen. HRV und Ruhepuls zeigen die Abweichung vom 7-Tage-Mittel in der Nacht nach der Einheit, nur von Tagen ohne weitere Aktivität.</p>
@@ -866,7 +925,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="table-wrap wide"><table id="by-workout"></table></div>
       </div>
-      <div class="card span2" data-tab="Einheiten" data-icon="calendar">
+      <div class="card span2" data-group="kraft" data-tab="Einheiten" data-icon="calendar">
         <div class="card-head"><h3>Letzte Krafteinheiten</h3><p class="sub" id="sessions-recent-sub"></p></div>
         <div class="info" hidden>
           <p>Jede Zeile ist eine Einheit, neueste oben. <b>ohne Uhr</b>: in Hevy geloggt, aber keine Kraft-Aufzeichnung der Uhr, die höchstens drei Stunden daneben startet; Dauer, Puls und Trainingslast fehlen dann. <b>ohne Hevy</b>: nur die Uhr hat aufgezeichnet; Sätze und Tonnage fehlen.</p>
@@ -875,6 +934,46 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="table-wrap wide"><table id="sessions"></table></div>
         <button class="ghost-btn" type="button" id="sessions-more" hidden></button>
+      </div>
+      <div class="card span2" data-group="kraft" data-tab="Handkraft" data-icon="hand">
+        <div class="card-head"><h3>Handkraft</h3><p class="sub" id="grip-sub"></p></div>
+        <div class="info" hidden>
+          <p>Bester Satz je Hand und Tag aus den Hevy-Übungen „Handkraft links“ und „Handkraft rechts“, Gewicht in kg. Ein Handkraftmesser misst den vollen Faustschluss mit Daumen. Beim Bouldern hältst du Leisten und Sloper meist offen oder aufgestellt und ohne Daumen; der Wert zeigt deshalb allgemeine Kraft, keine bouldertypische Fingerkraft.</p>
+          <p>Vergleichbar ist er nur bei gleicher Haltung, gleicher Griffweite und gleichem Zeitpunkt, am besten nach dem Aufwärmen und vor dem Bouldern. Die Messungen zählen nicht als Arbeitssätze und gehen weder in Tonnage noch in das e1RM ein.</p>
+          <p class="source">Quelle: hevy_sets.csv · weight_kg · Übungsnamen in <code>GRIP_EXERCISES</code> oben im Skript</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>rechts</span><span><i class="key-line" style="background:var(--s2)"></i>links</span></div>
+        <div class="chart-host" id="c-grip"></div>
+      </div>
+      <div class="card span2" data-group="bouldern" data-tab="Spitze" data-icon="trend">
+        <div class="card-head"><h3>Spitzenleistung je Session</h3><p class="sub" id="peak-sub"></p></div>
+        <div class="info" hidden>
+          <p>Oben pro Session der schwerste getoppte Boulder (Punkt) und der schwerste nur versuchte (Ring). Liegt der Ring über dem Punkt, war das dein Projektbereich. Unten die Zahl der Tops; der dunkle Balken ist die Session mit den meisten. Ein einzelner Top hängt stark vom konkreten Boulder und vom Schrauben der Halle ab, aussagekräftig ist der Verlauf über mehrere Sessions.</p>
+          <p>Nur Sessions, in denen du jeden Boulder mit LAP einzeln geloggt hast. Ohne LAP speichert die Uhr die ganze Session als einen einzigen Boulder; solche Sessions fehlen hier.</p>
+          <p class="source">Quelle: garmin_climbs.csv · grade, grade_order, status</p>
+        </div>
+        <div class="legend"><span><i class="key-dot solid" style="background:var(--s1)"></i>Höchster Top</span><span><i class="key-ring"></i>Höchster Versuch</span><span><i class="key-rect" style="background:var(--s1);opacity:.4"></i>Tops je Session</span></div>
+        <div class="chart-host" id="c-peak"></div>
+        <ul class="stat3" id="peak-stats"></ul>
+      </div>
+      <div class="card span2" data-group="bouldern" data-tab="Breite" data-icon="pyramid">
+        <div class="card-head"><h3>Gradpyramide</h3><p class="sub" id="pyramid-sub"></p></div>
+        <div class="info" hidden>
+          <p>Tops und Versuche je Grad im gewählten Zeitraum. Die Quote ist der Anteil der Tops an allen geloggten Bouldern eines Grads; sie stimmt nur, wenn du jeden Versuch einzeln loggst. Garmin erkennt nicht, ob zwei Einträge derselbe Boulder sind, Wiederholungen zählen also mit.</p>
+          <p class="source">Quelle: garmin_climbs.csv · grade, grade_order, status</p>
+        </div>
+        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>Tops</span><span><i class="key-rect" style="background:var(--s1);opacity:.35"></i>Versuche</span></div>
+        <ul class="pyramid" id="pyramid"></ul>
+      </div>
+      <div class="card span2" data-group="bouldern" data-tab="Sessions" data-icon="list">
+        <div class="card-head"><h3>Letzte Boulder-Sessions</h3><p class="sub" id="bsessions-sub"></p></div>
+        <div class="info" hidden>
+          <p><b>Getoppt</b>: abgeschlossene von allen geloggten Bouldern. <b>An der Wand</b>: Summe der Routentimer. <b>In der Halle</b>: Dauer der ganzen Aktivität. Puls aus der Aktivität. <b>Anstrengung</b> (1 bis 10) und <b>Gefühl</b> stammen aus der Selbstbewertung, die die Uhr nach dem Speichern abfragt, wenn sie in den Einstellungen der Aktivität eingeschaltet ist.</p>
+          <p><b>nicht einzeln geloggt</b>: Die Session wurde ohne LAP pro Boulder aufgezeichnet; Grad, Tops und Zeit an der Wand fehlen dann.</p>
+          <p class="source">Quelle: garmin_climb_sessions.csv · garmin_climbs.csv · garmin_activities.csv · duration_min, avg_hr, max_hr</p>
+        </div>
+        <ul class="bsessions" id="bsessions"></ul>
+        <button class="ghost-btn" type="button" id="bsessions-more" hidden></button>
       </div>
     </div>
   </section>
@@ -1085,7 +1184,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h3>Tastenkürzel</h3>
       <table>
         <tbody>
-          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Ernährung, Erholung, Schlaf, Kraft, Aktivitäten, Zusammenhänge, Daten</td></tr>
+          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Ernährung, Erholung, Schlaf, Sport, Aktivitäten, Zusammenhänge, Daten</td></tr>
           <tr><td><kbd>0</kbd></td><td>Zurück zum Überblick</td></tr>
           <tr><td><kbd>Z</kbd></td><td>Nächster Zeitraum; mit <kbd>Umschalt</kbd> der vorherige</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Im ausgewählten Diagramm einen Tag weiter; mit <kbd>Umschalt</kbd> eine Woche</td></tr>
@@ -1166,7 +1265,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   // Sports grouping for Garmin activity types (typeKey). First match wins; the order is
   // also the stacking order and fixes each sport's color.
   const SPORTS = [
-    { key: "climb", label: "Bouldern & Klettern", color: "var(--s1)", test: /boulder|climb/ },
+    { key: "climb", label: "Bouldern & Klettern", color: "var(--s1)", test: /boulder|^(indoor_|rock_|outdoor_)?climb/ }, // not stair_climbing
     { key: "mountain", label: "Berg & Wandern", color: "var(--s2)", test: /hik|mountaineer|ski_tour|backcountry|snowshoe/ },
     { key: "bike", label: "Rad", color: "var(--s3)", test: /cycl|bik|ride/ },
     { key: "run", label: "Laufen", color: "var(--s4)", test: /run/ },
@@ -1179,19 +1278,30 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     hevy: "../data/hevy_sets.csv",
     insights: "../data/insights.json",
     nutrition: "../data/nutrition_daily.csv",
+    climbs: "../data/garmin_climbs.csv",
+    climbSessions: "../data/garmin_climb_sessions.csv",
   };
   // Private repository with the data files, read through the GitHub API when the page runs
   // without data next to it, e.g. on GitHub Pages. Only the default for the connect dialog.
   const DATA_REPO = "sh4rkfx/healthsync-data";
   const GITHUB_FILES = {
     garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json",
-    nutrition: "nutrition_daily.csv",
+    nutrition: "nutrition_daily.csv", climbs: "garmin_climbs.csv", climbSessions: "garmin_climb_sessions.csv",
   };
+  // Every data file the page reads, in the order they are fetched
+  const FILE_KEYS = ["garmin", "activities", "hevy", "insights", "nutrition", "climbs", "climbSessions"];
   // YAZIO days below this count as not fully logged and stay out of every mean (same value as
   // MIN_COMPLETE_KCAL in healthsync/analyze.py).
   const MIN_COMPLETE_KCAL = 1200;
   const PROTEIN_REFS = [1.6, 2.2]; // g per kg body weight, Morton et al. 2018 (plateau and upper 95 % bound)
   const KCAL_PER_KG = 7700;        // rough energy content of one kg of body weight
+  // Hevy exercises holding grip-strength measurements (kg per set), same names as GRIP_EXERCISES
+  // in healthsync/config.py. They are no training sets: no hard sets, tonnage or e1RM.
+  const GRIP_EXERCISES = { "handkraft rechts": "right", "handkraft links": "left" };
+  // A bouldering split longer than this is a whole session recorded without LAP, not a boulder
+  const MAX_BOULDER_S = 900;
+  const FEEL_LABELS = { 0: "sehr schwach", 25: "schwach", 50: "normal", 75: "stark", 100: "sehr stark" };
+  const BOULDER_ROWS = 6; // sessions listed before "show all"
 
   // German wording for the variables of data/insights.json (keys as in healthsync/analyze.py)
   const INSIGHT_DRIVERS = {
@@ -1229,11 +1339,13 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   ];
   const DEFAULT_RANGE = 90;
   // Areas in page order; the position is also the keyboard shortcut (1 = Körper)
-  const AREAS = ["koerper", "ernaehrung", "erholung", "schlaf", "kraft", "aktivitaeten", "zusammenhaenge", "daten"];
+  const AREAS = ["koerper", "ernaehrung", "erholung", "schlaf", "sport", "aktivitaeten", "zusammenhaenge", "daten"];
+  // Old links and the sports inside Sport: #kraft opens Sport with Kraft selected
+  const GROUP_ALIAS = { kraft: ["sport", "kraft"], bouldern: ["sport", "bouldern"] };
   // Color family of each area (CSS classes tint-*); status colors are never used for areas
   const AREA_TINT = {
     koerper: "orange", ernaehrung: "orange", erholung: "violet", schlaf: "violet",
-    kraft: "blue", aktivitaeten: "blue", zusammenhaenge: "gray", daten: "gray",
+    sport: "blue", aktivitaeten: "blue", zusammenhaenge: "gray", daten: "gray",
   };
   const PHONE = "(max-width: 759px)"; // same breakpoint as the CSS: icon bar, tabs, collapsed areas
   const STEP_GOAL = 8000;       // same target as docs/scores.md
@@ -1401,24 +1513,18 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     //    CSV text, plus insights as the parsed content of insights.json
     const embedded = window.HEALTHSYNC_DATA;
     if (embedded) {
+      const csvKeys = FILE_KEYS.filter((k) => k !== "insights");
       return {
-        garmin: parseCsv(embedded.garmin || ""), activities: parseCsv(embedded.activities || ""),
-        hevy: parseCsv(embedded.hevy || ""), nutrition: parseCsv(embedded.nutrition || ""),
+        ...Object.fromEntries(csvKeys.map((k) => [k, parseCsv(embedded[k] || "")])),
         insights: embedded.insights || null, source: "embedded",
-        found: {
-          garmin: embedded.garmin != null, activities: embedded.activities != null, hevy: embedded.hevy != null,
-          nutrition: embedded.nutrition != null, insights: embedded.insights != null,
-        },
+        found: Object.fromEntries(FILE_KEYS.map((k) => [k, embedded[k] != null])),
       };
     }
     // 2. Files next to the dashboard (repo checkout served over HTTP). Skipped on GitHub Pages,
     //    where the data is never published.
     if (!location.hostname.endsWith(".github.io")) {
-      const [garmin, activities, hevy, insights, nutrition] = await Promise.all([
-        fetchText(DATA_URLS.garmin), fetchText(DATA_URLS.activities), fetchText(DATA_URLS.hevy), fetchText(DATA_URLS.insights),
-        fetchText(DATA_URLS.nutrition),
-      ]);
-      if (garmin != null || activities != null || hevy != null) return fromTexts({ garmin, activities, hevy, insights, nutrition }, "csv");
+      const texts = Object.fromEntries(await Promise.all(FILE_KEYS.map(async (k) => [k, await fetchText(DATA_URLS[k])])));
+      if (texts.garmin != null || texts.activities != null || texts.hevy != null) return fromTexts(texts, "csv");
     }
     // 3. The private data repository through the GitHub API, once this browser is connected
     const cred = loadCredentials();
@@ -1437,19 +1543,20 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // 4. Generated example data, with the analysis result the Python script produced for it
     return {
       ...makeDemoData(tToIso(Date.now())), insights: DEMO_INSIGHTS, source: "demo", githubError,
-      found: { garmin: true, activities: true, hevy: true, nutrition: true, insights: true },
+      found: Object.fromEntries(FILE_KEYS.map((k) => [k, true])),
     };
   }
 
   // Parsed data from the raw file contents; null means the file does not exist
-  function fromTexts({ garmin, activities, hevy, nutrition, insights: insightsText }, source) {
+  function fromTexts(texts, source) {
+    const insightsText = texts.insights;
     let insights = null;
     try { insights = insightsText ? JSON.parse(insightsText) : null; } catch { insights = null; }
+    const csvKeys = FILE_KEYS.filter((k) => k !== "insights");
     return {
-      garmin: garmin ? parseCsv(garmin) : [], activities: activities ? parseCsv(activities) : [], hevy: hevy ? parseCsv(hevy) : [],
-      nutrition: nutrition ? parseCsv(nutrition) : [],
+      ...Object.fromEntries(csvKeys.map((k) => [k, texts[k] ? parseCsv(texts[k]) : []])),
       insights, source, insightsBroken: insightsText != null && insights == null,
-      found: { garmin: garmin != null, activities: activities != null, hevy: hevy != null, nutrition: nutrition != null, insights: insights != null },
+      found: { ...Object.fromEntries(csvKeys.map((k) => [k, texts[k] != null])), insights: insights != null },
     };
   }
 
@@ -1514,10 +1621,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         return null;
       }
     };
-    const [garmin, activities, hevy, insights, nutrition] = await Promise.all(
-      [GITHUB_FILES.garmin, GITHUB_FILES.activities, GITHUB_FILES.hevy, GITHUB_FILES.insights, GITHUB_FILES.nutrition].map(get),
-    );
-    const texts = { garmin, activities, hevy, insights, nutrition };
+    const texts = Object.fromEntries(await Promise.all(FILE_KEYS.map(async (k) => [k, await get(GITHUB_FILES[k])])));
     return { ...fromTexts(texts, "github"), texts };
   }
 
@@ -1566,6 +1670,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       entry("nutrition", "YAZIO Ernährung", file("nutrition"), data.nutrition || [], remote
         ? "Optional. Entsteht, wenn das Daten-Repository das Secret `YAZIO_TOKENS_JSON` hat oder für einen Lauf `YAZIO_EMAIL` und `YAZIO_PASSWORD`; danach Run workflow mit 365 Tagen."
         : "Optional. Einrichten mit `python -m healthsync yazio-login`, dann `python -m healthsync sync --source yazio --days 365`.", true),
+      entry("climbs", "Garmin Bouldern", file("climbs"), data.climbs || [], remote
+        ? "Entsteht beim nächsten Lauf des Workflows. Ältere Sessions holt Run workflow mit source `climbs` und days `2000`."
+        : "Abrufen mit `python -m healthsync sync --source climbs --days 2000`.", true),
     ];
     const ins = data.insights;
     list.push({
@@ -1768,7 +1875,69 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       prevLoad = garminLoad;
       prevLower = tonnage > 0 && plan[0].startsWith("Unterkörper");
     }
-    return { garmin, hevy, activities, nutrition };
+    // Own random stream, so the data above (and the analysis result built from it) stays the same
+    const climbRnd = mulberry32(53);
+    const { climbs, climbSessions } = demoBouldering(activities, end, climbRnd);
+    // Grip strength every two weeks for the last 12 weeks, two sets per hand
+    for (let k = 6; k >= 1; k--) {
+      const t = end - k * 14 * DAY + 2 * DAY, date = tToIso(t), right = 48 + (6 - k) * 0.8 + climbRnd() * 1.5;
+      [["Handkraft rechts", right], ["Handkraft links", right - 2.5 - climbRnd() * 1.5]].forEach(([exercise, kg], ex) => {
+        for (let s = 0; s < 2; s++) {
+          hevy.push({
+            date, start_time: `${date}T17:00:00Z`, workout_id: `demo-grip-${date}`, workout_title: "Handkraft",
+            exercise_index: ex, exercise, exercise_template_id: "", set_index: s, set_type: "normal",
+            weight_kg: (kg - s * climbRnd()).toFixed(1), reps: 1, rpe: "", duration_s: "", distance_m: "",
+          });
+        }
+      });
+    }
+    return { garmin, hevy, activities, nutrition, climbs, climbSessions };
+  }
+
+  // Sessions of the last 16 weeks logged boulder by boulder with a slowly rising level; older ones
+  // in one piece, as the watch stores a session without LAP. Self evaluation for the last 8 weeks.
+  function demoBouldering(activities, end, rnd) {
+    const FONT = ["_1", "_2", "_3", "_4", "_4_PLUS", "_5", "_5_PLUS", "_6A", "_6A_PLUS", "_6B", "_6B_PLUS", "_6C", "_6C_PLUS", "_7A", "_7A_PLUS", "_7B"];
+    const climbs = [], climbSessions = [];
+    const clock = (base, s) => {
+      const [d, time] = base.split(" "), [h, m, sec] = time.split(":").map(Number), total = h * 3600 + m * 60 + (sec || 0) + Math.round(s);
+      return `${d} ${String(Math.floor(total / 3600) % 24).padStart(2, "0")}:${String(Math.floor(total / 60) % 60).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+    };
+    for (const a of activities.filter((x) => x.type === "bouldering")) {
+      const age = (end - isoToT(a.date)) / DAY, minutes = Number(a.duration_min);
+      const rows = [];
+      if (age > 112) {
+        rows.push({ grade: "_6A", order: 7, status: "completed", dur: minutes * 60, rest: null, hr: a.avg_hr, hrMax: a.max_hr });
+      } else {
+        const level = 10.2 + 1.3 * (1 - age / 112); // grade order where tops become hard
+        const n = 13 + Math.floor(rnd() * 9);
+        for (let k = 0; k < n; k++) {
+          const order = clamp(Math.round(level - 4 + k / n * 3 + rnd() * 3), 5, 15);
+          const top = rnd() < 1 / (1 + Math.exp(-(level + 0.4 - order) * 1.5));
+          rows.push({
+            grade: FONT[order], order, status: top ? "completed" : "attempted", dur: top ? 25 + rnd() * 35 : 8 + rnd() * 30,
+            rest: k < n - 1 ? 70 + rnd() * 180 : null, hr: Math.round(124 + rnd() * 18), hrMax: Math.round(146 + rnd() * 22),
+          });
+        }
+      }
+      let at = 300;
+      rows.forEach((r, k) => {
+        climbs.push({
+          date: a.date, activity_id: a.activity_id, climb_no: k + 1, start_time_local: clock(a.start_time_local, at),
+          grade: r.grade, grade_scale: "FONT", grade_order: r.order, status: r.status,
+          duration_s: Math.round(r.dur), rest_after_s: r.rest == null ? "" : Math.round(r.rest), avg_hr: r.hr, max_hr: r.hrMax,
+        });
+        at += r.dur + (r.rest ?? 0);
+      });
+      const rated = age <= 56;
+      climbSessions.push({
+        date: a.date, activity_id: a.activity_id, start_time_local: a.start_time_local, climbs: rows.length,
+        completed: rows.filter((r) => r.status === "completed").length, attempted: rows.filter((r) => r.status === "attempted").length,
+        wall_s: Math.round(rows.reduce((s, r) => s + r.dur, 0)), rest_s: Math.round(rows.reduce((s, r) => s + (r.rest ?? 0), 0)),
+        effort: rated ? (5 + Math.floor(rnd() * 4)).toFixed(1) : "", feel: rated ? [25, 50, 50, 75, 75, 100][Math.floor(rnd() * 6)] : "",
+      });
+    }
+    return { climbs, climbSessions };
   }
 
   // ------------------------------------------------------------------ model
@@ -1784,7 +1953,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
   }
 
-  function buildModel(garminRows, hevyRows, activityRows, nutritionRows = []) {
+  function buildModel(garminRows, hevyRows, activityRows, nutritionRows = [], climbRows = [], climbSessionRows = []) {
     const byDate = new Map();
     for (const r of garminRows) if (r.date) byDate.set(r.date.slice(0, 10), r);
     const foodByDate = new Map();
@@ -1796,20 +1965,31 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         const type = (r.type || "").toLowerCase();
         return {
           t: isoToT(r.date), start: r.start_time_local || r.date, startMin: clockMinutes(r.start_time_local),
-          type, sport: SPORTS.find((s) => s.test.test(type)),
+          type, sport: SPORTS.find((s) => s.test.test(type)), id: String(r.activity_id || ""),
           name: r.name || type, min: num(r.duration_min), km: num(r.distance_km), elev: num(r.elevation_gain_m),
-          hr: num(r.avg_hr), load: num(r.training_load), te: num(r.aerobic_te),
+          hr: num(r.avg_hr), hrMax: num(r.max_hr), load: num(r.training_load), te: num(r.aerobic_te),
         };
       })
       .sort((a, b) => (a.start < b.start ? -1 : a.start > b.start ? 1 : 0));
 
-    const sets = hevyRows
+    const allSets = hevyRows
       .filter((r) => r.date)
       .map((r) => ({
         t: isoToT(r.date), exercise: r.exercise, type: (r.set_type || "normal").toLowerCase(),
         weight: num(r.weight_kg) ?? 0, reps: num(r.reps), workout: r.workout_id,
         title: r.workout_title, startMin: utcToLocalMinutes(r.start_time),
+        grip: GRIP_EXERCISES[String(r.exercise || "").trim().toLowerCase()] || null,
       }));
+    // Grip measurements: best set per hand and day. Everything else below works without them.
+    const gripByDay = new Map();
+    for (const s of allSets) {
+      if (!s.grip || !(s.weight > 0) || s.type === "warmup") continue;
+      const g = gripByDay.get(s.t) || { t: s.t, right: null, left: null };
+      g[s.grip] = Math.max(g[s.grip] ?? 0, s.weight);
+      gripByDay.set(s.t, g);
+    }
+    const grip = [...gripByDay.values()].sort((a, b) => a.t - b.t);
+    const sets = allSets.filter((s) => !s.grip);
 
     const allT = [...[...byDate.keys()].map(isoToT), ...sets.map((s) => s.t), ...activities.map((a) => a.t), ...[...foodByDate.keys()].map(isoToT)];
     if (!allT.length) return null;
@@ -1947,11 +2127,52 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
 
     const strengthSessions = linkStrengthSessions(sets, activities, days, index);
+    const bouldering = buildBouldering(activities, climbRows, climbSessionRows);
     return {
       days, t0, t1, index, activities, hasActivities: activities.length > 0, strengthSessions,
       hasNutrition: foodByDate.size > 0,
       exercises, defaultLifts, computeLift, lifts: defaultLifts.map(computeLift),
+      grip, bouldering, boulderScale: bouldering.scale,
     };
+  }
+
+  // "_6A_PLUS" -> "6A+", "_5" -> "5", "V4" -> "V4"
+  const gradeLabel = (key) => String(key || "").replace(/^_/, "").replace(/_PLUS$/, "+").replace(/_/g, " ").trim();
+
+  // One entry per bouldering activity, with the boulders the watch logged in it (garmin_climbs.csv)
+  // and the self evaluation (garmin_climb_sessions.csv). Grades are compared by Garmin's sort order
+  // within one scale; boulders in another scale than the most used one stay out of grade figures.
+  function buildBouldering(activities, climbRows, sessionRows) {
+    const byId = new Map();
+    for (const r of climbRows) {
+      const id = String(r.activity_id || "");
+      if (!id) continue;
+      if (!byId.has(id)) byId.set(id, []);
+      byId.get(id).push(r);
+    }
+    const evalById = new Map(sessionRows.map((r) => [String(r.activity_id || ""), r]));
+    const scaleCount = new Map();
+    const parsed = activities.filter((a) => a.type === "bouldering").map((a) => {
+      const climbs = (byId.get(a.id) || [])
+        .map((r) => ({ grade: gradeLabel(r.grade), rank: num(r.grade_order), scale: r.grade_scale || "", status: r.status, s: num(r.duration_s) }))
+        .filter((c) => c.s != null && c.s <= MAX_BOULDER_S);
+      for (const c of climbs) scaleCount.set(c.scale, (scaleCount.get(c.scale) || 0) + 1);
+      const ev = evalById.get(a.id);
+      return { a, climbs, effort: num(ev?.effort), feel: num(ev?.feel), split: (byId.get(a.id) || []).length };
+    });
+    const scale = [...scaleCount.entries()].sort((x, y) => y[1] - x[1])[0]?.[0] ?? null;
+    const sessions = parsed.map(({ a, climbs, effort, feel, split }) => {
+      const graded = climbs.filter((c) => c.scale === scale && c.rank != null);
+      const best = (status) => graded.filter((c) => c.status === status).reduce((m, c) => (!m || c.rank > m.rank ? c : m), null);
+      const tops = climbs.filter((c) => c.status === "completed").length;
+      return {
+        t: a.t, start: a.start, id: a.id, min: a.min, hr: a.hr, hrMax: a.hrMax, effort, feel,
+        logged: climbs.length > 0, fetched: split > 0, climbs, graded,
+        tops, attempts: climbs.length - tops, wallS: climbs.reduce((s, c) => s + c.s, 0),
+        maxTop: best("completed"), maxAtt: best("attempted"),
+      };
+    });
+    return Object.assign(sessions, { scale });
   }
 
   // Hevy knows the sets, the watch knows duration, heart rate and training load. A Hevy
@@ -2485,7 +2706,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
   const state = {
     range: DEFAULT_RANGE, model: null, source: "demo", insights: null, insightsBroken: false, sourceInfo: [],
-    insightFilter: "robust", showAll: { sessions: false, recent: false, insights: false }, x0: null, x1: null, days: [],
+    insightFilter: "robust", showAll: { sessions: false, recent: false, insights: false, bsessions: false }, x0: null, x1: null, days: [],
   };
   const charts = new Map();
   const resizer = new ResizeObserver((entries) => {
@@ -2512,7 +2733,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const clockOf = (ms) => new Date(ms).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
   const dayOf = (ms) => new Date(ms).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
   const AREA_LABELS = {
-    koerper: "Körper", ernaehrung: "Ernährung", erholung: "Erholung", schlaf: "Schlaf", kraft: "Kraft",
+    koerper: "Körper", ernaehrung: "Ernährung", erholung: "Erholung", schlaf: "Schlaf", sport: "Sport",
     aktivitaeten: "Aktivitäten", zusammenhaenge: "Zusammenhänge", daten: "Daten",
   };
 
@@ -2671,6 +2892,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderLifts(M, x0, x1);
     renderVolume(days, x0, x1);
     renderStrengthSessions(M, x0, x1);
+    renderGrip(M, x0, x1);
+    renderBouldering(M, x0, x1);
     renderActivities(M, days, x0);
     renderNutrition(M, days, x0, x1);
     renderInsights();
@@ -2758,7 +2981,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const hrvRatio = h?.hrvLow ? h.hrv7 / h.hrvLow : null;
 
     // delta: { icon, text, level }; level only past a threshold, otherwise the line stays gray
-    const tile = (area, iconName, label, value, unit, delta, sparkData) => html("a", { class: `tile tint-${AREA_TINT[area]}`, href: `#${area}`, title: `Zum Bereich ${AREA_LABELS[area]}` }, [
+    const tile = (area, iconName, label, value, unit, delta, sparkData) => html("a", { class: `tile tint-${AREA_TINT[area]}`, href: `#${area === "sport" ? "kraft" : area}`, title: `Zum Bereich ${AREA_LABELS[area]}` }, [
       html("span", { class: "label" }, [icon(iconName), label]),
       html("span", { class: "value" }, [value, unit ? html("small", { text: unit }) : null]),
       html("span", { class: `delta ${delta?.level || ""}` }, delta ? [delta.icon ? icon(delta.icon) : null, html("span", { text: delta.text })] : []),
@@ -2790,7 +3013,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         rd ? { icon: null, text: `${READINESS_LABELS[rd.readyLevel] || rd.readyLevel || ""}${rd.t === M.t1 ? "" : `, ${ddmm(rd.t)}`}`, level: rd.readyLevel === "LOW" || rd.readyLevel === "POOR" ? "warn" : "" } : null, spark("ready")),
       tile("schlaf", "schlaf", "Schlaf", sl ? fmtDuration(sl.sleepH7 * 60).replace(" h", "") : "–", "h",
         bed || ss ? { icon: "clock", text: [bed ? fmtClock(bed.bed7) : null, ss ? `Score ${fmt(ss.sleep7)}` : null].filter(Boolean).join(" · ") } : null, spark("sleepH7")),
-      tile("kraft", "kraft", "Sätze, 7 Tage", fmt(setsLast7), "",
+      tile("sport", "kraft", "Sätze, 7 Tage", fmt(setsLast7), "",
         { icon: direction(setsLast7 - setsPrev7, 0), text: `${fmtSigned(setsLast7 - setsPrev7)} · ${sessions7} ${sessions7 === 1 ? "Einheit" : "Einheiten"}` }, spark("sets7Sum")),
       tile("aktivitaeten", "aktivitaeten", "Aktiv, 7 Tage", M.hasActivities ? fmt(activeH7, 1) : "–", "h",
         M.hasActivities ? { icon: direction(activeH7 - activeHPrev7, 0.05), text: `${fmtSigned(activeH7 - activeHPrev7, 1)} h · ${activities7} Akt.` } : { icon: null, text: "keine Daten der Uhr" }, spark("active7Sum")),
@@ -2861,18 +3084,22 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     slept.length ? `Durchschnittlich ${fmtDuration(mean(slept.map((d) => d.sleepH)) * 60)} Schlaf pro Nacht, eingeschlafen ${fmtClock(bedAvg)}, aufgewacht ${fmtClock(wakeAvg)}.`
       + (jetlag != null ? ` Am Wochenende liegt die Schlafmitte ${shiftText(jetlag)}.` : "") : "Keine Schlafdaten im Zeitraum.");
 
-    // Kraft
+    // Sport: Kraft and Bouldern
     const workouts = M.strengthSessions.filter((s) => s.t >= x0 && s.t <= x1 && s.source !== "watch");
     const sets = days.reduce((a, d) => a + d.hardSets, 0);
-    const lift = M.lifts[0];
-    const liftIn = lift ? lift.sessions.filter((s) => s.t >= x0 && s.t <= x1) : [];
-    const dL = liftIn.length > 1 ? liftIn[liftIn.length - 1].e1rm - liftIn[0].e1rm : null;
-    put("kraft", workouts.length
-      ? [chip("kraft", `${workouts.length} ${workouts.length === 1 ? "Einheit" : "Einheiten"}`), chip("bars", `Ø ${fmt(sets / weeks)} Sätze/Woche`),
-        dL != null ? chip(direction(dL, 0.05), `${lift.label} ${fmtSigned(dL, 1)} kg`) : null]
-      : [chip("kraft", "Keine Hevy-Workouts im Zeitraum")],
-    workouts.length ? `${workouts.length} Einheiten, ${fmt(workouts.length / weeks, 1)} pro Woche mit ${fmt(sets / weeks)} Arbeitssätzen.`
-      + (dL != null ? ` ${lift.label} ${fmtSigned(dL, 1)} kg e1RM.` : "") : "Keine Hevy-Workouts im Zeitraum.");
+    const bSessions = M.bouldering.filter((s) => s.t >= x0 && s.t <= x1);
+    const bTop = bSessions.map((s) => s.maxTop).filter(Boolean).reduce((m, c) => (!m || c.rank > m.rank ? c : m), null);
+    const gLast = M.grip.filter((g) => g.t <= x1).at(-1);
+    const gMax = gLast ? Math.max(gLast.right ?? 0, gLast.left ?? 0) : null;
+    put("sport", [
+      chip("kraft", workouts.length ? `${workouts.length} ${workouts.length === 1 ? "Krafteinheit" : "Krafteinheiten"}` : "Keine Krafteinheiten"),
+      workouts.length ? chip("bars", `Ø ${fmt(sets / weeks)} Sätze/Woche`) : null,
+      chip("hold", bSessions.length ? `${bSessions.length} Boulder-${bSessions.length === 1 ? "Session" : "Sessions"}` : "Keine Boulder-Sessions"),
+      bTop ? chip("trend", `Top ${bTop.grade}`) : null,
+      gMax ? chip("hand", `Handkraft ${fmt(gMax, 1)} kg`) : null,
+    ], (workouts.length ? `${workouts.length} Krafteinheiten mit ${fmt(sets / weeks)} Arbeitssätzen pro Woche. ` : "Keine Krafteinheiten im Zeitraum. ")
+      + (bSessions.length ? `${bSessions.length} Boulder-Sessions${bTop ? `, schwerster Top ${bTop.grade}` : ""}.` : "Keine Boulder-Sessions im Zeitraum.")
+      + (gMax ? ` Handkraft zuletzt ${fmt(gMax, 1)} kg.` : ""));
 
     // Aktivitäten
     const acts = days.flatMap((d) => d.activities);
@@ -3219,10 +3446,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   // "Alle anzeigen" below a table; hidden when everything fits
-  function toggleMore(id, key, total) {
+  function toggleMore(id, key, total, rows = RECENT_ROWS) {
     const btn = $(id);
-    btn.hidden = total <= RECENT_ROWS;
-    btn.textContent = state.showAll[key] ? `Nur die neuesten ${RECENT_ROWS} anzeigen` : `Alle ${total} anzeigen`;
+    btn.hidden = total <= rows;
+    btn.textContent = state.showAll[key] ? `Nur die neuesten ${rows} anzeigen` : `Alle ${total} anzeigen`;
     btn.setAttribute("aria-expanded", String(state.showAll[key]));
   }
 
@@ -3311,6 +3538,181 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     );
     $("recent-sub").textContent = inRange.length ? `${shown.length} von ${inRange.length}, neueste oben` : "";
     toggleMore("recent-more", "recent", inRange.length);
+  }
+
+  // ---- Sport: Handkraft and Bouldern
+
+  function renderGrip(M, x0, x1) {
+    const inRange = M.grip.filter((g) => g.t >= x0 && g.t <= x1);
+    const last = inRange.at(-1), first = inRange[0];
+    const change = (side) => (last?.[side] != null && first?.[side] != null && last !== first ? ` (${fmtSigned(last[side] - first[side], 1)})` : "");
+    $("grip-sub").textContent = last
+      ? [last.right != null ? `rechts ${fmt(last.right, 1)} kg${change("right")}` : null, last.left != null ? `links ${fmt(last.left, 1)} kg${change("left")}` : null]
+        .filter(Boolean).join(" · ") + ` · ${inRange.length} ${inRange.length === 1 ? "Messung" : "Messungen"}`
+      : "Keine Messungen im Zeitraum";
+    const kg = (v) => `${fmt(v, 1)} kg`;
+    mount("c-grip", (host) => timeChart(host, {
+      x0, x1, label: "Handkraft rechts und links in Kilogramm, bester Satz je Tag", height: 200,
+      empty: "Noch keine Messungen. Lege in Hevy die Übungen „Handkraft rechts“ und „Handkraft links“ an und logge pro Satz das Gewicht in kg mit 1 Wiederholung.",
+      series: [
+        { label: "rechts", color: "var(--s1)", data: inRange.map((g) => ({ t: g.t, v: g.right })), fmt: kg, markers: true, endLabel: true, maxGap: 400 * DAY },
+        { label: "links", color: "var(--s2)", data: inRange.map((g) => ({ t: g.t, v: g.left })), fmt: kg, markers: true, endLabel: true, maxGap: 400 * DAY },
+      ],
+    }));
+  }
+
+  const LOG_HINT = "Drücke beim Bouldern nach jedem Boulder LAP und wähle „Abgeschlossen“ oder „Versucht“; den Grad stellst du vorher ein.";
+
+  function renderBouldering(M, x0, x1) {
+    const sessions = M.bouldering.filter((s) => s.t >= x0 && s.t <= x1);
+    const logged = sessions.filter((s) => s.logged);
+    $("peak-sub").textContent = logged.length
+      ? `${logged.length} von ${sessions.length} Sessions einzeln geloggt`
+      : sessions.length ? `${sessions.length} Sessions, keine davon einzeln geloggt` : "Keine Boulder-Sessions im Zeitraum";
+    mount("c-peak", (host) => boulderPeakChart(host, {
+      sessions: logged, x0, x1,
+      empty: sessions.length ? `Noch keine einzeln geloggten Boulder im Zeitraum. ${LOG_HINT}` : "Keine Boulder-Sessions im Zeitraum.",
+    }));
+    const best = (key) => logged.filter((s) => s[key]).reduce((m, s) => (!m || s[key].rank > m[key].rank || (s[key].rank === m[key].rank && s.t > m.t) ? s : m), null);
+    const topS = best("maxTop"), attS = best("maxAtt");
+    const mostS = logged.reduce((m, s) => (!m || s.tops > m.tops || (s.tops === m.tops && s.t > m.t) ? s : m), null);
+    const stat = (keyClass, label, value, sub) => html("li", {}, [
+      html("span", { class: "l" }, [html("i", { class: keyClass, style: keyClass === "key-ring" ? "" : "background:var(--s1)" }), label]),
+      html("span", { class: "v", text: value }), html("span", { class: "s", text: sub }),
+    ]);
+    const attTried = attS ? logged.reduce((n, s) => n + s.graded.filter((c) => c.status === "attempted" && c.rank === attS.maxAtt.rank).length, 0) : 0;
+    const attTopped = attS ? logged.some((s) => s.graded.some((c) => c.status === "completed" && c.rank >= attS.maxAtt.rank)) : false;
+    $("peak-stats").hidden = !logged.length;
+    $("peak-stats").replaceChildren(...(logged.length ? [
+      stat("key-dot solid", "Höchster Top", topS ? topS.maxTop.grade : "–", topS ? `am ${ddmm(topS.t)}` : "noch kein Top"),
+      stat("key-ring", "Höchster Versuch", attS ? attS.maxAtt.grade : "–", attS ? `${attTried} ${attTried === 1 ? "Versuch" : "Versuche"}, ${attTopped ? "inzwischen getoppt" : "noch kein Top"}` : "keine Versuche"),
+      stat("key-rect", "Meiste Tops", mostS ? fmt(mostS.tops) : "–", mostS ? `am ${ddmm(mostS.t)}` : ""),
+    ] : []));
+
+    // Pyramid: grades of the main scale, hardest on top
+    const byRank = new Map();
+    for (const s of logged) for (const c of s.graded) {
+      const e = byRank.get(c.rank) || { rank: c.rank, grade: c.grade, tops: 0, atts: 0 };
+      if (c.status === "completed") e.tops += 1; else e.atts += 1;
+      byRank.set(c.rank, e);
+    }
+    const rows = [...byRank.values()].sort((a, b) => b.rank - a.rank);
+    const maxN = Math.max(1, ...rows.map((r) => r.tops + r.atts));
+    const totalTops = rows.reduce((n, r) => n + r.tops, 0), total = rows.reduce((n, r) => n + r.tops + r.atts, 0);
+    $("pyramid-sub").textContent = total ? `${fmt(total)} Boulder, ${fmt(totalTops)} getoppt (${fmt((100 * totalTops) / total)} %)` : "Keine einzeln geloggten Boulder im Zeitraum";
+    $("pyramid").replaceChildren(...(rows.length ? [
+      html("li", { class: "head", "aria-hidden": "true" }, [html("span", { text: "Grad" }), html("span", { text: "Tops · Versuche" }), html("span", { class: "n", text: "Anzahl" }), html("span", { class: "q", text: "Quote" })]),
+      ...rows.map((r) => html("li", { "aria-label": `${r.grade}: ${r.tops} Tops, ${r.atts} Versuche` }, [
+        html("span", { class: "g", text: r.grade }),
+        html("span", { class: "bars" }, [html("i", { class: "t", style: `width:${((100 * r.tops) / maxN).toFixed(1)}%` }), html("i", { class: "a", style: `width:${((100 * r.atts) / maxN).toFixed(1)}%` })]),
+        html("span", { class: "n", text: `${r.tops} · ${r.atts}` }),
+        html("span", { class: "q", text: `${fmt((100 * r.tops) / (r.tops + r.atts))} %` }),
+      ])),
+    ] : [html("li", { class: "empty-row" }, [html("div", { class: "empty" }, withCode(sessions.length ? LOG_HINT : "Keine Boulder-Sessions im Zeitraum."))])]));
+
+    renderBoulderSessions(M, x0, x1);
+  }
+
+  function renderBoulderSessions(M, x0, x1) {
+    const sessions = M.bouldering.filter((s) => s.t >= x0 && s.t <= x1);
+    const newest = [...sessions].reverse();
+    const shown = state.showAll.bsessions ? newest : newest.slice(0, BOULDER_ROWS);
+    $("bsessions-sub").textContent = sessions.length ? `${shown.length} von ${sessions.length}, neueste oben` : "";
+    const fact = (iconName, label, value) => html("div", {}, [html("dt", {}, [icon(iconName), label]), html("dd", { text: value })]);
+    const mins = (s) => `${fmt(Math.round(s / 60))} min`;
+    $("bsessions").replaceChildren(...(shown.length ? shown.map((s) => {
+      const n = s.climbs.length, pct = n ? (100 * s.tops) / n : null;
+      const evalText = s.effort != null || s.feel != null
+        ? [s.effort != null ? `${fmt(s.effort)}/10` : null, s.feel != null ? FEEL_LABELS[s.feel] ?? fmt(s.feel) : null].filter(Boolean).join(" · ")
+        : "–";
+      return html("li", {}, [
+        html("div", { class: "bs-top" }, [
+          html("span", { class: "bs-date", text: longDate(s.t) }),
+          s.logged ? html("span", { class: "bs-gl", text: s.maxTop ? "höchster Top" : "kein Top" }) : chip("info", "nicht einzeln geloggt"),
+          s.maxTop ? html("span", { class: "grade", text: s.maxTop.grade }) : null,
+        ]),
+        s.logged ? html("div", { class: "bs-ratio" }, [
+          html("span", {}, [html("b", { text: `${s.tops} von ${n}` }), " getoppt"]),
+          html("span", { class: "bar", role: "img", "aria-label": `${s.tops} von ${n} Bouldern getoppt` }, [html("i", { style: `width:${pct.toFixed(1)}%` })]),
+          html("span", { class: "pct", text: `${fmt(pct)} %` }),
+        ]) : null,
+        html("dl", { class: "bs-facts" }, [
+          fact("wall", "An der Wand", s.logged ? mins(s.wallS) : "–"),
+          fact("clock", "In der Halle", s.min != null ? fmtDuration(s.min) : "–"),
+          fact("heart", "Puls Ø · max", s.hr != null ? `${fmt(s.hr)} · ${s.hrMax != null ? fmt(s.hrMax) : "–"} bpm` : "–"),
+          fact("slider", "Anstrengung · Gefühl", evalText),
+        ]),
+      ]);
+    }) : [html("li", {}, [html("div", { class: "empty", text: "Keine Boulder-Sessions im Zeitraum." })])]));
+    toggleMore("bsessions-more", "bsessions", sessions.length, BOULDER_ROWS);
+  }
+
+  // Top panel: hardest top (dot) and hardest attempt (ring) per session on a grade axis.
+  // Bottom panel: tops per session, the session with the most tops in full color.
+  function boulderPeakChart(host, o) {
+    const S = o.sessions;
+    if (!S.length) return emptyNote(host, o.empty);
+    const f = svgFrame(host, 250, { l: 42, r: 14, t: 10, b: 24 }, `Höchster Top und höchster Versuch je Session, darunter die Zahl der Tops. ${S.length} Sessions.`);
+    const gap = 16, topH = Math.round((f.ph - gap) * 0.64), barTop = f.m.t + topH + gap, barH = f.ph - topH - gap;
+    const ranks = S.flatMap((s) => [s.maxTop?.rank, s.maxAtt?.rank]).filter((r) => r != null);
+    const labelOf = new Map(S.flatMap((s) => s.graded.map((c) => [c.rank, c.grade])));
+    const lo = Math.min(...ranks) - 0.6, hi = Math.max(...ranks) + 0.6;
+    const x = (t) => f.m.l + ((t - o.x0) / Math.max(DAY, o.x1 - o.x0)) * f.pw;
+    const y = (r) => f.m.t + (1 - (r - lo) / (hi - lo)) * topH;
+    const maxTops = Math.max(1, ...S.map((s) => s.tops));
+    const yb = (n) => barTop + barH - (n / maxTops) * barH;
+
+    const step = Math.ceil((hi - lo) / 6);
+    for (let r = Math.ceil(lo); r <= hi; r += step) {
+      svg("line", { x1: f.m.l, x2: f.m.l + f.pw, y1: y(r), y2: y(r), class: "grid" }, f.root);
+      if (labelOf.has(r)) svgText(f.root, f.m.l - 7, y(r) + 3.5, labelOf.get(r), "tick", "end");
+    }
+    svg("line", { x1: f.m.l, x2: f.m.l + f.pw, y1: barTop + barH, y2: barTop + barH, class: "axisline" }, f.root);
+    svgText(f.root, f.m.l - 7, barTop + 9, "Tops", "tick", "end");
+    let lastX = -Infinity;
+    for (const tk of timeTicks(o.x0, o.x1)) {
+      const xx = x(tk.t);
+      if (xx - lastX < 46 || xx > f.m.l + f.pw - 12) continue;
+      lastX = xx;
+      svgText(f.root, xx, f.H - 7, tk.label, "tick", "middle");
+    }
+    const most = S.reduce((m, s) => (s.tops > m.tops || (s.tops === m.tops && s.t > m.t) ? s : m), S[0]);
+    const bw = clamp(f.pw / Math.max(S.length, 1) * 0.5, 3, 10);
+    for (const s of S) {
+      const xx = x(s.t);
+      if (s.tops) svg("rect", { x: xx - bw / 2, y: yb(s.tops), width: bw, height: barTop + barH - yb(s.tops), rx: Math.min(2, bw / 2) }, f.root, { fill: "var(--s1)", opacity: s === most ? 1 : 0.4 });
+    }
+    svgText(f.root, x(most.t), yb(most.tops) - 4, fmt(most.tops), "end-label", "middle");
+    for (const s of S) if (s.maxAtt) svg("circle", { cx: x(s.t), cy: y(s.maxAtt.rank), r: 3.6 }, f.root, { fill: "var(--surface)", stroke: "var(--s2)", "stroke-width": 2 });
+    for (const s of S) if (s.maxTop) svg("circle", { cx: x(s.t), cy: y(s.maxTop.rank), r: 4 }, f.root, { fill: "var(--s1)" });
+
+    // Hover and keyboard: the nearest session
+    const layer = svg("g", { visibility: "hidden" }, f.root);
+    const cross = svg("line", { y1: f.m.t, y2: f.m.t + f.ph, class: "crosshair" }, layer);
+    const hit = svg("rect", { x: f.m.l, y: f.m.t, width: f.pw, height: f.ph, fill: "transparent", class: "hit" }, f.root);
+    let current = null;
+    const show = (i) => {
+      i = clamp(i, 0, S.length - 1); current = i;
+      const s = S[i], xx = x(s.t);
+      cross.setAttribute("x1", xx); cross.setAttribute("x2", xx);
+      layer.setAttribute("visibility", "visible");
+      const sc = scaleOf(f.root, f.W);
+      showTip(sc.rect, xx * sc.k, (f.m.t + topH / 2) * sc.k, longDate(s.t), [
+        { color: "var(--s1)", value: s.maxTop ? s.maxTop.grade : "–", label: "höchster Top" },
+        { color: "var(--s2)", value: s.maxAtt ? s.maxAtt.grade : "–", label: "höchster Versuch" },
+        { value: `${s.tops} von ${s.climbs.length}`, label: "getoppt" },
+      ]);
+    };
+    const nearest = (t) => S.reduce((bi, s, i) => (Math.abs(s.t - t) < Math.abs(S[bi].t - t) ? i : bi), 0);
+    const hide = () => { layer.setAttribute("visibility", "hidden"); hideTip(); };
+    hit.addEventListener("pointermove", (e) => show(nearest(o.x0 + ((toSvgX(f.root, f.W, e.clientX) - f.m.l) / f.pw) * (o.x1 - o.x0))));
+    hit.addEventListener("pointerleave", hide);
+    f.root.addEventListener("focus", () => show(current ?? S.length - 1));
+    f.root.addEventListener("blur", hide);
+    f.root.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); show((current ?? S.length - 1) + (e.key === "ArrowLeft" ? -1 : 1)); }
+      else if (e.key === "Escape") hide();
+    });
   }
 
   // ---- Ernährung
@@ -3770,6 +4172,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const TAB_KEY = "healthsync.tabs";
   let tabChoice = {};
   try { tabChoice = JSON.parse(localStorage.getItem(TAB_KEY) || "{}") || {}; } catch { tabChoice = {}; }
+  // Tabs are remembered per area and, in Sport, per sport
+  const tabKeyOf = (area) => { const g = $(`b-${area}`)?.dataset.groupOn; return g ? `${area}:${g}` : area; };
+  // A card without data, or one of the other sport, has no tab
+  const cardOff = (c) => c.hidden || c.classList.contains("other-group");
   function selectTab(area, index, focus = false) {
     const body = $(`b-${area}`), bar = body?.querySelector(":scope > .tabs");
     if (!bar) return;
@@ -3777,7 +4183,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     cards.forEach((c, i) => c.classList.toggle("on", i === index));
     buttons.forEach((b, i) => { b.setAttribute("aria-selected", String(i === index)); b.tabIndex = i === index ? 0 : -1; });
     if (focus) buttons[index].focus();
-    tabChoice[area] = cards[index]?.dataset.tab;
+    tabChoice[tabKeyOf(area)] = cards[index]?.dataset.tab;
     try { localStorage.setItem(TAB_KEY, JSON.stringify(tabChoice)); } catch { /* storage unavailable */ }
     hideTip();
   }
@@ -3786,10 +4192,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const body = $(`b-${area}`), bar = body?.querySelector(":scope > .tabs");
     if (!bar) return;
     const cards = [...body.querySelectorAll(":scope > .card")];
-    [...bar.children].forEach((b, i) => { b.hidden = cards[i].hidden; });
-    const visible = cards.map((c, i) => (c.hidden ? -1 : i)).filter((i) => i >= 0);
+    [...bar.children].forEach((b, i) => { b.hidden = cardOff(cards[i]); });
+    const visible = cards.map((c, i) => (cardOff(c) ? -1 : i)).filter((i) => i >= 0);
     const current = cards.findIndex((c) => c.classList.contains("on"));
-    const wanted = cards.findIndex((c) => !c.hidden && c.dataset.tab === tabChoice[area]);
+    const wanted = cards.findIndex((c) => !cardOff(c) && c.dataset.tab === tabChoice[tabKeyOf(area)]);
     const index = wanted >= 0 ? wanted : visible.includes(current) ? current : visible[0] ?? 0;
     const buttons = [...bar.children];
     cards.forEach((c, i) => c.classList.toggle("on", i === index));
@@ -3808,14 +4214,27 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       b.addEventListener("keydown", (e) => {
         if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
         e.preventDefault();
-        const visible = cards.map((c, k) => (c.hidden ? -1 : k)).filter((k) => k >= 0);
+        const visible = cards.map((c, k) => (cardOff(c) ? -1 : k)).filter((k) => k >= 0);
         const pos = visible.indexOf(i) + (e.key === "ArrowRight" ? 1 : -1);
         selectTab(area, visible[(pos + visible.length) % visible.length], true);
       });
       bar.append(b);
     });
-    body.prepend(bar);
+    const disc = body.querySelector(":scope > .disc");
+    if (disc) disc.after(bar); else body.prepend(bar);
     syncTabs(area);
+  }
+  // Sport: show the cards of one sport; the choice is remembered in this browser
+  const GROUP_KEY = "healthsync.sport";
+  function setGroup(area, group) {
+    const body = $(`b-${area}`), disc = body?.querySelector(":scope > .disc");
+    if (!disc || !disc.querySelector(`[data-group="${group}"]`)) return;
+    body.dataset.groupOn = group;
+    for (const b of disc.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.group === group));
+    for (const c of body.querySelectorAll(":scope > .card[data-group]")) c.classList.toggle("other-group", c.dataset.group !== group);
+    try { localStorage.setItem(GROUP_KEY, group); } catch { /* storage unavailable */ }
+    syncTabs(area);
+    hideTip(); // charts of the newly shown cards are drawn by the resize observer once they have a width
   }
   function setCollapsed(area, value) {
     const section = $(area), body = $(`b-${area}`), btn = section?.querySelector(".area-toggle");
@@ -3830,7 +4249,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   // Jump to an area: opens it if collapsed, scrolls below the sticky bar and moves focus to its heading.
+  const knownTarget = (id) => Boolean(id && (document.getElementById(id) || GROUP_ALIAS[id]));
   function goTo(id, push = true) {
+    if (GROUP_ALIAS[id]) { const [area, group] = GROUP_ALIAS[id]; setGroup(area, group); id = area; }
     const target = id === "top" ? $("top") : $(id);
     if (!target) return;
     const area = target.closest(".area");
@@ -3863,11 +4284,24 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       head.querySelector("h2").after(btn);
       // The whole head is a large touch target; the button keeps keyboard and screen reader access
       head.addEventListener("click", () => setCollapsed(area, btn.getAttribute("aria-expanded") === "true"));
+      const disc = $(`b-${area}`)?.querySelector(":scope > .disc");
+      if (disc) {
+        let group = null;
+        try { group = localStorage.getItem(GROUP_KEY); } catch { group = null; }
+        const body = $(`b-${area}`);
+        body.dataset.groupOn = disc.querySelector(`[data-group="${group}"]`) ? group : disc.querySelector("[aria-pressed=true]").dataset.group;
+        for (const c of body.querySelectorAll(":scope > .card[data-group]")) c.classList.toggle("other-group", c.dataset.group !== body.dataset.groupOn);
+        for (const b of disc.querySelectorAll("button")) {
+          b.setAttribute("aria-pressed", String(b.dataset.group === body.dataset.groupOn));
+          b.addEventListener("click", () => setGroup(area, b.dataset.group));
+        }
+      }
       buildTabs(area);
     }
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(collapsedKey()) || "null"); } catch { saved = null; }
-    for (const area of saved ?? (onPhone() ? AREAS : [])) if (AREAS.includes(area)) setCollapsed(area, true);
+    // "kraft" is the former name of the Sport area
+    for (const area of (saved ?? (onPhone() ? AREAS : [])).map((x) => (x === "kraft" ? "sport" : x))) if (AREAS.includes(area)) setCollapsed(area, true);
 
     // Info button for every explanation: cards, area heads and the overview tiles.
     // stopPropagation keeps a click in an area head from collapsing the area.
@@ -3898,14 +4332,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       const a = e.target.closest?.('a[href^="#"]');
       if (!a || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return;
       const id = a.getAttribute("href").slice(1);
-      if (!id || !document.getElementById(id)) return;
+      if (!knownTarget(id)) return;
       e.preventDefault();
       if ($("help").open) closeHelp();
       goTo(id);
     });
     window.addEventListener("popstate", () => {
       const id = decodeURIComponent(location.hash.slice(1)) || "top";
-      if (document.getElementById(id)) goTo(id, false);
+      if (knownTarget(id)) goTo(id, false);
     });
 
     // Sticky bar height, used for scroll offsets
@@ -4038,7 +4472,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
             insights: data.insights, loadedAt: Date.now(),
           });
           if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
-          state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || []);
+          state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || [], data.climbs || [], data.climbSessions || []);
           state.sourceInfo = describeSources(data);
           if (!state.model) { renderNoData(); return; }
           if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything
@@ -4105,10 +4539,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     setupLiftPicker();
     setupApp();
     renderRangeButtons();
-    for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"], ["insights", "insights-more"]]) {
+    for (const [key, id] of [["sessions", "sessions-more"], ["recent", "recent-more"], ["insights", "insights-more"], ["bsessions", "bsessions-more"]]) {
       $(id).addEventListener("click", () => {
         state.showAll[key] = !state.showAll[key];
         if (key === "sessions") renderStrengthSessions(state.model, state.x0, state.x1);
+        else if (key === "bsessions") renderBoulderSessions(state.model, state.x0, state.x1);
         else if (key === "insights") renderInsights();
         else renderRecentActivities(state.days.flatMap((d) => d.activities));
       });
@@ -4118,7 +4553,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
     // Deep link such as #kraft: open that area and scroll to it once the content has its final height
     const hash = decodeURIComponent(location.hash.slice(1));
-    if (hash && document.getElementById(hash)) requestAnimationFrame(() => goTo(hash, false));
+    if (knownTarget(hash)) requestAnimationFrame(() => goTo(hash, false));
   }
   start();
 })();

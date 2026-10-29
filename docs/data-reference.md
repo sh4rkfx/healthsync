@@ -74,6 +74,10 @@ edited in Garmin Connect.
 | `rest_after_s` | s | Rest until the next boulder; empty after the last one |
 | `avg_hr`, `max_hr` | bpm | During the boulder |
 
+A session recorded without LAP has a single split as long as the whole session, with the grade set
+at the start and status `completed`. The dashboard treats splits longer than 15 minutes as such a
+session, not as a boulder.
+
 Garmin does not know which boulder in the gym an entry is. Three falls and a top on the same
 boulder are four rows, and a repeat of a boulder from last week is a new row.
 
@@ -103,6 +107,10 @@ One row per set.
 | `set_index`, `set_type` | `set_type` is `normal`, `warmup`, `dropset` or `failure`. Everything except `warmup` counts as a hard set |
 | `weight_kg`, `reps`, `rpe` | |
 | `duration_s`, `distance_m` | For timed or cardio sets |
+
+The exercises „Handkraft rechts“ and „Handkraft links“ (`GRIP_EXERCISES` in `healthsync/config.py`) hold
+grip-strength measurements, one set per try with the dynamometer reading as `weight_kg` and 1 rep.
+They are left out of hard sets, tonnage and strength form in the analysis and the dashboard.
 
 ## nutrition_daily.csv
 

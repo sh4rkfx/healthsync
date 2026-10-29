@@ -73,7 +73,9 @@ def test_load_daily_reads_all_three_files(tmp_path, monkeypatch):
         "date,exercise,set_type,weight_kg,reps\n"
         "2026-10-13,Squat (Barbell),warmup,60,8\n"
         "2026-10-13,Squat (Barbell),normal,100,5\n"
-        "2026-10-13,Squat (Barbell),normal,100,4\n", encoding="utf-8")
+        "2026-10-13,Squat (Barbell),normal,100,4\n"
+        "2026-10-13,Handkraft rechts,normal,52,1\n"
+        "2026-10-13,handkraft links ,normal,49,1\n", encoding="utf-8")
     monkeypatch.setattr(config, "GARMIN_CSV", tmp_path / "garmin_daily.csv")
     monkeypatch.setattr(config, "ACTIVITIES_CSV", tmp_path / "garmin_activities.csv")
     monkeypatch.setattr(config, "HEVY_CSV", tmp_path / "hevy_sets.csv")
@@ -83,7 +85,7 @@ def test_load_daily_reads_all_three_files(tmp_path, monkeypatch):
     assert daily.loc["2026-10-13", "bedtime_min"] == 45
     assert daily.loc["2026-10-12", "training_load"] == 80  # two activities summed
     assert daily.loc["2026-10-13", "training_load"] == 0  # no activity counts as zero load
-    assert daily.loc["2026-10-13", "hard_sets"] == 2  # warm-up excluded
+    assert daily.loc["2026-10-13", "hard_sets"] == 2  # warm-up and grip measurements excluded
     assert daily.loc["2026-10-13", "tonnage_t"] == pytest.approx(0.9)
     assert daily.loc["2026-10-14", "body_battery"] == 75  # falls back to the daily high
 

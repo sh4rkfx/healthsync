@@ -33,6 +33,9 @@ CLIMB_REFRESH_DAYS = 7  # bouldering sessions this recent are fetched again (gra
 # Hevy fetching
 HEVY_API_URL = "https://api.hevyapp.com/v1/workouts"
 HEVY_PAGE_SIZE = 10  # maximum allowed by the API
+# Hevy exercises that hold grip-strength measurements, not training sets: left out of hard sets,
+# tonnage and strength form. Same names as GRIP_EXERCISES in the dashboard.
+GRIP_EXERCISES = ("Handkraft links", "Handkraft rechts")
 
 # YAZIO: unofficial app API. Tokens live in a file (local runs, CI cache) or in YAZIO_TOKENS_JSON (CI seed).
 YAZIO_API_URL = os.environ.get("YAZIO_API_URL", "https://yzapi.yazio.com/v15")

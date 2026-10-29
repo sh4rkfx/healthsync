@@ -191,6 +191,8 @@ def load_daily() -> pd.DataFrame:
 
     if len(sets):
         s = sets.assign(date=pd.to_datetime(sets["date"]))
+        grip = {name.casefold() for name in config.GRIP_EXERCISES}
+        s = s[~s["exercise"].fillna("").astype(str).str.strip().str.casefold().isin(grip)]
         s["set_type"] = s["set_type"].fillna("normal").astype(str).str.lower()
         s["weight_kg"] = _column(s, "weight_kg").fillna(0)
         s["reps"] = _column(s, "reps")
