@@ -42,6 +42,8 @@ FDR_Q = 0.10  # share of false discoveries accepted among "robust" findings
 TENDENCY_P = 0.05  # uncorrected p below this, but not robust: reported as a tendency
 MIN_FORM_WEIGHT_KG = 20  # exercises lighter than this are too noisy for e1RM changes
 HARD_SET_TYPES = {"normal", "failure", "dropset"}
+# YAZIO days below this are treated as not fully logged and left out, like the dashboard does.
+MIN_COMPLETE_KCAL = 1200
 
 
 @dataclass(frozen=True)
@@ -68,12 +70,18 @@ VARIABLES = {v.key: v for v in [
     Variable("resting_hr", "Resting heart rate", "bpm", 5, "5 bpm"),
     Variable("readiness", "Training readiness", "points", 10, "10 points"),
     Variable("body_battery", "Body Battery at wake-up", "points", 10, "10 points"),
+    Variable("calories_kcal", "Energy intake (YAZIO)", "kcal", 500, "500 kcal"),
+    Variable("protein_g", "Protein intake (YAZIO)", "g", 50, "50 g"),
+    Variable("carbs_g", "Carbohydrate intake (YAZIO)", "g", 100, "100 g"),
+    Variable("fat_g", "Fat intake (YAZIO)", "g", 30, "30 g"),
     Variable("strength_form_pct", "Strength form (e1RM vs. best of prior 28 days)", "%", 1, "1 %",
              detrend=False),
 ]}
 
 DAY_DRIVERS = ["training_load", "active_min", "steps", "hard_sets", "tonnage_t", "stress_avg"]
 NIGHT_OUTCOMES = ["hrv", "resting_hr", "sleep_score", "sleep_hours", "readiness", "body_battery"]
+# Intake of day D against the night after D only; a second night would add many tests for little.
+NUTRITION_DRIVERS = ["calories_kcal", "protein_g", "carbs_g", "fat_g"]
 # Garmin derives these outcomes from the listed inputs, so testing the pair is circular.
 DERIVED_FROM = {
     "readiness": {"sleep_score", "sleep_hours", "hrv"},
@@ -84,6 +92,7 @@ TIMING_LABELS = {
     "next_night": "following night",
     "second_night": "second night after",
     "same_day": "same day",
+    "next_day": "following day",
 }
 
 
@@ -93,12 +102,14 @@ def candidate_pairs() -> list[tuple[str, str, int]]:
     pairs += [(d, o, 0) for d in ("bedtime_min", "sleep_hours") for o in ("hrv", "resting_hr", "readiness")]
     pairs += [(d, "strength_form_pct", 0)
               for d in ("bedtime_min", "sleep_hours", "sleep_score", "hrv", "resting_hr", "readiness")]
+    pairs += [(d, o, 1) for d in NUTRITION_DRIVERS for o in NIGHT_OUTCOMES]
+    pairs += [(d, "strength_form_pct", 1) for d in ("calories_kcal", "carbs_g")]  # eaten the day before training
     return [p for p in pairs if p[0] not in DERIVED_FROM.get(p[1], set())]
 
 
 def timing(outcome: str, lag: int) -> str:
     if outcome == "strength_form_pct":
-        return "same_day"
+        return "next_day" if lag else "same_day"
     return {0: "same_night", 1: "next_night", 2: "second_night"}[lag]
 
 
@@ -145,6 +156,7 @@ def load_daily() -> pd.DataFrame:
     garmin = _read(config.GARMIN_CSV)
     activities = _read(config.ACTIVITIES_CSV)
     sets = _read(config.HEVY_CSV)
+    food = _read(config.NUTRITION_CSV)
 
     dates = [pd.to_datetime(f["date"]) for f in (garmin, activities, sets) if "date" in f and len(f)]
     if not dates:
@@ -189,6 +201,14 @@ def load_daily() -> pd.DataFrame:
         for name in per_day:
             daily[name] = per_day[name].reindex(index).fillna(0).where(covered)
         daily["strength_form_pct"] = _strength_form(hard).reindex(index)
+
+    # Unlogged days stay empty (not 0): a missing YAZIO day says nothing about intake.
+    if len(food):
+        f = food.assign(date=pd.to_datetime(food["date"])).drop_duplicates("date", keep="last")
+        f = f.set_index("date").reindex(index)
+        complete = _column(f, "calories_kcal") >= MIN_COMPLETE_KCAL
+        for name in NUTRITION_DRIVERS:
+            daily[name] = _column(f, name).where(complete)
 
     return daily
 

@@ -192,17 +192,18 @@ it shows and which columns it reads.
 
 | Area | Content |
 |---|---|
-| Overview | Eight tiles for the last 7 days: weight, HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps. Each tile links to its area |
+| Overview | Eight tiles for the last 7 days: weight, HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps; two more with YAZIO data: calories and protein. Each tile links to its area |
 | Körper | Weight with 7-day mean, change in fat and muscle mass |
 | Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery |
 | Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV |
 | Kraft | Estimated 1RM per main lift, weekly hard sets, Hevy workouts linked to the watch's strength recordings and compared by recovery the following night |
 | Aktivitäten | Weekly active time per sport, steps against the 8,000 target, totals per sport, recent activities |
+| Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means |
 | Zusammenhänge | The results of `healthsync analyze`, filterable to robust findings, plus scatter plots for training load, tonnage and sleep against recovery and performance |
 | Daten | Data source and connection, status of every data file with a fix when one is missing, empty or stale; weekly overview; all daily values; how each number is calculated |
 
 The page warns when the newest Garmin day is two or more days old, which usually means the daily
-workflow has stopped. Keyboard shortcuts: `1` to `7` jump to the areas, `0` back to the overview,
+workflow has stopped. Keyboard shortcuts: `1` to `8` jump to the areas, `0` back to the overview,
 `Z` switches the time range, `?` opens the help. Range, collapsed areas, main lifts and the
 findings filter are remembered in the browser.
 
@@ -213,6 +214,7 @@ Settings at the top of the dashboard script:
 | `MAIN_LIFTS` | Default lifts shown as e1RM charts, by their exact Hevy names. Without matches, the four most frequent exercises are used. The easier way is **Kraft → Übungen wählen** on the dashboard: it lists every exercise in your Hevy data, applies the choice at once, remembers it in the browser and copies it in this format if you want it as the default everywhere |
 | `SPORTS` | Groups Garmin activity types into sports. The first matching pattern wins; the order sets colors and stacking |
 | `MAX_LINK_GAP_MIN` | Maximum gap between the start of a Hevy workout and a strength activity on the watch to count them as one session (default 180) |
+| `MIN_COMPLETE_KCAL` | YAZIO days below this count as not fully logged and stay out of all means (default 1,200; keep it equal to the constant in `healthsync/analyze.py`) |
 | `DATA_REPO` | Data repository suggested in the connect dialog |
 
 ## Analysis

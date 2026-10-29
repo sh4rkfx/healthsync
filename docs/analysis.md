@@ -16,10 +16,15 @@ with an explicit lag:
 | Training load, active time, steps, hard sets, tonnage, daytime stress on day D | HRV, resting heart rate, sleep score, sleep duration, readiness, Body Battery | 1 and 2 days | The night after D, and the night after that |
 | Bedtime and sleep duration of a night | HRV, resting heart rate, readiness of the same night | 0 | Same night |
 | Bedtime, sleep duration, sleep score, HRV, resting heart rate, readiness | Strength form on the same day | 0 | Did the night before affect the workout? |
+| Calories, protein, carbohydrates, fat on day D (YAZIO, optional) | HRV, resting heart rate, sleep score, sleep duration, readiness, Body Battery | 1 day | The night after D |
+| Calories and carbohydrates on day D | Strength form on day D + 1 | 1 day | Did yesterday's food affect today's workout? |
 
 Pairs where Garmin computes the outcome from the driver are left out, because they are related
 by construction: Training Readiness uses sleep and HRV, Body Battery uses sleep, HRV and stress.
-This leaves about 80 pairs.
+This leaves about 80 pairs, plus 26 with YAZIO data. Food is tested against the following night
+only: a second night would add another 24 tests, which lowers the chance that any real effect
+survives the correction. YAZIO days under 1,200 kcal count as not fully logged and are left out
+(`MIN_COMPLETE_KCAL`), as are days without an entry; neither counts as zero.
 
 ## Method
 

@@ -81,8 +81,10 @@ meals of the day.
 | `protein_g`, `carbs_g`, `fat_g` | Grams per day, rounded to 0.1 |
 | `water_ml` | Logged water intake |
 
-A partly logged day is indistinguishable from a day of low intake. Check the mapping against your
-data with `python -m healthsync dump-yazio --date <day>` after the first login.
+A partly logged day is indistinguishable from a day of low intake. The dashboard and the analysis
+therefore treat days under 1,200 kcal (`MIN_COMPLETE_KCAL`) and the running day as not fully
+logged and leave them out of means, the energy balance and the tests. Check the mapping against
+your data with `python -m healthsync dump-yazio --date <day>` after the first login.
 
 ## insights.json
 

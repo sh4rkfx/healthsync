@@ -86,3 +86,26 @@ def test_load_daily_reads_all_three_files(tmp_path, monkeypatch):
     assert daily.loc["2026-10-13", "hard_sets"] == 2  # warm-up excluded
     assert daily.loc["2026-10-13", "tonnage_t"] == pytest.approx(0.9)
     assert daily.loc["2026-10-14", "body_battery"] == 75  # falls back to the daily high
+
+
+def test_nutrition_is_tested_against_the_following_night_and_next_training_day():
+    pairs = analyze.candidate_pairs()
+    assert ("protein_g", "hrv", 1) in pairs
+    assert ("calories_kcal", "strength_form_pct", 1) in pairs
+    assert ("protein_g", "hrv", 2) not in pairs
+    assert analyze.timing("strength_form_pct", 1) == "next_day"
+
+
+def test_incomplete_and_unlogged_food_days_stay_empty(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "GARMIN_CSV", tmp_path / "garmin_daily.csv")
+    monkeypatch.setattr(config, "ACTIVITIES_CSV", tmp_path / "none.csv")
+    monkeypatch.setattr(config, "HEVY_CSV", tmp_path / "none2.csv")
+    monkeypatch.setattr(config, "NUTRITION_CSV", tmp_path / "nutrition_daily.csv")
+    pd.DataFrame({"date": ["2026-10-01", "2026-10-02", "2026-10-03"], "hrv_last_night_ms": [50, 52, 54]}).to_csv(
+        config.GARMIN_CSV, index=False)
+    pd.DataFrame({"date": ["2026-10-01", "2026-10-03"], "calories_kcal": [2100, 800], "protein_g": [140, 30],
+                  "carbs_g": [200, 90], "fat_g": [70, 30]}).to_csv(config.NUTRITION_CSV, index=False)
+    daily = analyze.load_daily()
+    assert daily.loc["2026-10-01", "protein_g"] == 140
+    assert np.isnan(daily.loc["2026-10-02", "calories_kcal"])  # not logged
+    assert np.isnan(daily.loc["2026-10-03", "protein_g"])  # below MIN_COMPLETE_KCAL: incomplete

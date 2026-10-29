@@ -175,6 +175,7 @@ code { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; 
   background: var(--surface); border: 1px solid var(--ring); border-radius: 14px; overflow: hidden;
 }
 @media (min-width: 640px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .tiles.ten { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 .tile {
   padding: 13px 16px 11px; display: grid; gap: 3px; align-content: start; min-width: 0;
   box-shadow: -1px 0 0 var(--grid), 0 -1px 0 var(--grid); color: inherit; text-decoration: none;
@@ -399,6 +400,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-schlaf" viewBox="0 0 20 20"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
     <symbol id="i-kraft" viewBox="0 0 20 20"><path d="M3 8v4M5.75 5.5v9M14.25 5.5v9M17 8v4M5.75 10h8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-aktivitaeten" viewBox="0 0 20 20"><path d="M2.5 16l5-8.5 3.4 5.2 2.1-3.2 4.5 6.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ernaehrung" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v4.5a2.25 2.25 0 0 0 4.5 0V3M7.25 3v14"/><path d="M15 17V3c-1.8 1-2.7 3.1-2.7 5.6 0 1.6.9 2.6 2.7 2.6"/></g></symbol>
     <symbol id="i-zusammenhaenge" viewBox="0 0 20 20"><path d="M3.5 16.5L16.5 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.6"/><g fill="currentColor"><circle cx="5" cy="11.5" r="1.6"/><circle cx="8.5" cy="13.5" r="1.6"/><circle cx="10.5" cy="7.5" r="1.6"/><circle cx="15" cy="9.5" r="1.6"/></g></symbol>
     <symbol id="i-daten" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="3.5" width="14" height="13" rx="2"/><path d="M3 8h14M3 12.2h14M8 3.5v13"/></g></symbol>
     <symbol id="i-refresh" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10.5a6 6 0 1 1-1.9-4.9"/><path d="M15.5 3v3.5H12"/></g></symbol>
@@ -416,8 +418,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <a href="#schlaf" title="Taste 3"><svg class="ic" aria-hidden="true"><use href="#i-schlaf"/></svg>Schlaf</a>
       <a href="#kraft" title="Taste 4"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Kraft</a>
       <a href="#aktivitaeten" title="Taste 5"><svg class="ic" aria-hidden="true"><use href="#i-aktivitaeten"/></svg>Aktivitäten</a>
-      <a href="#zusammenhaenge" title="Taste 6"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg>Zusammenhänge</a>
-      <a href="#daten" title="Taste 7"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg>Daten</a>
+      <a href="#ernaehrung" title="Taste 6"><svg class="ic" aria-hidden="true"><use href="#i-ernaehrung"/></svg>Ernährung</a>
+      <a href="#zusammenhaenge" title="Taste 7"><svg class="ic" aria-hidden="true"><use href="#i-zusammenhaenge"/></svg>Zusammenhänge</a>
+      <a href="#daten" title="Taste 8"><svg class="ic" aria-hidden="true"><use href="#i-daten"/></svg>Daten</a>
     </nav>
     <div class="seg-host"><div class="seg small" role="group" aria-label="Zeitraum" data-range></div></div>
     <button class="icon-btn" id="install" type="button" hidden aria-label="Als App installieren" title="Als App installieren"><svg class="ic" aria-hidden="true"><use href="#i-install"/></svg></button>
@@ -430,7 +433,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   <header class="top">
     <div class="top-row">
       <div class="title">
-        <span class="eyebrow">Garmin Connect · Hevy</span>
+        <span class="eyebrow" id="eyebrow">Garmin Connect · Hevy</span>
         <h1>Training und Erholung</h1>
       </div>
       <div class="seg-host"><div class="seg" role="group" aria-label="Zeitraum" data-range></div></div>
@@ -633,6 +636,59 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     </div>
   </section>
 
+  <section class="area" id="ernaehrung" aria-labelledby="h-ernaehrung">
+    <div class="area-head">
+      <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-ernaehrung"/></svg></span>
+      <h2 id="h-ernaehrung">Ernährung</h2>
+      <p class="area-sum" id="sum-ernaehrung"></p>
+    </div>
+    <div class="area-body" id="b-ernaehrung">
+      <div class="card span2">
+        <div class="card-head"><h3>Kalorien pro Tag</h3><p class="sub" id="kcal-sub"></p></div>
+        <div class="info" hidden>
+          <p>Punkte sind die in YAZIO geloggten Tage, die Linie ist das 7-Tage-Mittel aus vollständig geloggten Tagen. Tage unter 1.200 kcal gelten als unvollständig, etwa weil eine Mahlzeit fehlt; sie erscheinen grau und zählen in keinem Mittelwert. Der laufende Tag zählt erst ab morgen. Die gestrichelte Linie ist der Gesamtverbrauch laut Garmin; die Uhr schätzt ihn aus Puls und Bewegung, Abweichungen von 10 bis 20 % sind üblich.</p>
+          <p class="source">Quelle: nutrition_daily.csv · calories_kcal (YAZIO) · Verbrauch: garmin_daily.csv · calories_total · Grenze: <code>MIN_COMPLETE_KCAL</code> oben im Skript</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>Aufnahme, 7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dot" style="background:var(--other);opacity:1"></i>unvollständig geloggt</span><span><i class="key-dash"></i>Verbrauch laut Garmin, 7-Tage-Mittel</span></div>
+        <div class="chart-host" id="c-kcal"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Makronährstoffe pro Woche</h3><p class="sub" id="macro-sub"></p></div>
+        <div class="info" hidden>
+          <p>Mittlere Energie pro vollständig geloggtem Tag, aufgeteilt nach Herkunft: Eiweiß und Kohlenhydrate mit 4 kcal pro Gramm, Fett mit 9 kcal pro Gramm. Die Summe liegt meist wenige Prozent neben den Kalorien von YAZIO, weil Ballaststoffe, Alkohol und Rundung dort anders eingehen. Der Tooltip zeigt die Gramm pro Tag.</p>
+          <p class="source">Quelle: nutrition_daily.csv · protein_g, carbs_g, fat_g</p>
+        </div>
+        <div class="legend"><span><i class="key-rect" style="background:var(--s1)"></i>Eiweiß</span><span><i class="key-rect" style="background:var(--s2)"></i>Kohlenhydrate</span><span><i class="key-rect" style="background:var(--s3)"></i>Fett</span></div>
+        <div class="chart-host" id="c-macros"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Eiweiß pro Kilogramm Körpergewicht</h3><p class="sub" id="protein-sub"></p></div>
+        <div class="info" hidden>
+          <p>Eiweiß des Tages geteilt durch das 7-Tage-Mittel des Körpergewichts. In der Meta-Analyse von Morton und Kollegen (2018, 49 Studien) steigt der Zuwachs an fettfreier Masse durch Krafttraining bis etwa 1,6 g pro kg und Tag; darüber flacht er ab, die obere Grenze des Vertrauensbereichs lag bei 2,2 g pro kg. In einem Kaloriendefizit empfehlen Übersichtsarbeiten eher den oberen Bereich.</p>
+          <p class="source">Quelle: nutrition_daily.csv · protein_g · Körpergewicht aus garmin_daily.csv</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>1,6 und 2,2 g/kg</span></div>
+        <div class="chart-host" id="c-protein"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Energiebilanz und Gewicht</h3><p class="sub" id="balance-sub"></p></div>
+        <div class="info" hidden>
+          <p>Aufnahme laut YAZIO minus Verbrauch laut Garmin, nur an vollständig geloggten Tagen. Die Umrechnung in Kilogramm nimmt 7.700 kcal pro kg Körpergewicht an. Dass erwartete und gemessene Änderung nicht genau übereinstimmen, ist normal: Die Uhr schätzt den Verbrauch, beim Loggen fehlen oft Kleinigkeiten, und Wasser verschiebt das Gewicht um mehr als ein Kilogramm. Aussagekräftig ist, ob beide in dieselbe Richtung zeigen und wie groß der Abstand über Wochen bleibt.</p>
+          <p class="source">Quelle: nutrition_daily.csv · calories_kcal · garmin_daily.csv · calories_total, weight_kg</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>7-Tage-Mittel</span><span><i class="key-dot" style="background:var(--s1)"></i>Tageswert</span><span><i class="key-dash"></i>ausgeglichen</span></div>
+        <div class="chart-host" id="c-balance"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Kalorien und HRV der Folgenacht</h3><p class="sub" id="kcal-hrv-sub"></p></div>
+        <div class="info" hidden>
+          <p>Jeder Punkt ist ein vollständig geloggter Tag: waagrecht die Kalorien des Tages, senkrecht die HRV der folgenden Nacht im Vergleich zum 7-Tage-Mittel bis zu diesem Tag. Die statistische Prüfung aller Nährstoffe gegen Erholung und Schlaf steht unter Zusammenhänge.</p>
+        </div>
+        <div class="chart-host" id="c-kcal-hrv"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="area" id="zusammenhaenge" aria-labelledby="h-zusammenhaenge">
     <div class="area-head">
       <span class="area-icon" aria-hidden="true"><svg class="ic"><use href="#i-zusammenhaenge"/></svg></span>
@@ -714,6 +770,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           <div><dt>Relative Kraft</dt><dd>Geschätztes 1RM geteilt durch das 7-Tage-Mittel des Körpergewichts am Tag der Einheit.</dd></div>
           <div><dt>Trainingslast</dt><dd>Garmins Wert pro Aktivität aus dem geschätzten Sauerstoffdefizit (EPOC), pro Tag summiert. Er macht Bouldern, Bergtouren und Radfahren vergleichbar.</dd></div>
           <div><dt>Schlafmitte, sozialer Jetlag</dt><dd>Die Schlafmitte liegt zwischen Einschlafen und Aufwachen. Ihre Verschiebung am Wochenende gegenüber Werktagen heißt sozialer Jetlag.</dd></div>
+          <div><dt>Vollständig geloggter Tag</dt><dd>Ein YAZIO-Tag mit mindestens 1.200 kcal, ohne den laufenden Tag. Nur diese Tage gehen in Mittelwerte, Bilanz und Analyse ein; seltener geloggte Wochen haben dadurch weniger Gewicht, aber keine verfälschten Werte.</dd></div>
+          <div><dt>Energiebilanz</dt><dd>Kalorien laut YAZIO minus Gesamtverbrauch laut Garmin. 7.700 kcal Defizit entsprechen grob einem Kilogramm Körpergewicht.</dd></div>
           <div><dt>r und ρ</dt><dd>Korrelationskoeffizienten von −1 bis 1. Sie zeigen, wie eng zwei Werte gemeinsam schwanken, nicht ob einer den anderen verursacht. Unter etwa 20 bis 30 Punkten schwanken sie stark.</dd></div>
         </dl>
       </div>
@@ -745,7 +803,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <h3>Tastenkürzel</h3>
       <table>
         <tbody>
-          <tr><td><kbd>1</kbd> bis <kbd>7</kbd></td><td>Zum Bereich springen: Körper, Erholung, Schlaf, Kraft, Aktivitäten, Zusammenhänge, Daten</td></tr>
+          <tr><td><kbd>1</kbd> bis <kbd>8</kbd></td><td>Zum Bereich springen: Körper, Erholung, Schlaf, Kraft, Aktivitäten, Ernährung, Zusammenhänge, Daten</td></tr>
           <tr><td><kbd>0</kbd></td><td>Zurück zum Überblick</td></tr>
           <tr><td><kbd>Z</kbd></td><td>Nächster Zeitraum; mit <kbd>Umschalt</kbd> der vorherige</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Im ausgewählten Diagramm einen Tag weiter; mit <kbd>Umschalt</kbd> eine Woche</td></tr>
@@ -838,11 +896,20 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     activities: "../data/garmin_activities.csv",
     hevy: "../data/hevy_sets.csv",
     insights: "../data/insights.json",
+    nutrition: "../data/nutrition_daily.csv",
   };
   // Private repository with the data files, read through the GitHub API when the page runs
   // without data next to it, e.g. on GitHub Pages. Only the default for the connect dialog.
   const DATA_REPO = "sh4rkfx/healthsync-data";
-  const GITHUB_FILES = { garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json" };
+  const GITHUB_FILES = {
+    garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json",
+    nutrition: "nutrition_daily.csv",
+  };
+  // YAZIO days below this count as not fully logged and stay out of every mean (same value as
+  // MIN_COMPLETE_KCAL in healthsync/analyze.py).
+  const MIN_COMPLETE_KCAL = 1200;
+  const PROTEIN_REFS = [1.6, 2.2]; // g per kg body weight, Morton et al. 2018 (plateau and upper 95 % bound)
+  const KCAL_PER_KG = 7700;        // rough energy content of one kg of body weight
 
   // German wording for the variables of data/insights.json (keys as in healthsync/analyze.py)
   const INSIGHT_DRIVERS = {
@@ -858,6 +925,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     hrv: ["HRV", "10 ms mehr"],
     resting_hr: ["Ruhepuls", "5 bpm mehr"],
     readiness: ["Training Readiness", "10 Punkte mehr"],
+    calories_kcal: ["Kalorien (YAZIO)", "500 kcal mehr"],
+    protein_g: ["Eiweiß (YAZIO)", "50 g mehr"],
+    carbs_g: ["Kohlenhydrate (YAZIO)", "100 g mehr"],
+    fat_g: ["Fett (YAZIO)", "30 g mehr"],
   };
   const INSIGHT_OUTCOMES = {
     hrv: "HRV", resting_hr: "Ruhepuls", sleep_score: "Sleep Score", sleep_hours: "Schlafdauer",
@@ -865,8 +936,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   };
   const INSIGHT_TIMING = {
     same_night: "dieselbe Nacht", next_night: "Folgenacht", second_night: "zweite Nacht danach", same_day: "derselbe Tag",
+    next_day: "Training am Folgetag",
   };
-  const INSIGHT_UNITS = { points: "Punkte", steps: "Schritte", sets: "Sätze", min: "min", h: "h", ms: "ms", bpm: "bpm", t: "t", "%": "%" };
+  const INSIGHT_UNITS = { points: "Punkte", steps: "Schritte", sets: "Sätze", min: "min", h: "h", ms: "ms", bpm: "bpm", t: "t", "%": "%", kcal: "kcal", g: "g" };
   const RANGES = [
     { days: 30, label: "30 Tage" },
     { days: 90, label: "90 Tage" },
@@ -875,7 +947,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   ];
   const DEFAULT_RANGE = 90;
   // Areas in page order; the position is also the keyboard shortcut (1 = Körper)
-  const AREAS = ["koerper", "erholung", "schlaf", "kraft", "aktivitaeten", "zusammenhaenge", "daten"];
+  const AREAS = ["koerper", "erholung", "schlaf", "kraft", "aktivitaeten", "ernaehrung", "zusammenhaenge", "daten"];
   const STEP_GOAL = 8000;       // same target as docs/scores.md
   const STALE_AFTER_DAYS = 2;   // warn when the newest Garmin day is this many days old
   const RECENT_ROWS = 10;       // rows of the "latest" tables before "show all"
@@ -1031,23 +1103,28 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   }
 
   async function loadData() {
-    // 1. Data embedded by a build step: window.HEALTHSYNC_DATA = { garmin, activities, hevy } as CSV text,
-    //    plus insights as the parsed content of insights.json
+    // 1. Data embedded by a build step: window.HEALTHSYNC_DATA = { garmin, activities, hevy, nutrition } as
+    //    CSV text, plus insights as the parsed content of insights.json
     const embedded = window.HEALTHSYNC_DATA;
     if (embedded) {
       return {
         garmin: parseCsv(embedded.garmin || ""), activities: parseCsv(embedded.activities || ""),
-        hevy: parseCsv(embedded.hevy || ""), insights: embedded.insights || null, source: "embedded",
-        found: { garmin: embedded.garmin != null, activities: embedded.activities != null, hevy: embedded.hevy != null, insights: embedded.insights != null },
+        hevy: parseCsv(embedded.hevy || ""), nutrition: parseCsv(embedded.nutrition || ""),
+        insights: embedded.insights || null, source: "embedded",
+        found: {
+          garmin: embedded.garmin != null, activities: embedded.activities != null, hevy: embedded.hevy != null,
+          nutrition: embedded.nutrition != null, insights: embedded.insights != null,
+        },
       };
     }
     // 2. Files next to the dashboard (repo checkout served over HTTP). Skipped on GitHub Pages,
     //    where the data is never published.
     if (!location.hostname.endsWith(".github.io")) {
-      const [garmin, activities, hevy, insights] = await Promise.all([
+      const [garmin, activities, hevy, insights, nutrition] = await Promise.all([
         fetchText(DATA_URLS.garmin), fetchText(DATA_URLS.activities), fetchText(DATA_URLS.hevy), fetchText(DATA_URLS.insights),
+        fetchText(DATA_URLS.nutrition),
       ]);
-      if (garmin != null || activities != null || hevy != null) return fromTexts({ garmin, activities, hevy, insights }, "csv");
+      if (garmin != null || activities != null || hevy != null) return fromTexts({ garmin, activities, hevy, insights, nutrition }, "csv");
     }
     // 3. The private data repository through the GitHub API, once this browser is connected
     const cred = loadCredentials();
@@ -1066,18 +1143,19 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // 4. Generated example data, with the analysis result the Python script produced for it
     return {
       ...makeDemoData(tToIso(Date.now())), insights: DEMO_INSIGHTS, source: "demo", githubError,
-      found: { garmin: true, activities: true, hevy: true, insights: true },
+      found: { garmin: true, activities: true, hevy: true, nutrition: true, insights: true },
     };
   }
 
   // Parsed data from the raw file contents; null means the file does not exist
-  function fromTexts({ garmin, activities, hevy, insights: insightsText }, source) {
+  function fromTexts({ garmin, activities, hevy, nutrition, insights: insightsText }, source) {
     let insights = null;
     try { insights = insightsText ? JSON.parse(insightsText) : null; } catch { insights = null; }
     return {
       garmin: garmin ? parseCsv(garmin) : [], activities: activities ? parseCsv(activities) : [], hevy: hevy ? parseCsv(hevy) : [],
+      nutrition: nutrition ? parseCsv(nutrition) : [],
       insights, source, insightsBroken: insightsText != null && insights == null,
-      found: { garmin: garmin != null, activities: activities != null, hevy: hevy != null, insights: insights != null },
+      found: { garmin: garmin != null, activities: activities != null, hevy: hevy != null, nutrition: nutrition != null, insights: insights != null },
     };
   }
 
@@ -1142,10 +1220,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         return null;
       }
     };
-    const [garmin, activities, hevy, insights] = await Promise.all(
-      [GITHUB_FILES.garmin, GITHUB_FILES.activities, GITHUB_FILES.hevy, GITHUB_FILES.insights].map(get),
+    const [garmin, activities, hevy, insights, nutrition] = await Promise.all(
+      [GITHUB_FILES.garmin, GITHUB_FILES.activities, GITHUB_FILES.hevy, GITHUB_FILES.insights, GITHUB_FILES.nutrition].map(get),
     );
-    const texts = { garmin, activities, hevy, insights };
+    const texts = { garmin, activities, hevy, insights, nutrition };
     return { ...fromTexts(texts, "github"), texts };
   }
 
@@ -1177,10 +1255,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   // One entry per data file for the "Datenquellen" table
   function describeSources(data) {
     const dates = (rows) => rows.map((r) => String(r.date || "").slice(0, 10)).filter(Boolean).sort();
-    const entry = (key, label, file, rows, fix) => {
+    const entry = (key, label, file, rows, fix, optional = false) => {
       const d = dates(rows);
       return {
-        key, label, file, found: data.found[key], rows: rows.length, fix,
+        key, label, file, found: data.found[key], rows: rows.length, fix, optional,
         first: d.length ? isoToT(d[0]) : null, last: d.length ? isoToT(d[d.length - 1]) : null,
       };
     };
@@ -1191,6 +1269,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       entry("garmin", "Garmin Tageswerte", file("garmin"), data.garmin, remote ? viaWorkflow : "Abrufen mit `python -m healthsync sync --source garmin`."),
       entry("activities", "Garmin Aktivitäten", file("activities"), data.activities || [], remote ? viaWorkflow : "Abrufen mit `python -m healthsync sync --source activities`."),
       entry("hevy", "Hevy Sätze", file("hevy"), data.hevy, remote ? `${viaWorkflow} Dafür braucht das Repository das Secret \`HEVY_API_KEY\`.` : "Abrufen mit `python -m healthsync sync --source hevy`; dafür muss `HEVY_API_KEY` gesetzt sein."),
+      entry("nutrition", "YAZIO Ernährung", file("nutrition"), data.nutrition || [], remote
+        ? "Optional. Entsteht, wenn das Daten-Repository das Secret `YAZIO_TOKENS_JSON` hat oder für einen Lauf `YAZIO_EMAIL` und `YAZIO_PASSWORD`; danach Run workflow mit 365 Tagen."
+        : "Optional. Einrichten mit `python -m healthsync yazio-login`, dann `python -m healthsync sync --source yazio --days 365`.", true),
     ];
     const ins = data.insights;
     list.push({
@@ -1236,7 +1317,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       "Overhead Press (Barbell)": [57, 61], "Pull Up (Weighted)": [109, 115],
       "Incline Bench Press (Dumbbell)": [34, 37], "Romanian Deadlift (Barbell)": [118, 126], "Bulgarian Split Squat (Dumbbell)": [38, 42],
     };
-    const garmin = [], hevy = [], activities = [];
+    const garmin = [], hevy = [], activities = [], nutrition = [];
+    const foodRnd = mulberry32(97);
+    const foodGauss = () => { let u = 0, v = 0; while (!u) u = foodRnd(); while (!v) v = foodRnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
     const hrvHistory = [];
     let prevTonnage = 0, prevLoad = 0, prevLower = false, bodyweight = 82.6, activityId = 1000;
 
@@ -1374,11 +1457,24 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       }
       row.calories_active = Math.round(row.steps * 0.04 + activityKcal);
       row.calories_total = 1850 + row.calories_active;
+      // Food diary for the last four months: most days logged, a few incomplete, today only breakfast
+      if (i >= N - 120 && foodRnd() < (wd === 0 || wd === 6 ? 0.7 : 0.92)) {
+        const kcal = row.calories_total - 380 + foodGauss() * 260;
+        const share = i === N - 1 ? 0.3 : foodRnd() < 0.05 ? 0.35 + foodRnd() * 0.25 : 1;
+        const protein = bodyweight * (1.75 + foodGauss() * 0.25);
+        const fat = (kcal * (0.27 + foodGauss() * 0.04)) / 9;
+        const carbs = Math.max(40, (kcal - protein * 4 - fat * 9) / 4);
+        nutrition.push({
+          date, calories_kcal: Math.round(kcal * share), protein_g: (protein * share).toFixed(1),
+          carbs_g: (carbs * share).toFixed(1), fat_g: (fat * share).toFixed(1),
+          water_ml: foodRnd() < 0.55 ? Math.round((1500 + foodRnd() * 1500) / 250) * 250 : "",
+        });
+      }
       prevTonnage = tonnage;
       prevLoad = garminLoad;
       prevLower = tonnage > 0 && plan[0].startsWith("Unterkörper");
     }
-    return { garmin, hevy, activities };
+    return { garmin, hevy, activities, nutrition };
   }
 
   // ------------------------------------------------------------------ model
@@ -1394,9 +1490,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
   }
 
-  function buildModel(garminRows, hevyRows, activityRows) {
+  function buildModel(garminRows, hevyRows, activityRows, nutritionRows = []) {
     const byDate = new Map();
     for (const r of garminRows) if (r.date) byDate.set(r.date.slice(0, 10), r);
+    const foodByDate = new Map();
+    for (const r of nutritionRows) if (r.date) foodByDate.set(r.date.slice(0, 10), r);
 
     const activities = activityRows
       .filter((r) => r.date)
@@ -1419,16 +1517,25 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         title: r.workout_title, startMin: utcToLocalMinutes(r.start_time),
       }));
 
-    const allT = [...[...byDate.keys()].map(isoToT), ...sets.map((s) => s.t), ...activities.map((a) => a.t)];
+    const allT = [...[...byDate.keys()].map(isoToT), ...sets.map((s) => s.t), ...activities.map((a) => a.t), ...[...foodByDate.keys()].map(isoToT)];
     if (!allT.length) return null;
     const t0 = Math.min(...allT), t1 = Math.max(...allT);
 
     // Continuous calendar so that rolling windows are measured in real days.
     const days = [];
+    const today = todayT();
     for (let t = t0; t <= t1; t += DAY) {
       const r = byDate.get(tToIso(t)) || {};
       const weight = num(r.weight_kg), fatPct = num(r.body_fat_pct);
+      // YAZIO: logged days only. "Complete" excludes days under MIN_COMPLETE_KCAL and the running day.
+      const food = foodByDate.get(tToIso(t));
+      const kcalIn = food ? num(food.calories_kcal) : null;
+      const complete = kcalIn != null && kcalIn >= MIN_COMPLETE_KCAL && t < today;
+      const only = (v) => (complete ? v : null);
       days.push({
+        kcalIn, foodComplete: complete, water: food ? num(food.water_ml) : null,
+        foodRaw: food ? { p: num(food.protein_g), c: num(food.carbs_g), f: num(food.fat_g) } : null,
+        kcal: only(kcalIn), proteinG: only(num(food?.protein_g)), carbsG: only(num(food?.carbs_g)), fatG: only(num(food?.fat_g)),
         t,
         weight, fatPct,
         fatKg: num(r.fat_mass_kg) ?? (weight != null && fatPct != null ? weight * fatPct / 100 : null),
@@ -1473,6 +1580,12 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     rollingMean(days, "ready", "ready7", 7, 3);
     rollingMean(days, "bb", "bb7", 7, 3);
     rollingMean(days, "steps", "steps7", 7, 3);
+    for (const d of days) d.balance = d.kcal != null && d.kcalBurned != null ? d.kcal - d.kcalBurned : null;
+    rollingMean(days, "kcal", "kcal7", 7, 3);
+    rollingMean(days, "proteinG", "proteinG7", 7, 3);
+    rollingMean(days, "balance", "balance7", 7, 3);
+    for (const d of days) d.burnedFull = d.t < today ? d.kcalBurned : null; // the running day is not over yet
+    rollingMean(days, "burnedFull", "burned7", 7, 3);
     for (const d of days) {
       // Plausible windows only: asleep between 18:00 and 06:00, awake after falling asleep
       if (d.bed == null || d.wake == null || d.wake <= d.bed || d.bed < -360 || d.bed > 360) { d.bed = null; d.wake = null; }
@@ -1483,6 +1596,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Body weight on a given day: latest 7-day mean on or before it.
     let lastWeight = null;
     for (const d of days) { if (d.weight7 != null) lastWeight = d.weight7; d.bodyweight = lastWeight; }
+    for (const d of days) d.proteinKg = d.proteinG != null && d.bodyweight ? d.proteinG / d.bodyweight : null;
+    rollingMean(days, "proteinKg", "proteinKg7", 7, 3);
     const firstWeight = days.find((d) => d.weight7 != null)?.weight7 ?? null;
     const bodyweightAt = (t) => days[index(t)]?.bodyweight ?? firstWeight;
 
@@ -1534,6 +1649,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const strengthSessions = linkStrengthSessions(sets, activities, days, index);
     return {
       days, t0, t1, index, activities, hasActivities: activities.length > 0, strengthSessions,
+      hasNutrition: foodByDate.size > 0,
       exercises, defaultLifts, computeLift, lifts: defaultLifts.map(computeLift),
     };
   }
@@ -1871,10 +1987,28 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       });
       if (cx - lastLabel >= 46 && cx < f.m.l + f.pw - 10) { lastLabel = cx; svgText(f.root, cx, f.H - 7, d.tick, "tick", "middle"); }
     });
+    // Label the most recent bar and the maximum; the maximum gives way when the two labels would overlap.
     const maxI = o.data.reduce((bi, d, i, arr) => (d.total > arr[bi].total ? i : bi), 0);
-    for (const i of new Set([maxI, o.data.length - 1])) {
+    const lastI = o.data.length - 1;
+    const label = o.labelFmt || o.fmt;  // shorter text on the bars, e.g. without the unit
+    const labelW = (i) => label(o.data[i].total).length * 6.8;  // monospace end labels
+    const overlap = maxI !== lastI && band * (lastI - maxI) < (labelW(maxI) + labelW(lastI)) / 2 + 4;
+    // With overlapping labels the most recent bar wins; if it has no room either, the maximum gets a try.
+    let drawn = 0;
+    for (const i of new Set(overlap ? [lastI, maxI] : [maxI, lastI])) {
       const d = o.data[i];
-      if (d.total > 0) svgText(f.root, f.m.l + band * (i + 0.5), y(d.total) - 5, o.fmt(d.total), "end-label", "middle");
+      if (!(d.total > 0) || (overlap && drawn)) continue;
+      const cx = f.m.l + band * (i + 0.5), right = f.W - 2;
+      const clipped = cx + labelW(i) / 2 > right;  // keep the label inside the chart at the right edge
+      const x0 = clipped ? right - labelW(i) : cx - labelW(i) / 2, x1 = x0 + labelW(i), base = y(d.total) - 5;
+      // Narrow charts: skip a label that would run into a taller neighbouring bar; the tooltip has the value
+      const blocked = o.data.some((e, j) => {
+        const l = f.m.l + band * (j + 0.5) - bw / 2;
+        return j !== i && l < x1 && l + bw > x0 && y(e.total) < base + 2;
+      });
+      if (blocked) continue;
+      svgText(f.root, clipped ? right : cx, base, label(d.total), "end-label", clipped ? "end" : "middle");
+      drawn += 1;
     }
     let current = null;
     const show = (i) => {
@@ -2079,7 +2213,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const dayOf = (ms) => new Date(ms).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
   const AREA_LABELS = {
     koerper: "Körper", erholung: "Erholung", schlaf: "Schlaf", kraft: "Kraft",
-    aktivitaeten: "Aktivitäten", zusammenhaenge: "Zusammenhänge", daten: "Daten",
+    aktivitaeten: "Aktivitäten", ernaehrung: "Ernährung", zusammenhaenge: "Zusammenhänge", daten: "Daten",
   };
 
   // ---- time range
@@ -2140,6 +2274,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const lastWith = (key) => [...M.days].reverse().find((d) => d[key] != null) || null;
     const series = (key) => days.map((d) => ({ t: d.t, v: d[key] }));
 
+    $("eyebrow").textContent = M.hasNutrition ? "Garmin Connect · Hevy · YAZIO" : "Garmin Connect · Hevy";
     renderHeader(M, lastWith, x0, x1);
     renderTiles(M, lastWith, at);
 
@@ -2223,6 +2358,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderVolume(days, x0, x1);
     renderStrengthSessions(M, x0, x1);
     renderActivities(M, days, x0);
+    renderNutrition(M, days, x0, x1);
     renderInsights();
     renderCorrelations(M, x0, x1);
     renderWeeks(M, days);
@@ -2233,7 +2369,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
 
     const sourceText = {
       demo: "Beispieldaten, im Browser erzeugt",
-      csv: "data/garmin_daily.csv, data/garmin_activities.csv und data/hevy_sets.csv",
+      csv: "CSV-Dateien im Ordner data/",
       embedded: "eingebettete CSV-Daten",
       github: `GitHub-Repository ${state.dataRepo}`,
     }[state.source];
@@ -2286,7 +2422,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         " neu an und ersetze das Secret ", html("code", { text: "GARMIN_TOKENS_JSON" }), ".",
       ]));
     }
-    const missing = state.sourceInfo.filter((s) => !s.found && s.key !== "insights");
+    const missing = state.sourceInfo.filter((s) => !s.found && s.key !== "insights" && !s.optional);
     if (state.source !== "demo" && missing.length) {
       parts.push(html("p", {}, [
         html("strong", { text: `${missing.map((s) => s.file).join(", ")} ${missing.length > 1 ? "fehlen" : "fehlt"}. ` }),
@@ -2316,6 +2452,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const activeHPrev7 = prev7.reduce((a, d) => a + d.activeMin, 0) / 60;
     const activities7 = last7.reduce((a, d) => a + d.activities.length, 0);
     const goalDays7 = last7.filter((d) => d.steps != null && d.steps >= STEP_GOAL).length;
+    const today = todayT();
+    const foodDays7 = M.days.filter((d) => d.t < today && d.t >= today - 7 * DAY && d.foodComplete).length;
+    const kc = lastWith("kcal7"), pg = lastWith("proteinG7"), pk = lastWith("proteinKg7");
+    const asOf = (d) => (d && d.t < today - 2 * DAY ? `Stand ${ddmm(d.t)}` : null);
     const clockValue = (hours) => (hours == null ? "–" : fmtDuration(hours * 60).replace(" h", ""));
 
     const tile = (area, label, value, unit, delta, sparkData) => html("a", { class: "tile", href: `#${area}` }, [
@@ -2344,7 +2484,14 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         M.hasActivities ? `${activities7} Aktivitäten · ${fmtSigned(activeH7 - activeHPrev7, 1)} h ggü. Vorwoche` : "Keine Aktivitäten der Uhr geladen", null),
       tile("aktivitaeten", "Schritte, 7-Tage-Mittel", fmt(st7?.steps7), "",
         `Ziel ${fmt(STEP_GOAL)} an ${goalDays7} von 7 Tagen`, spark("steps7")),
+      ...(M.hasNutrition ? [
+        tile("ernaehrung", "Kalorien, 7-Tage-Mittel", fmt(kc?.kcal7), "kcal",
+          asOf(kc) ?? `${foodDays7} von 7 Tagen geloggt${kc?.burned7 != null ? ` · Verbrauch Ø ${fmt(kc.burned7)}` : ""}`, spark("kcal7")),
+        tile("ernaehrung", "Eiweiß, 7-Tage-Mittel", fmt(pg?.proteinG7), "g",
+          asOf(pg) ?? (pk ? `${fmt(pk.proteinKg7, 1)} g/kg · Ziel ab ${fmt(PROTEIN_REFS[0], 1)}` : ""), spark("proteinG7")),
+      ] : []),
     );
+    $("tiles").classList.toggle("ten", M.hasNutrition);
   }
 
   // One sentence per area that answers its question; stays visible when the area is collapsed.
@@ -2408,6 +2555,19 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       : "Keine Aktivitäten der Uhr im Zeitraum.")
       + (stepDays.length ? ` Schritte Ø ${fmt(mean(stepDays.map((d) => d.steps)))}, Ziel ${fmt(STEP_GOAL)} an ${fmt(100 * stepDays.filter((d) => d.steps >= STEP_GOAL).length / stepDays.length)} % der Tage.` : ""));
 
+    // Ernährung
+    const food = days.filter((d) => d.foodComplete);
+    const withBalance = food.filter((d) => d.balance != null);
+    const perKg = food.filter((d) => d.proteinKg != null);
+    put("ernaehrung", !M.hasNutrition
+      ? "Noch keine Ernährungsdaten. Der Abruf aus YAZIO ist optional; wie er eingerichtet wird, steht unter Daten → Datenquellen."
+      : food.length
+        ? `Ø ${fmt(mean(food.map((d) => d.kcal)))} kcal und ${fmt(mean(food.map((d) => d.proteinG)))} g Eiweiß`
+          + (perKg.length ? ` (${fmt(mean(perKg.map((d) => d.proteinKg)), 1)} g/kg)` : "")
+          + ` an ${food.length} vollständig geloggten von ${fmt(days.length)} Tagen.`
+          + (withBalance.length ? ` Bilanz laut Garmin Ø ${fmtSigned(mean(withBalance.map((d) => d.balance)))} kcal pro Tag.` : "")
+        : "Im Zeitraum kein vollständig geloggter Tag.");
+
     // Zusammenhänge
     const ins = state.insights;
     if (ins?.findings) {
@@ -2421,7 +2581,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
 
     // Daten
-    const info = state.sourceInfo.filter((s) => s.key !== "insights");
+    const info = state.sourceInfo.filter((s) => s.key !== "insights" && (s.found || !s.optional));
     const fr = freshness(M);
     put("daten", state.source === "demo"
       ? `Beispieldaten über ${fmt(M.days.length)} Tage, im Browser erzeugt.`
@@ -2464,6 +2624,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       let status, hint = "";
       if (state.source === "demo") { status = pill("neutral", "Beispiel"); hint = "Im Browser erzeugt."; }
       else if (s.broken) { status = pill("crit", "unlesbar"); hint = s.fix; }
+      else if (!s.found && s.optional) { status = pill("neutral", "nicht eingerichtet"); hint = s.fix; }
       else if (!s.found) { status = pill("crit", "fehlt"); hint = s.fix; }
       else if (!s.rows) { status = pill("warn", "leer"); hint = s.fix; }
       else if (s.key === "garmin" && age(s.last) >= STALE_AFTER_DAYS) {
@@ -2837,6 +2998,143 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     toggleMore("recent-more", "recent", inRange.length);
   }
 
+  // ---- Ernährung
+
+  const MACROS = [
+    { key: "protein", label: "Eiweiß", color: "var(--s1)", field: "proteinG", kcalPerG: 4 },
+    { key: "carbs", label: "Kohlenhydrate", color: "var(--s2)", field: "carbsG", kcalPerG: 4 },
+    { key: "fat", label: "Fett", color: "var(--s3)", field: "fatG", kcalPerG: 9 },
+  ];
+  const kcalText = (v) => `${fmt(v)} kcal`;
+
+  function renderNutrition(M, days, x0, x1) {
+    const series = (key) => days.map((d) => ({ t: d.t, v: d[key] }));
+    const food = days.filter((d) => d.foodComplete);
+    const incomplete = days.filter((d) => d.kcalIn != null && !d.foodComplete);
+    const none = M.hasNutrition ? "Keine vollständig geloggten Tage im Zeitraum." : "Noch keine Ernährungsdaten.";
+    // Without YAZIO data one card explains the setup; the others would only repeat it
+    for (const id of ["c-macros", "c-protein", "c-balance", "c-kcal-hrv"]) $(id).closest(".card").hidden = !M.hasNutrition;
+    $("c-kcal").closest(".card").querySelector(".legend").hidden = !M.hasNutrition;
+
+    // Calories against Garmin's estimate of the energy burned
+    const burnedOnFoodDays = mean(food.map((d) => d.kcalBurned));
+    $("kcal-sub").textContent = food.length
+      ? `Ø ${kcalText(mean(food.map((d) => d.kcal)))} an ${food.length} vollständig geloggten Tagen`
+        + (incomplete.length ? `, ${incomplete.length} unvollständig` : "")
+        + (burnedOnFoodDays != null ? `; Verbrauch laut Garmin an diesen Tagen Ø ${kcalText(burnedOnFoodDays)}` : "")
+      : M.hasNutrition ? none : "Kalorien, Makronährstoffe und Energiebilanz erscheinen hier, sobald nutrition_daily.csv im Daten-Repository liegt.";
+    mount("c-kcal", (host) => (food.length || incomplete.length ? timeChart(host, {
+      x0, x1, label: "Kalorien pro Tag laut YAZIO und Verbrauch laut Garmin",
+      series: [
+        { label: "Tageswert", kind: "dots", color: "var(--s1)", data: series("kcal"), fmt: kcalText },
+        { label: "unvollständig geloggt", kind: "dots", color: "var(--other)", fmt: kcalText,
+          data: days.map((d) => ({ t: d.t, v: d.kcalIn != null && !d.foodComplete ? d.kcalIn : null })) },
+        { label: "Verbrauch laut Garmin, 7-Tage-Mittel", kind: "dashed", color: "var(--ink-2)", data: series("burned7"), fmt: kcalText },
+        { label: "Aufnahme, 7-Tage-Mittel", color: "var(--s1)", data: series("kcal7"), fmt: kcalText, endLabel: true },
+      ],
+    }) : emptyNote(host, none)));
+
+    // Energy by macronutrient per week, from the first week with a complete day
+    const weeks = new Map();
+    for (const d of days) {
+      const ws = weekStart(d.t);
+      if (!weeks.has(ws)) weeks.set(ws, { t: ws, n: 0, proteinG: 0, carbsG: 0, fatG: 0 });
+      if (!d.foodComplete) continue;
+      const w = weeks.get(ws);
+      w.n += 1;
+      for (const m of MACROS) w[m.field] += d[m.field] ?? 0;
+    }
+    const list = [...weeks.values()].sort((a, b) => a.t - b.t);
+    const first = list.findIndex((w) => w.n > 0);
+    const data = (first < 0 ? [] : list.slice(first)).map((w) => {
+      const parts = {};
+      for (const m of MACROS) if (w.n) parts[m.key] = (w[m.field] / w.n) * m.kcalPerG;
+      const total = Object.values(parts).reduce((a, b) => a + b, 0);
+      return {
+        tick: `KW ${isoWeek(w.t)}`, parts, total,
+        title: `KW ${isoWeek(w.t)} · ab ${ddmm(Math.max(w.t, x0))}${w.t + 6 * DAY > x1 ? " · laufend" : ""}`,
+        rows: w.n
+          ? [...MACROS.map((m) => ({ color: m.color, value: `${fmt(w[m.field] / w.n)} g`, label: `${m.label}, ${fmt((100 * parts[m.key]) / total)} % der Energie` })),
+            { value: kcalText(total), label: `pro Tag, ${w.n} ${w.n === 1 ? "Tag" : "Tage"} vollständig geloggt` }]
+          : [{ value: "–", label: "kein vollständig geloggter Tag" }],
+      };
+    });
+    const avg = Object.fromEntries(MACROS.map((m) => [m.key, mean(food.map((d) => d[m.field]))]));
+    const avgKcal = MACROS.reduce((a, m) => a + (avg[m.key] ?? 0) * m.kcalPerG, 0);
+    $("macro-sub").textContent = food.length
+      ? `kcal pro Tag nach Herkunft. Ø ${MACROS.map((m) => `${fmt(avg[m.key])} g ${m.label}`).join(", ")}; `
+        + `Anteile ${MACROS.map((m) => fmt((100 * avg[m.key] * m.kcalPerG) / avgKcal)).join(" / ")} %`
+      : none;
+    mount("c-macros", (host) => stackedBarChart(host, {
+      data, cats: MACROS, fmt: kcalText, labelFmt: (v) => fmt(v), empty: none,
+      label: "Kilokalorien pro Tag aus Eiweiß, Kohlenhydraten und Fett, nach Kalenderwoche",
+    }));
+
+    // Protein relative to body weight
+    const inRangeKg = days.filter((d) => d.proteinKg7 != null);
+    const lastKg = inRangeKg[inRangeKg.length - 1];
+    const kgDays = days.filter((d) => d.proteinKg != null);
+    $("protein-sub").textContent = lastKg
+      ? `${fmt(lastKg.proteinKg7, 1)} g/kg im 7-Tage-Mittel (${fmt(lastKg.proteinG7)} g bei ${fmt(lastKg.bodyweight, 1)} kg); `
+        + `an ${kgDays.filter((d) => d.proteinKg >= PROTEIN_REFS[0]).length} von ${kgDays.length} Tagen mindestens ${fmt(PROTEIN_REFS[0], 1)} g/kg`
+      : food.length ? "Ohne Gewichtsmessung lässt sich Eiweiß pro Kilogramm nicht berechnen." : none;
+    mount("c-protein", (host) => (kgDays.length ? timeChart(host, {
+      x0, x1, label: "Eiweiß in Gramm pro Kilogramm Körpergewicht",
+      refs: PROTEIN_REFS.map((v) => ({ v, label: `${fmt(v, 1)} g/kg` })),
+      series: [
+        { label: "Tageswert", kind: "dots", color: "var(--s1)", data: series("proteinKg"), fmt: (v) => `${fmt(v, 2)} g/kg` },
+        { label: "7-Tage-Mittel", color: "var(--s1)", data: series("proteinKg7"), fmt: (v) => `${fmt(v, 1)} g/kg`, endLabel: true },
+      ],
+    }) : emptyNote(host, $("protein-sub").textContent)));
+
+    // Energy balance against the measured change in weight
+    const balanceDays = food.filter((d) => d.balance != null);
+    const meanBalance = mean(balanceDays.map((d) => d.balance));
+    let weightText = "";
+    if (balanceDays.length) {
+      const span = days.filter((d) => d.t >= balanceDays[0].t && d.t <= balanceDays[balanceDays.length - 1].t && d.weight7 != null);
+      const a = span[0], b = span[span.length - 1];
+      if (a && b && b.t - a.t >= 14 * DAY) {
+        const perWeek = ((b.weight7 - a.weight7) / (b.t - a.t)) * 7 * DAY;
+        weightText = ` Die Waage zeigt ${fmtSigned(perWeek, 2)} kg pro Woche (${ddmm(a.t)} bis ${ddmm(b.t)}, 7-Tage-Mittel).`;
+      }
+    }
+    $("balance-sub").textContent = balanceDays.length
+      ? `Ø ${fmtSigned(meanBalance)} kcal pro Tag an ${balanceDays.length} Tagen; das entspräche ${fmtSigned((meanBalance * 7) / KCAL_PER_KG, 2)} kg pro Woche.${weightText}`
+      : food.length ? "Für die Bilanz fehlt der Verbrauch laut Garmin (Spalte calories_total)." : none;
+    mount("c-balance", (host) => (balanceDays.length ? timeChart(host, {
+      x0, x1, label: "Energiebilanz pro Tag in Kilokalorien", zero: true, refs: [{ v: 0, label: "ausgeglichen" }],
+      series: [
+        { label: "Tageswert", kind: "dots", color: "var(--s1)", data: series("balance"), fmt: (v) => `${fmtSigned(v)} kcal` },
+        { label: "7-Tage-Mittel", color: "var(--s1)", data: series("balance7"), fmt: (v) => `${fmtSigned(v)} kcal`, endLabel: true },
+      ],
+    }) : emptyNote(host, $("balance-sub").textContent)));
+
+    // Calories of a day against HRV of the following night
+    const points = [];
+    for (const d of food) {
+      const next = M.days[M.index(d.t + DAY)];
+      if (!next || next.hrv == null || d.hrv7 == null) continue;
+      points.push({
+        x: d.kcal, y: next.hrv - d.hrv7, title: longDate(d.t),
+        rows: [
+          { value: kcalText(d.kcal), label: `${fmt(d.proteinG)} g Eiweiß, ${fmt(d.carbsG)} g Kohlenhydrate, ${fmt(d.fatG)} g Fett` },
+          { color: "var(--s1)", value: `${fmtSigned(next.hrv - d.hrv7, 0)} ms`, label: `HRV-Nacht ${ddmm(next.t)} ggü. Mittel` },
+        ],
+      });
+    }
+    mount("c-kcal-hrv", (host) => {
+      const fit = scatterChart(host, {
+        points, color: "var(--s1)", zero: true, label: "Kalorien gegen HRV-Abweichung der Folgenacht",
+        xTitle: "Kalorien des Tages (YAZIO)", xTick: (v) => fmt(v), yTick: (v) => `${fmtSigned(v, 0)}`,
+        empty: food.length ? "Zu wenige geloggte Tage mit HRV-Wert der Folgenacht im Zeitraum." : none,
+      });
+      $("kcal-hrv-sub").textContent = fit
+        ? `r = ${fmt(fit.r, 2)} bei ${fit.n} Tagen${fewPoints(fit)}. Pro 500 kcal mehr ändert sich die HRV der Folgenacht im Schnitt um ${fmtSigned(fit.slope * 500, 1)} ms.`
+        : "";
+    });
+  }
+
   // Results of the statistics step. They cover the analysis window of insights.json,
   // independent of the range selected above.
   function renderInsights() {
@@ -2996,6 +3294,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         html("td", { text: fmt(mean(list.map((d) => d.sleep))) }),
         html("td", { text: fmtClock(mean(list.map((d) => d.bed))) }),
         html("td", { text: fmt(mean(list.map((d) => d.steps))) }),
+        ...(M.hasNutrition ? [
+          html("td", { text: fmt(mean(list.map((d) => d.kcal))) }),
+          html("td", { text: fmt(mean(list.map((d) => d.proteinG))) }),
+        ] : []),
         html("td", { text: `${fmt(list.reduce((a, d) => a + d.hardSets, 0))}` }),
         html("td", { text: `${fmt(list.reduce((a, d) => a + d.tonnage, 0) / 1000, 1)} t` }),
         html("td", { text: `${sessions}` }),
@@ -3005,7 +3307,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         html("td", { class: "l" }, st ? [pill(st.level, st.short)] : ["–"]),
       ]);
     });
-    const head = ["Woche", "Gewicht Ø", "HRV Ø", "Ruhepuls Ø", "Schlaf Ø", "Einschlafen Ø", "Schritte Ø", "Arbeitssätze", "Tonnage", "Einheiten", "Aktive Zeit", "Trainingslast", bench ? `${bench.label} e1RM` : "e1RM", "Erholung"];
+    const head = ["Woche", "Gewicht Ø", "HRV Ø", "Ruhepuls Ø", "Schlaf Ø", "Einschlafen Ø", "Schritte Ø",
+      ...(M.hasNutrition ? ["Kalorien Ø", "Eiweiß Ø g"] : []), "Arbeitssätze", "Tonnage", "Einheiten", "Aktive Zeit", "Trainingslast", bench ? `${bench.label} e1RM` : "e1RM", "Erholung"];
     $("weeks").replaceChildren(
       html("thead", {}, html("tr", {}, head.map((h, i) => html("th", { scope: "col", class: i === head.length - 1 ? "l" : "", text: h })))),
       html("tbody", {}, rows),
@@ -3023,6 +3326,11 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       ["Arbeitssätze", (d) => (d.hardSets ? fmt(d.hardSets) : "–")], ["Tonnage t", (d) => (d.tonnage ? fmt(d.tonnage / 1000, 1) : "–")],
       ["Aktiv min", (d) => (d.activeMin ? fmt(d.activeMin) : "–")], ["Trainingslast", (d) => (d.load ? fmt(d.load) : "–")],
       ["Aktivitäten", (d) => [...new Set(d.activities.map((a) => a.sport.label))].join(", ") || "–", "l"],
+      ...(state.model?.hasNutrition ? [
+        ["kcal", (d) => (d.kcalIn == null ? "–" : `${fmt(d.kcalIn)}${d.foodComplete ? "" : " · unvollst."}`)],
+        ["Eiweiß g", (d) => fmt(d.foodRaw?.p)], ["KH g", (d) => fmt(d.foodRaw?.c)], ["Fett g", (d) => fmt(d.foodRaw?.f)],
+        ["Wasser ml", (d) => fmt(d.water)],
+      ] : []),
     ];
     $("daily-summary").textContent = `Tabelle mit ${fmt(days.length)} Tagen anzeigen`;
     $("daily").replaceChildren(
@@ -3259,7 +3567,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       const t = e.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
       if ($("connect").open || ($("help").open && e.key !== "?")) return;
-      if (/^[1-7]$/.test(e.key)) { e.preventDefault(); goTo(AREAS[Number(e.key) - 1]); }
+      if (/^[1-9]$/.test(e.key) && Number(e.key) <= AREAS.length) { e.preventDefault(); goTo(AREAS[Number(e.key) - 1]); }
       else if (e.key === "0") { e.preventDefault(); goTo("top"); }
       else if (e.key === "z" || e.key === "Z") { if (state.model) { e.preventDefault(); cycleRange(e.shiftKey ? -1 : 1); } }
       else if (e.key === "?") { e.preventDefault(); openHelp(); }
@@ -3341,7 +3649,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
             insights: data.insights, loadedAt: Date.now(),
           });
           if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
-          state.model = buildModel(data.garmin, data.hevy, data.activities || []);
+          state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || []);
           state.sourceInfo = describeSources(data);
           if (!state.model) { renderNoData(); return; }
           if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything
