@@ -24,6 +24,9 @@ FIELDS = [
     "set_index", "set_type", "weight_kg", "reps", "rpe",
     "duration_s", "distance_m",
 ]
+EXERCISE_FIELDS = [
+    "exercise_template_id", "title", "type", "primary_muscle_group", "secondary_muscle_groups", "is_custom",
+]
 
 
 def _api_key() -> str:
@@ -124,6 +127,44 @@ def sync(days: int, refresh: bool = False) -> None:  # noqa: ARG001 - the window
     with _session() as session:
         fetched = [row for workout in iter_workouts(session, since) for row in flatten(workout)]
 
-    kept = [row for row in read_rows(config.HEVY_CSV) if date.fromisoformat(row["date"]) < since]
-    count = write_rows(config.HEVY_CSV, FIELDS, sorted(kept + fetched, key=_sort_key))
-    log.info("Hevy: %d sets in %s (%d fetched)", count, config.HEVY_CSV, len(fetched))
+        kept = [row for row in read_rows(config.HEVY_CSV) if date.fromisoformat(row["date"]) < since]
+        count = write_rows(config.HEVY_CSV, FIELDS, sorted(kept + fetched, key=_sort_key))
+        log.info("Hevy: %d sets in %s (%d fetched)", count, config.HEVY_CSV, len(fetched))
+        try:
+            sync_exercises(session)
+        except requests.RequestException as exc:  # the sets are saved; muscle groups can wait for the next run
+            log.warning("Hevy: exercise templates failed: %s", exc)
+
+
+def parse_template(template: dict[str, Any]) -> dict[str, Any]:
+    """One exercise template; secondary muscle groups joined with "|"."""
+    return {
+        "exercise_template_id": template.get("id"),
+        "title": template.get("title"),
+        "type": template.get("type"),
+        "primary_muscle_group": template.get("primary_muscle_group"),
+        "secondary_muscle_groups": "|".join(m for m in template.get("secondary_muscle_groups") or [] if m),
+        "is_custom": bool(template.get("is_custom")),
+    }
+
+
+def iter_templates(session: requests.Session) -> Iterator[dict[str, Any]]:
+    """All exercise templates, Hevy's own and your custom ones."""
+    page, page_count = 1, 1
+    while page <= page_count:
+        response = session.get(
+            config.HEVY_TEMPLATES_URL, params={"page": page, "pageSize": config.HEVY_TEMPLATE_PAGE_SIZE}, timeout=30,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        page_count = payload.get("page_count", 0)
+        yield from payload.get("exercise_templates", [])
+        page += 1
+
+
+def sync_exercises(session: requests.Session) -> None:
+    """Muscle groups of every exercise that appears in hevy_sets.csv."""
+    used = {row["exercise_template_id"] for row in read_rows(config.HEVY_CSV) if row.get("exercise_template_id")}
+    rows = [parse_template(t) for t in iter_templates(session) if t.get("id") in used]
+    count = write_rows(config.HEVY_EXERCISES_CSV, EXERCISE_FIELDS, sorted(rows, key=lambda r: str(r["title"])))
+    log.info("Hevy: %d exercises with muscle groups in %s", count, config.HEVY_EXERCISES_CSV)

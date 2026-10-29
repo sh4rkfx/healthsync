@@ -96,6 +96,11 @@ def cmd_dump_yazio(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_dump_fitness(_: argparse.Namespace) -> int:
+    print(garmin.dump_fitness())
+    return 0
+
+
 def cmd_dump_raw(args: argparse.Namespace) -> int:
     path = garmin.dump_raw(args.date)
     print(f"Raw Garmin responses written to {path} (contains health data, do not commit)")
@@ -134,6 +139,9 @@ def build_parser() -> argparse.ArgumentParser:
     dump_yazio = commands.add_parser("dump-yazio", help="save raw YAZIO responses for one day")
     dump_yazio.add_argument("--date", type=date.fromisoformat, default=config.today(), help="YYYY-MM-DD")
     dump_yazio.set_defaults(handler=cmd_dump_yazio)
+
+    dump_fit = commands.add_parser("dump-fitness", help="save raw Garmin fitness responses next to the data files")
+    dump_fit.set_defaults(handler=cmd_dump_fitness)
 
     dump = commands.add_parser("dump-raw", help="save raw Garmin responses for one day")
     dump.add_argument("--date", type=date.fromisoformat, default=config.today(), help="YYYY-MM-DD")

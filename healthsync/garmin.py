@@ -317,6 +317,29 @@ def sync(days: int, refresh: bool = False) -> None:
         save_tokens(client)
 
 
+def dump_fitness(days: int = 120) -> Path:
+    """Raw responses of the fitness endpoints (VO2max, race predictions, hill and endurance score,
+    training status, fitness age) for checking the field mapping. Written next to the data files."""
+    client = connect()
+    end = config.today()
+    start = (end - timedelta(days=days - 1)).isoformat()
+    iso = end.isoformat()
+    raw = {
+        "max_metrics": safe_call(client.get_max_metrics_range, start, iso),
+        "race_predictions": safe_call(lambda a, b: client.get_race_predictions(a, b, "daily"), start, iso),
+        "race_predictions_latest": safe_call(lambda: client.get_race_predictions()),
+        "hill_score": safe_call(client.get_hill_score, start, iso),
+        "endurance_score": safe_call(client.get_endurance_score, start, iso),
+        "training_status": safe_call(client.get_training_status, iso),
+        "fitness_age": safe_call(client.get_fitnessage_data, iso),
+    }
+    save_tokens(client)
+    path = config.DATA_DIR / "debug" / "garmin_fitness_raw.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(raw, indent=1, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
 def dump_raw(day: date) -> Path:
     """Write all raw responses for one day to DEBUG_DIR, for checking the field mapping."""
     client = connect()

@@ -14,6 +14,7 @@ ACTIVITIES_CSV = DATA_DIR / "garmin_activities.csv"
 CLIMBS_CSV = DATA_DIR / "garmin_climbs.csv"  # one row per logged boulder
 CLIMB_SESSIONS_CSV = DATA_DIR / "garmin_climb_sessions.csv"  # one row per bouldering session
 HEVY_CSV = DATA_DIR / "hevy_sets.csv"
+HEVY_EXERCISES_CSV = DATA_DIR / "hevy_exercises.csv"  # muscle groups of the exercises in hevy_sets.csv
 NUTRITION_CSV = DATA_DIR / "nutrition_daily.csv"
 INSIGHTS_JSON = DATA_DIR / "insights.json"
 DEBUG_DIR = Path("debug")
@@ -32,6 +33,8 @@ CLIMB_REFRESH_DAYS = 7  # bouldering sessions this recent are fetched again (gra
 
 # Hevy fetching
 HEVY_API_URL = "https://api.hevyapp.com/v1/workouts"
+HEVY_TEMPLATES_URL = "https://api.hevyapp.com/v1/exercise_templates"
+HEVY_TEMPLATE_PAGE_SIZE = 100  # maximum allowed by the API
 HEVY_PAGE_SIZE = 10  # maximum allowed by the API
 # Hevy exercises that hold grip-strength measurements, not training sets: left out of hard sets,
 # tonnage and strength form. Same names as GRIP_EXERCISES in the dashboard.
