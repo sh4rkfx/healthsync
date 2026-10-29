@@ -108,8 +108,9 @@ One row per set.
 | `weight_kg`, `reps`, `rpe` | |
 | `duration_s`, `distance_m` | For timed or cardio sets |
 
-The exercises „Handkraft rechts“ and „Handkraft links“ (`GRIP_EXERCISES` in `healthsync/config.py`) hold
-grip-strength measurements, one set per try with the dynamometer reading as `weight_kg` and 1 rep.
+The exercises „Right-hand Grip Strength“ and „Left-hand Grip Strength“ (or „Handkraft rechts“ and
+„Handkraft links“; `GRIP_EXERCISES` in `healthsync/config.py`) hold grip-strength measurements, one
+set per try with the dynamometer reading as `weight_kg` and 1 rep.
 They are left out of hard sets, tonnage and strength form in the analysis and the dashboard.
 
 ## nutrition_daily.csv

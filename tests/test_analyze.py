@@ -74,8 +74,8 @@ def test_load_daily_reads_all_three_files(tmp_path, monkeypatch):
         "2026-10-13,Squat (Barbell),warmup,60,8\n"
         "2026-10-13,Squat (Barbell),normal,100,5\n"
         "2026-10-13,Squat (Barbell),normal,100,4\n"
-        "2026-10-13,Handkraft rechts,normal,52,1\n"
-        "2026-10-13,handkraft links ,normal,49,1\n", encoding="utf-8")
+        "2026-10-13,Right-hand Grip Strength,normal,52,1\n"
+        "2026-10-13,left-hand grip strength ,normal,49,1\n", encoding="utf-8")
     monkeypatch.setattr(config, "GARMIN_CSV", tmp_path / "garmin_daily.csv")
     monkeypatch.setattr(config, "ACTIVITIES_CSV", tmp_path / "garmin_activities.csv")
     monkeypatch.setattr(config, "HEVY_CSV", tmp_path / "hevy_sets.csv")

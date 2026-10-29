@@ -938,7 +938,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       <div class="card span2" data-group="kraft" data-tab="Handkraft" data-icon="hand">
         <div class="card-head"><h3>Handkraft</h3><p class="sub" id="grip-sub"></p></div>
         <div class="info" hidden>
-          <p>Bester Satz je Hand und Tag aus den Hevy-Übungen „Handkraft links“ und „Handkraft rechts“, Gewicht in kg. Ein Handkraftmesser misst den vollen Faustschluss mit Daumen. Beim Bouldern hältst du Leisten und Sloper meist offen oder aufgestellt und ohne Daumen; der Wert zeigt deshalb allgemeine Kraft, keine bouldertypische Fingerkraft.</p>
+          <p>Bester Satz je Hand und Tag aus den Hevy-Übungen „Right-hand Grip Strength“ und „Left-hand Grip Strength“, der Wert des Messers als Gewicht in kg. Ein Handkraftmesser misst den vollen Faustschluss mit Daumen. Beim Bouldern hältst du Leisten und Sloper meist offen oder aufgestellt und ohne Daumen; der Wert zeigt deshalb allgemeine Kraft, keine bouldertypische Fingerkraft.</p>
           <p>Vergleichbar ist er nur bei gleicher Haltung, gleicher Griffweite und gleichem Zeitpunkt, am besten nach dem Aufwärmen und vor dem Bouldern. Die Messungen zählen nicht als Arbeitssätze und gehen weder in Tonnage noch in das e1RM ein.</p>
           <p class="source">Quelle: hevy_sets.csv · weight_kg · Übungsnamen in <code>GRIP_EXERCISES</code> oben im Skript</p>
         </div>
@@ -1297,7 +1297,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
   const KCAL_PER_KG = 7700;        // rough energy content of one kg of body weight
   // Hevy exercises holding grip-strength measurements (kg per set), same names as GRIP_EXERCISES
   // in healthsync/config.py. They are no training sets: no hard sets, tonnage or e1RM.
-  const GRIP_EXERCISES = { "handkraft rechts": "right", "handkraft links": "left" };
+  const GRIP_EXERCISES = {
+    "right-hand grip strength": "right", "left-hand grip strength": "left",
+    "handkraft rechts": "right", "handkraft links": "left",
+  };
   // A bouldering split longer than this is a whole session recorded without LAP, not a boulder
   const MAX_BOULDER_S = 900;
   const FEEL_LABELS = { 0: "sehr schwach", 25: "schwach", 50: "normal", 75: "stark", 100: "sehr stark" };
@@ -1881,7 +1884,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     // Grip strength every two weeks for the last 12 weeks, two sets per hand
     for (let k = 6; k >= 1; k--) {
       const t = end - k * 14 * DAY + 2 * DAY, date = tToIso(t), right = 48 + (6 - k) * 0.8 + climbRnd() * 1.5;
-      [["Handkraft rechts", right], ["Handkraft links", right - 2.5 - climbRnd() * 1.5]].forEach(([exercise, kg], ex) => {
+      [["Right-hand Grip Strength", right], ["Left-hand Grip Strength", right - 2.5 - climbRnd() * 1.5]].forEach(([exercise, kg], ex) => {
         for (let s = 0; s < 2; s++) {
           hevy.push({
             date, start_time: `${date}T17:00:00Z`, workout_id: `demo-grip-${date}`, workout_title: "Handkraft",
@@ -3553,7 +3556,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const kg = (v) => `${fmt(v, 1)} kg`;
     mount("c-grip", (host) => timeChart(host, {
       x0, x1, label: "Handkraft rechts und links in Kilogramm, bester Satz je Tag", height: 200,
-      empty: "Noch keine Messungen. Lege in Hevy die Übungen „Handkraft rechts“ und „Handkraft links“ an und logge pro Satz das Gewicht in kg mit 1 Wiederholung.",
+      empty: "Noch keine Messungen. Logge in Hevy „Right-hand Grip Strength“ und „Left-hand Grip Strength“ mit dem Wert des Messers als Gewicht in kg und 1 Wiederholung pro Satz.",
       series: [
         { label: "rechts", color: "var(--s1)", data: inRange.map((g) => ({ t: g.t, v: g.right })), fmt: kg, markers: true, endLabel: true, maxGap: 400 * DAY },
         { label: "links", color: "var(--s2)", data: inRange.map((g) => ({ t: g.t, v: g.left })), fmt: kg, markers: true, endLabel: true, maxGap: 400 * DAY },

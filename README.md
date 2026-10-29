@@ -225,7 +225,7 @@ Settings at the top of the dashboard script:
 | `MAIN_LIFTS` | Default lifts shown as e1RM charts, by their exact Hevy names. Without matches, the four most frequent exercises are used. The easier way is **Sport → Kraft → Übungen wählen** on the dashboard: it lists every exercise in your Hevy data, applies the choice at once, remembers it in the browser and copies it in this format if you want it as the default everywhere |
 | `SPORTS` | Groups Garmin activity types into sports. The first matching pattern wins; the order sets colors and stacking |
 | `MAX_LINK_GAP_MIN` | Maximum gap between the start of a Hevy workout and a strength activity on the watch to count them as one session (default 180) |
-| `GRIP_EXERCISES` | Hevy exercise names that hold grip-strength measurements (default „Handkraft rechts“ and „Handkraft links“). They are shown as grip strength and left out of hard sets, tonnage and e1RM; keep the names equal to `GRIP_EXERCISES` in `healthsync/config.py` |
+| `GRIP_EXERCISES` | Hevy exercise names that hold grip-strength measurements (default „Right-hand Grip Strength“ and „Left-hand Grip Strength“, also the German „Handkraft rechts“ and „Handkraft links“). They are shown as grip strength and left out of hard sets, tonnage and e1RM; keep the names equal to `GRIP_EXERCISES` in `healthsync/config.py` |
 | `MAX_BOULDER_S` | A bouldering split longer than this is a whole session recorded without LAP, not a boulder (default 900 s) |
 | `MIN_COMPLETE_KCAL` | YAZIO days below this count as not fully logged and stay out of all means (default 1,200; keep it equal to the constant in `healthsync/analyze.py`) |
 | `DATA_REPO` | Data repository suggested in the connect dialog |
