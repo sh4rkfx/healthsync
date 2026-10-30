@@ -596,6 +596,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     <symbol id="i-koerper" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="3.5"/><path d="M6.5 9a3.5 3.5 0 0 1 7 0"/><path d="M10 9l1.7-2.2"/></g></symbol>
     <symbol id="i-erholung" viewBox="0 0 20 20"><path d="M2.5 10.5h3.2l1.8-4.5 3 9 2-4.5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-schlaf" viewBox="0 0 20 20"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3c3 4.2 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.8 6-11z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
     <symbol id="i-fitness" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 16a8.5 8.5 0 1 1 17 0"/><path d="M12 16l4.5-5"/><path d="M3.5 16h2M18.5 16h2M12 7.5v1.8"/></g></symbol>
     <symbol id="i-sport" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="5"/><path d="M8.5 3l2.6 7.2M15.5 3l-2.6 7.2M12 13.2v3.6"/></g></symbol>
     <symbol id="i-hold" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5C4.5 10 8.5 6 13.5 6c3.5 0 6 2.2 6 5 0 4.5-4.5 8-10 8-3.2 0-5-1.4-5-3.5z"/><circle cx="13" cy="12" r="1.6"/></g></symbol>
@@ -718,6 +719,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg>± kg</span></td><td>Änderung des 7-Tage-Mittels vom ersten bis zum letzten Tag im Zeitraum; Pfeil ab 0,05 kg.</td></tr>
           <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg>Fett</span></td><td>Änderung der Fettmasse, ebenso berechnet.</td></tr>
           <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-kraft"/></svg>Muskel</span></td><td>Änderung der Muskelmasse, ebenso berechnet.</td></tr>
+          <tr><td><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg>mmHg</span></td><td>Blutdruck, Mittel aller Messungen im Zeitraum. Gelb im Bereich „erhöht“ ab 120/70, rot ab 135/85 (Grenzen für die Messung zu Hause, ESC-Leitlinie 2024).</td></tr>
         </tbody>
       </table>
     </div>
@@ -748,6 +750,17 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         </div>
         <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>% pro Woche, 28 Tage</span><span><i class="key-dash"></i>−0,5 und −1 %</span></div>
         <div class="chart-host" id="c-rate"></div>
+      </div>
+      <div class="card span2" data-tab="Blutdruck" data-icon="drop">
+        <div class="card-head"><h3>Blutdruck</h3><p class="sub" id="bp-sub"></p></div>
+        <div class="info" hidden>
+          <p>Punkte sind einzelne Messungen, die Linien das Mittel jedes Tages. Einzelwerte schwanken stark mit Uhrzeit, Bewegung, Kaffee und Anspannung; beurteilen lässt sich nur das Mittel einer Messreihe.</p>
+          <p>Grenzen für die Messung zu Hause laut ESC-Leitlinie 2024: <b>nicht erhöht</b> unter 120/70 mmHg, <b>erhöht</b> ab 120/70, <b>Hypertonie</b> ab 135/85 (in der Praxis gemessen gilt ab 140/90). Es zählt der höhere der beiden Werte. Die Leitlinie empfiehlt, morgens und abends jeweils zwei Messungen im Abstand von 1 bis 2 Minuten zu machen, mindestens 3 und bis zu 7 Tage lang, und alle Werte zu mitteln. Die Einordnung hier ersetzt keine ärztliche Beurteilung.</p>
+          <p class="source">Quelle: garmin_blood_pressure.csv · systolic, diastolic, pulse · Messgerät oder Eingabe in Garmin Connect · Grenzen: ESC 2024, Tabelle 5</p>
+        </div>
+        <div class="legend"><span><i class="key-line" style="background:var(--s1)"></i>systolisch</span><span><i class="key-line" style="background:var(--s2)"></i>diastolisch</span><span><i class="key-dot" style="background:var(--ink-2)"></i>Einzelmessung</span><span><i class="key-dash"></i>135 und 85</span></div>
+        <div class="chart-host" id="c-bp"></div>
+        <ul class="stat3" id="bp-stats"></ul>
       </div>
     </div>
   </section>
@@ -1431,6 +1444,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     climbSessions: "../data/garmin_climb_sessions.csv",
     exercises: "../data/hevy_exercises.csv",
     fitness: "../data/garmin_fitness.csv",
+    bp: "../data/garmin_blood_pressure.csv",
     fitnessStatus: "../data/garmin_fitness_status.json",
   };
   // Private repository with the data files, read through the GitHub API when the page runs
@@ -1440,9 +1454,10 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     garmin: "garmin_daily.csv", activities: "garmin_activities.csv", hevy: "hevy_sets.csv", insights: "insights.json",
     nutrition: "nutrition_daily.csv", climbs: "garmin_climbs.csv", climbSessions: "garmin_climb_sessions.csv",
     exercises: "hevy_exercises.csv", fitness: "garmin_fitness.csv", fitnessStatus: "garmin_fitness_status.json",
+    bp: "garmin_blood_pressure.csv",
   };
   // Every data file the page reads, in the order they are fetched; JSON_KEYS are JSON, the rest CSV
-  const FILE_KEYS = ["garmin", "activities", "hevy", "insights", "nutrition", "climbs", "climbSessions", "exercises", "fitness", "fitnessStatus"];
+  const FILE_KEYS = ["garmin", "activities", "hevy", "insights", "nutrition", "climbs", "climbSessions", "exercises", "fitness", "fitnessStatus", "bp"];
   const JSON_KEYS = ["insights", "fitnessStatus"];
   // YAZIO days below this count as not fully logged and stay out of every mean (same value as
   // MIN_COMPLETE_KCAL in healthsync/analyze.py).
@@ -1826,6 +1841,9 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       entry("nutrition", "YAZIO Ernährung", file("nutrition"), data.nutrition || [], remote
         ? "Optional. Entsteht, wenn das Daten-Repository das Secret `YAZIO_TOKENS_JSON` hat oder für einen Lauf `YAZIO_EMAIL` und `YAZIO_PASSWORD`; danach Run workflow mit 365 Tagen."
         : "Optional. Einrichten mit `python -m healthsync yazio-login`, dann `python -m healthsync sync --source yazio --days 365`.", true),
+      entry("bp", "Garmin Blutdruck", file("bp"), data.bp || [], remote
+        ? "Entsteht beim nächsten Lauf des Workflows, wenn Garmin Connect Blutdruckwerte hat. Ältere Werte holt Run workflow mit source `bp` und days `3650`."
+        : "Abrufen mit `python -m healthsync sync --source bp --days 3650`.", true),
       entry("fitness", "Garmin Fitness", file("fitness"), data.fitness || [], remote
         ? "Entsteht beim nächsten Lauf des Workflows. Die letzten 12 Monate holt Run workflow mit source `fitness` und days `365`."
         : "Abrufen mit `python -m healthsync sync --source fitness --days 365`.", true),
@@ -2055,7 +2073,28 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
     const exercises = DEMO_EXERCISES.map(([title, primary, secondary]) => ({ exercise_template_id: "", title, primary_muscle_group: primary, secondary_muscle_groups: secondary }));
     const { fitness, fitnessStatus } = demoFitness(end, climbRnd);
-    return { garmin, hevy, activities, nutrition, climbs, climbSessions, exercises, fitness, fitnessStatus };
+    const bp = demoBloodPressure(end, mulberry32(71));
+    return { garmin, hevy, activities, nutrition, climbs, climbSessions, exercises, fitness, fitnessStatus, bp };
+  }
+
+  // A one-week series morning and evening every two months, two readings each, plus a few single ones
+  function demoBloodPressure(end, rnd) {
+    const rows = [];
+    const add = (t, hour, base) => {
+      for (let k = 0; k < 2; k++) {
+        const sys = Math.round(base[0] + (rnd() - 0.5) * 12 - k * 2), dia = Math.round(base[1] + (rnd() - 0.5) * 8 - k);
+        rows.push({ date: tToIso(t), time_local: `${String(hour).padStart(2, "0")}:${String(10 + k * 2).padStart(2, "0")}`, systolic: sys, diastolic: dia, pulse: Math.round(60 + rnd() * 12), source: "DEVICE", category: "" });
+      }
+    };
+    for (const [ago, base] of [[150, [127, 83]], [90, [124, 81]], [30, [121, 78]]]) {
+      for (let d = 0; d < 7; d++) {
+        const t = end - (ago - d) * DAY;
+        add(t, 7, base);
+        add(t, 21, [base[0] + 3, base[1] + 1]);
+      }
+    }
+    for (const ago of [62, 45, 9, 2]) add(end - ago * DAY, 20, [123, 80]);
+    return rows.sort((a, b) => (a.date + a.time_local < b.date + b.time_local ? -1 : 1));
   }
 
   const DEMO_EXERCISES = [
@@ -2203,7 +2242,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     const grip = [...gripByDay.values()].sort((a, b) => a.t - b.t);
     const sets = allSets.filter((s) => !s.grip);
 
-    const allT = [...[...byDate.keys()].map(isoToT), ...sets.map((s) => s.t), ...activities.map((a) => a.t), ...[...foodByDate.keys()].map(isoToT)];
+    const allT = [...[...byDate.keys()].map(isoToT), ...sets.map((s) => s.t), ...activities.map((a) => a.t), ...[...foodByDate.keys()].map(isoToT), ...(extra.bp || []).filter((r) => r.date).map((r) => isoToT(r.date))];
     if (!allT.length) return null;
     const t0 = Math.min(...allT), t1 = Math.max(...allT);
 
@@ -2285,6 +2324,15 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     }
     rollingMean(days, "bed", "bed7", 7, 3);
     deriveTrends(days);
+    // Blood pressure: every reading with its time of day, and the mean of each day
+    const bp = (extra.bp || []).filter((r) => r.date && num(r.systolic) && num(r.diastolic)).map((r) => ({
+      t: isoToT(r.date), min: clockMinutes(`${r.date} ${r.time_local || ""}`), sys: num(r.systolic), dia: num(r.diastolic), pulse: num(r.pulse),
+    })).sort((a, b) => a.t - b.t || (a.min ?? 0) - (b.min ?? 0));
+    for (const r of bp) {
+      const d = days[index(r.t)];
+      if (d) (d.bp ||= []).push(r);
+    }
+    for (const d of days) if (d.bp) { d.bpSys = mean(d.bp.map((r) => r.sys)); d.bpDia = mean(d.bp.map((r) => r.dia)); }
 
     // Body weight on a given day: latest 7-day mean on or before it.
     let lastWeight = null;
@@ -2346,7 +2394,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
       hasNutrition: foodByDate.size > 0,
       exercises, defaultLifts, computeLift, lifts: defaultLifts.map(computeLift),
       grip, bouldering, boulderScale: bouldering.scale,
-      sets, muscles: muscleMap(extra.exercises || []), fitness: parseFitness(extra.fitness || []),
+      sets, muscles: muscleMap(extra.exercises || []), fitness: parseFitness(extra.fitness || []), bp,
     };
   }
 
@@ -3176,6 +3224,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     renderBouldering(M, x0, x1);
     renderMuscles(M, x0, x1);
     renderTrends(M, days, x0, x1, lastWith);
+    renderBloodPressure(M, days, x0, x1);
     renderFitness(M, x0, x1);
     renderActivities(M, days, x0);
     renderNutrition(M, days, x0, x1);
@@ -3320,8 +3369,8 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
     put("koerper", wIn.length
       ? [chip("koerper", `${fmt(wIn[wIn.length - 1].weight7, 1)} kg`), chip(direction(dW, 0.05), `${fmtSigned(dW, 1)} kg`),
         rate && rate.t >= x0 ? chip("trend", `${fmtSigned(rate.wRate, 1)} %/Woche`, rate.wRate < -1 ? "warn" : "neutral") : null,
-        dF != null ? chip("layers", `Fett ${fmtSigned(dF, 1)} kg`) : null, dM != null ? chip("kraft", `Muskel ${fmtSigned(dM, 1)} kg`) : null]
-      : [chip("koerper", "Keine Messung im Zeitraum")],
+        dF != null ? chip("layers", `Fett ${fmtSigned(dF, 1)} kg`) : null, dM != null ? chip("kraft", `Muskel ${fmtSigned(dM, 1)} kg`) : null, bpChip(M, x0, x1)]
+      : [chip("koerper", "Keine Messung im Zeitraum"), bpChip(M, x0, x1)],
     wIn.length
       ? `${fmt(wIn[wIn.length - 1].weight7, 1)} kg im 7-Tage-Mittel, ${fmtSigned(dW, 1)} kg in ${fmt(days.length)} Tagen.`
         + (dF != null && dM != null ? ` Fettmasse ${fmtSigned(dF, 1)} kg, Muskelmasse ${fmtSigned(dM, 1)} kg.` : "")
@@ -3901,6 +3950,64 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         { label: "7 Tage", color: "var(--s1)", data: series("sri7"), fmt: (v) => fmt(v), endLabel: true },
       ],
     }));
+  }
+
+  // ---- Körper: blood pressure
+
+  // ESC 2024, Table 5, home measurement: the higher category of systolic and diastolic counts
+  const BP_HOME = { elevated: [120, 70], hypertension: [135, 85] };
+  function bpCategory(sys, dia) {
+    if (sys >= BP_HOME.hypertension[0] || dia >= BP_HOME.hypertension[1]) return { label: "Bereich Hypertonie", level: "crit" };
+    if (sys >= BP_HOME.elevated[0] || dia >= BP_HOME.elevated[1]) return { label: "erhöht", level: "warn" };
+    return { label: "nicht erhöht", level: "good" };
+  }
+  const bpText = (sys, dia) => `${fmt(sys)}/${fmt(dia)}`;
+  function bpMean(list) {
+    return list.length ? { sys: mean(list.map((r) => r.sys)), dia: mean(list.map((r) => r.dia)), pulse: mean(list.map((r) => r.pulse).filter((v) => v != null)), n: list.length } : null;
+  }
+  function bpChip(M, x0, x1) {
+    const m = bpMean(M.bp.filter((r) => r.t >= x0 && r.t <= x1));
+    return m ? chip("drop", `${bpText(m.sys, m.dia)} mmHg`, bpCategory(m.sys, m.dia).level) : null;
+  }
+
+  function renderBloodPressure(M, days, x0, x1) {
+    const card = $("c-bp").closest(".card");
+    card.hidden = !M.bp.length;
+    if (!M.bp.length) return;
+    const inRange = M.bp.filter((r) => r.t >= x0 && r.t <= x1);
+    const last = M.bp[M.bp.length - 1];
+    const m = bpMean(inRange);
+    $("bp-sub").textContent = `zuletzt ${bpText(last.sys, last.dia)} mmHg am ${ddmm(last.t)}${last.pulse != null ? `, Puls ${fmt(last.pulse)}` : ""}`
+      + (m ? ` · ${fmt(m.n)} ${m.n === 1 ? "Messung" : "Messungen"} im Zeitraum` : "");
+    const at = (r) => r.t; // several readings of a day share its x position, like every other chart
+    const mm = (v) => `${fmt(v)} mmHg`;
+    mount("c-bp", (host) => timeChart(host, {
+      x0, x1, label: "Blutdruck in mmHg, einzelne Messungen und Tagesmittel", height: 220,
+      refs: [{ v: BP_HOME.hypertension[0], label: "135" }, { v: BP_HOME.hypertension[1], label: "85" }],
+      empty: "Keine Blutdruckmessung im Zeitraum.",
+      series: [
+        { label: "systolisch", kind: "dots", color: "var(--s1)", data: inRange.map((r) => ({ t: at(r), v: r.sys })), fmt: mm, hideInTip: true },
+        { label: "diastolisch", kind: "dots", color: "var(--s2)", data: inRange.map((r) => ({ t: at(r), v: r.dia })), fmt: mm, hideInTip: true },
+        { label: "systolisch, Tagesmittel", color: "var(--s1)", data: days.map((d) => ({ t: d.t, v: d.bpSys ?? null })), fmt: mm, endLabel: true },
+        { label: "diastolisch, Tagesmittel", color: "var(--s2)", data: days.map((d) => ({ t: d.t, v: d.bpDia ?? null })), fmt: mm, endLabel: true },
+      ],
+    }));
+    const hour = (r) => (r.min == null ? null : r.min / 60);
+    const stat = (label, mean_, sub) => html("li", {}, [
+      html("span", { class: "l", text: label }), html("span", { class: "v", text: mean_ ? bpText(mean_.sys, mean_.dia) : "–" }), html("span", { class: "s", text: sub }),
+    ]);
+    const morning = bpMean(inRange.filter((r) => hour(r) != null && hour(r) < 12));
+    const evening = bpMean(inRange.filter((r) => hour(r) != null && hour(r) >= 18));
+    const cat = m ? bpCategory(m.sys, m.dia) : null;
+    $("bp-stats").hidden = !m;
+    $("bp-stats").replaceChildren(...(m ? [
+      html("li", {}, [
+        html("span", { class: "l", text: "Mittel im Zeitraum" }), html("span", { class: "v", text: bpText(m.sys, m.dia) }),
+        html("span", { class: "s" }, [chip(null, cat.label, cat.level)]),
+      ]),
+      stat("Morgens, vor 12 Uhr", morning, morning ? `${fmt(morning.n)} Messungen` : "keine Messung"),
+      stat("Abends, ab 18 Uhr", evening, evening ? `${fmt(evening.n)} Messungen` : "keine Messung"),
+    ] : []));
   }
 
   // ---- Sport: sets per muscle group
@@ -4602,6 +4709,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
         ["Eiweiß g", (d) => fmt(d.foodRaw?.p)], ["KH g", (d) => fmt(d.foodRaw?.c)], ["Fett g", (d) => fmt(d.foodRaw?.f)],
         ["Wasser ml", (d) => fmt(d.water)],
       ] : []),
+      ...(state.model?.bp?.length ? [["Blutdruck", (d) => (d.bpSys != null ? `${fmt(d.bpSys)}/${fmt(d.bpDia)}` : "–")]] : []),
     ];
     $("daily-summary").textContent = `Tabelle mit ${fmt(days.length)} Tagen anzeigen`;
     $("daily").replaceChildren(
@@ -5023,7 +5131,7 @@ footer .link-btn { background: none; border: 0; padding: 0; color: var(--ink-2);
           });
           if (data.source === "demo") window.healthsyncDemoData = data; // lets tests export the sample data as CSV
           state.model = buildModel(data.garmin, data.hevy, data.activities || [], data.nutrition || [], data.climbs || [], data.climbSessions || [],
-            { exercises: data.exercises || [], fitness: data.fitness || [] });
+            { exercises: data.exercises || [], fitness: data.fitness || [], bp: data.bp || [] });
           state.sourceInfo = describeSources(data);
           if (!state.model) { renderNoData(); return; }
           if (!rangeAvailable(state.range)) state.range = 0; // shorter data than the saved range: show everything

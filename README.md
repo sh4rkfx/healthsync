@@ -17,6 +17,7 @@ locally or once a day on GitHub Actions.
 | `garmin_daily.csv` | One row per day: weight and body composition, sleep score and sleep times, HRV, resting heart rate, Body Battery, stress, steps, calories burned, Training Readiness |
 | `garmin_activities.csv` | One row per watch activity: bouldering, hiking, cycling, runs, strength and more, with duration, distance, elevation gain, heart rate and training load |
 | `garmin_climbs.csv`, `garmin_climb_sessions.csv` | Bouldering from the watch: one row per logged boulder with grade, completed or attempted, route timer and heart rate; one row per session with tops, time on the wall and the self evaluation |
+| `garmin_blood_pressure.csv` | One row per blood pressure reading from a cuff synced to Garmin Connect or entered in the app: systolic, diastolic, pulse |
 | `garmin_fitness.csv`, `garmin_fitness_status.json` | VO2max, race predictions for 5 km to marathon, hill and endurance score per day; today's training status, acute and chronic load, load focus and fitness age |
 | `hevy_sets.csv` | One row per set: workout, exercise, weight, reps, RPE, set type |
 | `hevy_exercises.csv` | Primary and secondary muscle groups of every exercise in `hevy_sets.csv` |
@@ -205,7 +206,7 @@ example resting heart rate more than 2.5 bpm above its 60-day mean or protein un
 | Area | Content |
 |---|---|
 | Overview | Tiles for the last 7 days: weight, calories and protein (with YAZIO data), HRV, resting heart rate, Training Readiness, sleep, hard sets, active time, steps. Each tile links to its area |
-| Körper | Weight with 7-day mean, change in fat and muscle mass, rate of change in % of body weight per week from a 28-day regression line |
+| Körper | Weight with 7-day mean, change in fat and muscle mass, rate of change in % of body weight per week from a 28-day regression line, blood pressure readings with daily means, morning and evening means and the ESC 2024 home category (non-elevated under 120/70, elevated, hypertension from 135/85) |
 | Ernährung | Optional, from YAZIO: calories per day against Garmin's energy burned, weekly energy by macronutrient, protein per kg body weight against 1.6 and 2.2 g/kg, energy balance against the measured weight change, calories against HRV of the following night. Days under 1,200 kcal count as not fully logged and stay out of all means. Actual energy use from intake and weight change over 28 days, against Garmin's estimate |
 | Erholung | HRV with Garmin's personal range, resting heart rate against its 60-day mean, sleep score, readiness and Body Battery, night-to-night variability of HRV (coefficient of variation of ln HRV over 7 nights) |
 | Schlaf | Bed and wake times per night, weekday against weekend nights, bedtime against HRV, Sleep Regularity Index from bed and wake times |
@@ -255,7 +256,7 @@ and periods of illness are the two most common sources of misleading results. Se
 
 | Command | Purpose |
 |---|---|
-| `sync [--days N] [--source all\|garmin\|activities\|climbs\|fitness\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
+| `sync [--days N] [--source all\|garmin\|activities\|climbs\|fitness\|bp\|hevy\|yazio] [--refresh]` | Fetch data and update the CSV files. `all` includes YAZIO only after `yazio-login`. `--refresh` fetches stored Garmin days again, e.g. to fill columns added in an update |
 | `analyze [--days N] [--top N]` | Test relationships and write `data/insights.json`. Prints the strongest findings |
 | `login` | Log in to Garmin with email and password and store tokens |
 | `export-tokens` | Print the Garmin tokens as JSON for the GitHub secret |
@@ -313,6 +314,7 @@ healthsync/
   activities.py   Garmin activities
   climbs.py       boulders and self evaluation of bouldering sessions
   fitness.py      VO2max, race predictions, hill and endurance score, training status
+  bloodpressure.py  blood pressure readings
   hevy.py         Hevy workouts and sets
   yazio.py        YAZIO daily food totals (unofficial app API)
   analyze.py      relationship analysis, insights.json

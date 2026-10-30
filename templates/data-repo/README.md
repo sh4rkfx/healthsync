@@ -13,6 +13,7 @@ metrics and activities, Hevy sets and the relationship analysis.
 | `garmin_activities.csv` | One row per watch activity |
 | `garmin_climbs.csv` | One row per boulder logged on the watch: grade, completed or attempted, route timer, heart rate |
 | `garmin_climb_sessions.csv` | One row per bouldering session: boulders, tops, time on the wall, self evaluation |
+| `garmin_blood_pressure.csv` | One row per blood pressure reading |
 | `garmin_fitness.csv` | VO2max, race predictions, hill and endurance score per day |
 | `garmin_fitness_status.json` | Today's training status, loads, load focus and fitness age |
 | `hevy_sets.csv` | One row per set |

@@ -93,6 +93,20 @@ One row per bouldering session, also for sessions without logged boulders.
 | `effort` | 1–10 | Perceived effort from the watch's self evaluation after saving; empty if skipped |
 | `feel` | 0–100 | Feel from the same evaluation: 0 very weak, 25 weak, 50 normal, 75 strong, 100 very strong |
 
+## garmin_blood_pressure.csv
+
+One row per blood pressure reading in Garmin Connect, from a cuff such as the Index BPM or entered
+by hand. The watch does not measure blood pressure. Each sync replaces the window it fetched;
+notes typed with a reading are not copied.
+
+| Column | Unit | Notes |
+|---|---|---|
+| `date`, `time_local` | | Local date and time of the reading |
+| `systolic`, `diastolic` | mmHg | |
+| `pulse` | bpm | If the device measures it |
+| `source` | text | Garmin's source type, e.g. `DEVICE` or `MANUAL` |
+| `category` | text | Garmin's own category; the dashboard uses the ESC 2024 home thresholds instead |
+
 ## garmin_fitness.csv
 
 One row per day on which Garmin reports at least one of these values. Each sync replaces the
