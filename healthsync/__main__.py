@@ -8,7 +8,7 @@ import sys
 from collections.abc import Callable
 from datetime import date
 
-from . import activities, climbs, config, fitness, garmin, hevy, yazio
+from . import activities, bloodpressure, climbs, config, fitness, garmin, hevy, yazio
 
 log = logging.getLogger("healthsync")
 
@@ -17,6 +17,7 @@ SOURCES: dict[str, Callable[..., None]] = {
     "activities": activities.sync,
     "climbs": climbs.sync,  # needs the activities written just before
     "fitness": fitness.sync,
+    "bp": bloodpressure.sync,
     "hevy": hevy.sync,
     "yazio": yazio.sync,
 }
